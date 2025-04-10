@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "isRoot": true,
+  "tools": {
+    "anv.tool": {
+      "version": "2.0.4",
+      "commands": [
+        "anv"
+      ],
+      "rollForward": false
+    }
+  }
+}
