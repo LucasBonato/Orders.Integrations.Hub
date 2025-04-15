@@ -10,13 +10,17 @@
 
   <ItemGroup>
     <PackageReference Include="Anv" Version="1.0.0" />
+    <PackageReference Include="AWSSDK.SimpleNotificationService" Version="3.7.400.134" />
+    <PackageReference Include="BizPik.AWS" Version="1.0.73" />
     <PackageReference Include="FastEndpoints" Version="5.35.0" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.2" />
     <PackageReference Include="Scalar.AspNetCore" Version="2.1.*" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Modules\Common\Extensions\" />
+    <Folder Include="Modules\Core\BizPik\Application\Ports\" />
+    <Folder Include="Modules\Core\Extensions\" />
+    <Folder Include="Modules\Core\Orders\Adapter\" />
     <Folder Include="Modules\Integrations\Rappi\" />
   </ItemGroup>
 

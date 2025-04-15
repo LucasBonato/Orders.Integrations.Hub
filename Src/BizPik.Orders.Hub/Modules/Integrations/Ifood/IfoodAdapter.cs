@@ -1,5 +1,5 @@
 ﻿using BizPik.Orders.Hub.Modules.Integrations.Common.Application;
-using BizPik.Orders.Hub.Modules.Integrations.Ifood.Domain.ValueObjects;
+using BizPik.Orders.Hub.Modules.Integrations.Ifood.Domain.ValueObjects.DTOs.Request;
 using BizPik.Orders.Hub.Modules.Integrations.Ifood.Domain.ValueObjects.Enums;
 
 using Microsoft.AspNetCore.Mvc;

@@ -1,7 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 
-using BizPik.Orders.Hub.Modules.Common.Orders.Domain.Contracts;
-using BizPik.Orders.Hub.Modules.Common.Orders.Domain.Entity;
+using BizPik.Orders.Hub.Modules.Core.Orders.Domain.Contracts;
+using BizPik.Orders.Hub.Modules.Core.Orders.Domain.Entity;
 using BizPik.Orders.Hub.Modules.Integrations.Ifood.Domain.ValueObjects.Enums;
 
 namespace BizPik.Orders.Hub.Modules.Integrations.Ifood.Domain.Entity;
