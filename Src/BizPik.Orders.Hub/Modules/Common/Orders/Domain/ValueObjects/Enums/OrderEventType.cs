@@ -1,4 +1,4 @@
-﻿namespace BizPik.Orders.Hub.Modules.Common.Orders.Adapter.Dtos.Enums;
+﻿namespace BizPik.Orders.Hub.Modules.Common.Orders.Domain.ValueObjects.Enums;
 
 public enum OrderEventType
 {

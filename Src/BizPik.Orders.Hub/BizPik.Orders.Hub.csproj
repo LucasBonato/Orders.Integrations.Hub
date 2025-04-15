@@ -16,7 +16,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Modules\Common\Orders\Domain\" />
+    <Folder Include="Modules\Common\Extensions\" />
+    <Folder Include="Modules\Integrations\Rappi\" />
   </ItemGroup>
 
 </Project>
