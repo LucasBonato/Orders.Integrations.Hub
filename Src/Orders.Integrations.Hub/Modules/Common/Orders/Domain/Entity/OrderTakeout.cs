@@ -1,8 +1,8 @@
 ﻿using System.Text.Json.Serialization;
 
-using Orders.Integrations.Hub.Modules.Common.Orders.Adapter.Dtos.Enums;
+using Orders.Integrations.Hub.Modules.Common.Orders.Domain.ValueObjects.Enums;
 
-namespace Orders.Integrations.Hub.Modules.Common.Orders.Adapter.Dtos.Entity;
+namespace Orders.Integrations.Hub.Modules.Common.Orders.Domain.Entity;
 
 public record OrderTakeout(
     [property: JsonPropertyName("mode")] OrderTakeoutMode Mode,

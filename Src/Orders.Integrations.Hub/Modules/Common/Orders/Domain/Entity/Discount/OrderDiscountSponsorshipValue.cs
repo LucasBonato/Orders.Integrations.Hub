@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Orders.Integrations.Hub.Modules.Common.Orders.Adapter.Dtos.Entity.Discount;
+namespace Orders.Integrations.Hub.Modules.Common.Orders.Domain.Entity.Discount;
 
 public record OrderDiscountSponsorshipValue(
     [property: JsonPropertyName("name")] string Name,

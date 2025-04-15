@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Orders.Integrations.Hub.Modules.Common.Orders.Adapter.Dtos.Entity;
+namespace Orders.Integrations.Hub.Modules.Common.Orders.Domain.Entity;
 
 public record Phone(
     [property: JsonPropertyName("number")] string Number,

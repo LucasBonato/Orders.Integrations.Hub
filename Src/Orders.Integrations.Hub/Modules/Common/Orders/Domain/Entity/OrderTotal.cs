@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Orders.Integrations.Hub.Modules.Common.Orders.Adapter.Dtos.Entity;
+namespace Orders.Integrations.Hub.Modules.Common.Orders.Domain.Entity;
 
 public record OrderTotal(
     [property: JsonPropertyName("itemsPrice")] Price ItemsPrice,

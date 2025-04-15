@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Orders.Integrations.Hub.Modules.Common.Orders.Adapter.Dtos.Entity.Payment;
+namespace Orders.Integrations.Hub.Modules.Common.Orders.Domain.Entity.Payment;
 
 public record OrderPaymentMethod(
     [property: JsonPropertyName("value")] decimal Value,

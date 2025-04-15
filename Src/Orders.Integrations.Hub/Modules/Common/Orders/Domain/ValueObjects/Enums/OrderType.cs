@@ -1,4 +1,4 @@
-﻿namespace Orders.Integrations.Hub.Modules.Common.Orders.Adapter.Dtos.Enums;
+﻿namespace Orders.Integrations.Hub.Modules.Common.Orders.Domain.ValueObjects.Enums;
 
 public enum OrderType
 {

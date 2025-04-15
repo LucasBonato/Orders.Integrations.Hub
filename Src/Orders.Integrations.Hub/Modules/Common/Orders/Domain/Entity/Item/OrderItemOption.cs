@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Orders.Integrations.Hub.Modules.Common.Orders.Adapter.Dtos.Entity.Item;
+namespace Orders.Integrations.Hub.Modules.Common.Orders.Domain.Entity.Item;
 
 public record OrderItemOption(
     [property: JsonPropertyName("id")] string Id,
