@@ -38,7 +38,7 @@ public record Order(
 
 public class Order
 {
-     #region  OpenDelivery
+    #region  OpenDelivery
 
     /// <summary>
     /// Unique identifier of the Order
