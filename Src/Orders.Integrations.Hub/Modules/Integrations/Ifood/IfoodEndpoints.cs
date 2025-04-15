@@ -1,4 +1,10 @@
-﻿using Orders.Integrations.Hub.Modules.Integrations.Ifood.Validators;
+﻿using Orders.Integrations.Hub.Modules.Integrations.Common.Domain.Contracts;
+using Orders.Integrations.Hub.Modules.Integrations.Ifood.Application.Clients;
+using Orders.Integrations.Hub.Modules.Integrations.Ifood.Application.Handlers;
+using Orders.Integrations.Hub.Modules.Integrations.Ifood.Domain.Contracts;
+using Orders.Integrations.Hub.Modules.Integrations.Ifood.Domain.ValueObjects.DTOs.Request;
+using Orders.Integrations.Hub.Modules.Integrations.Ifood.Domain.ValueObjects.DTOs.Response;
+using Orders.Integrations.Hub.Modules.Integrations.Ifood.Validators;
 
 namespace Orders.Integrations.Hub.Modules.Integrations.Ifood;
 
@@ -15,5 +21,30 @@ public static class IfoodEndpoints
         routeGroup.MapPost("/webhook", IfoodAdapter.Webhook).AddEndpointFilter<IfoodSignatureValidator>();
 
         return app;
+    }
+
+    public static IServiceCollection AddIfood(this IServiceCollection services)
+        => services
+            .AddIfoodServices()
+            .AddIfoodClients()
+        ;
+
+    private static IServiceCollection AddIfoodServices(this IServiceCollection services)
+    {
+        services.AddScoped<IfoodAuthMessageHandler>();
+        return services;
+    }
+
+    private static IServiceCollection AddIfoodClients(this IServiceCollection services)
+    {
+        services.AddHttpClient<IIntegrationAuthClient<IfoodAuthTokenRequest, IfoodAuthTokenResponse>, IfoodAuthClient>(client => {
+            client.BaseAddress = new Uri(AppEnv.IFOOD.BASE_URL.NotNull());
+        });
+
+        services.AddHttpClient<IIFoodClient, IfoodClient>(client => {
+            client.BaseAddress = new Uri(AppEnv.IFOOD.BASE_URL.NotNull());
+        }).AddHttpMessageHandler<IfoodAuthMessageHandler>();
+
+        return services;
     }
 }

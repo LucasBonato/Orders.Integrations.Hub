@@ -1,5 +1,5 @@
 ﻿using Orders.Integrations.Hub.Modules.Integrations.Common.Application;
-using Orders.Integrations.Hub.Modules.Integrations.Ifood.Domain.ValueObjects;
+using Orders.Integrations.Hub.Modules.Integrations.Ifood.Domain.ValueObjects.DTOs.Request;
 using Orders.Integrations.Hub.Modules.Integrations.Ifood.Domain.ValueObjects.Enums;
 
 using Microsoft.AspNetCore.Mvc;

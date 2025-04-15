@@ -1,7 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 
-using Orders.Integrations.Hub.Modules.Common.Orders.Domain.Contracts;
-using Orders.Integrations.Hub.Modules.Common.Orders.Domain.Entity;
+using Orders.Integrations.Hub.Modules.Core.Orders.Domain.Contracts;
+using Orders.Integrations.Hub.Modules.Core.Orders.Domain.Entity;
 using Orders.Integrations.Hub.Modules.Integrations.Ifood.Domain.ValueObjects.Enums;
 
 namespace Orders.Integrations.Hub.Modules.Integrations.Ifood.Domain.Entity;
