@@ -1,35 +1,50 @@
-﻿using System.Security.Cryptography;
-using System.Security.Cryptography.Xml;
-using System.Text;
+﻿using System.Text;
+using System.Security.Cryptography;
+using static Microsoft.AspNetCore.Http.Results;
 
-using FastEndpoints;
+namespace BizPik.Orders.Hub.Modules.Integrations.Ifood.Validators;
 
-using Microsoft.AspNetCore.Http.HttpResults;
+public class IfoodSignatureValidator(
+    ILogger<IfoodSignatureValidator> logger
+) : IEndpointFilter {
 
-namespace BizPik.Orders.Hub.Modules.Integrations.Saleschannels.Adapters.Ifood.Validators;
-
-public class IfoodSignatureValidator<TRequest> : IPreProcessor<TRequest>
-{
-    public async Task PreProcessAsync(IPreProcessorContext<TRequest> context, CancellationToken ct)
+    public async ValueTask<object?> InvokeAsync(EndpointFilterInvocationContext context, EndpointFilterDelegate next)
     {
-        string? body;
-        using (StreamReader reader = new(context.HttpContext.Request.Body, Encoding.UTF8))
+        var httpContext = context.HttpContext;
+
+        httpContext.Request.EnableBuffering();
+
+        string body;
+        using (var reader = new StreamReader(httpContext.Request.Body, Encoding.UTF8, leaveOpen: true))
         {
             body = await reader.ReadToEndAsync();
+            httpContext.Request.Body.Position = 0;
         }
 
-        if (IsSignatureValid(signature, body)) return BadRequest();
+        logger.LogInformation("[INFO] - IfoodSignatureValidator - Request Body: {body}", body);
 
-        throw new NotImplementedException();
+        string? signature = httpContext.Request.Headers["X-Signature"].FirstOrDefault();
+
+        if (signature == null)
+        {
+            return BadRequest("Signature header is missing.");
+        }
+
+        if (!IsSignatureValid(signature, body))
+        {
+            return BadRequest("Invalid signature");
+        }
+
+        return await next(context);
     }
 
-    private static bool IsSignatureValid(string headerSignature, string body, ILogger<IfoodSignatureValidator<TRequest>> logger)
+    private bool IsSignatureValid(string headerSignature, string body)
     {
-        logger.LogInformation("[INFO] Header signature: {HeaderSignature}", body);
+        logger.LogInformation("[INFO] - IfoodSignatureValidator - Expected Signature: [{signature}]", headerSignature);
 
         string generatedSignature = GetExpectedSignature(AppEnv.IFOOD.CLIENT.SECRET.NotNull(), body);
 
-        logger.LogInformation("[INFO] [ Generated signature: {GeneratedSignature}\nExpected signature: {ExpectedSignature} ]", generatedSignature, headerSignature);
+        logger.LogInformation("[INFO] - IfoodSignatureValidator - Generated Signature: [{signature}]", generatedSignature);
 
         return generatedSignature == headerSignature;
     }
@@ -38,7 +53,7 @@ public class IfoodSignatureValidator<TRequest> : IPreProcessor<TRequest>
     {
         using HMACSHA256 hmacSha256 = new (Encoding.UTF8.GetBytes(secret));
         byte[] hmacBytes = hmacSha256.ComputeHash(Encoding.UTF8.GetBytes(data));
-        string hmacHex = BitConverter.ToString(hmacBytes).Replace("-", "").ToLower();
+        string hmacHex = Convert.ToHexStringLower(hmacBytes);
         return hmacHex;
     }
 }

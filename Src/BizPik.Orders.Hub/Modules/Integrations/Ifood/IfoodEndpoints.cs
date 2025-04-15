@@ -1,4 +1,6 @@
-﻿namespace BizPik.Orders.Hub.Modules.Integrations.Saleschannels.Adapters.Ifood;
+﻿using BizPik.Orders.Hub.Modules.Integrations.Ifood.Validators;
+
+namespace BizPik.Orders.Hub.Modules.Integrations.Ifood;
 
 public static class IfoodEndpoints
 {
@@ -6,9 +8,11 @@ public static class IfoodEndpoints
     {
         RouteGroupBuilder routeGroup = app
             .MapGroup("/ifood")
+            .WithTags("Ifood")
+            .WithDescription("Ifood Webhook Endpoint")
         ;
 
-        routeGroup.MapPost("/webhook", IfoodAdapter.Webhook);
+        routeGroup.MapPost("/webhook", IfoodAdapter.Webhook).AddEndpointFilter<IfoodSignatureValidator>();
 
         return app;
     }

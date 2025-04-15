@@ -1,7 +1,8 @@
 ﻿using System.Text.Json.Serialization;
-using BizPik.Orders.Hub.Modules.Integrations.Ifood.Dtos.Enums;
 
-namespace BizPik.Orders.Hub.Modules.Integrations.Ifood.Dtos.ValueObjects;
+using BizPik.Orders.Hub.Modules.Integrations.Ifood.Domain.ValueObjects.Enums;
+
+namespace BizPik.Orders.Hub.Modules.Integrations.Ifood.Domain.ValueObjects;
 
 public record IfoodWebhookRequest(
     [property: JsonPropertyName("id")] string Id,

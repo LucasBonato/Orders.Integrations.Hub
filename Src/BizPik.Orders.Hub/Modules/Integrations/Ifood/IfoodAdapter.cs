@@ -1,77 +1,74 @@
-﻿using System.Text;
-using System.Text.Json;
-
-using BizPik.Orders.Hub.Modules.Integrations.Saleschannels.Adapters.Ifood.Dtos;
+﻿using BizPik.Orders.Hub.Modules.Integrations.Common.Application;
+using BizPik.Orders.Hub.Modules.Integrations.Ifood.Domain.ValueObjects;
+using BizPik.Orders.Hub.Modules.Integrations.Ifood.Domain.ValueObjects.Enums;
 
 using Microsoft.AspNetCore.Mvc;
+using static Microsoft.AspNetCore.Http.Results;
 
-namespace BizPik.Orders.Hub.Modules.Integrations.Saleschannels.Adapters.Ifood;
+namespace BizPik.Orders.Hub.Modules.Integrations.Ifood;
 
 public abstract class IfoodAdapterLog;
 
 public static class IfoodAdapter
 {
-    public static async Task Webhook(
-        HttpContext context,
+    public static async Task<IResult> Webhook(
         ILogger<IfoodAdapterLog> logger,
-        [FromHeader(Name = "X-Ifood-Signature")] string signature,
-        [FromServices] IfoodToBizPikService ifoodToBizPik
+        [FromServices] ICreateOrderUseCase<IfoodWebhookRequest> createOrder,
+        [FromServices] IUpdateOrderStatusUseCase<IfoodWebhookRequest> updateOrder,
+        [FromBody] IfoodWebhookRequest request
     ) {
-        string? strBody;
+        logger.LogInformation("[INFO] - IfoodAdapter - Ifood Webhook code: {FullCode}", request.FullCode);
 
-            using (StreamReader reader = new(context.Request.Body, Encoding.UTF8)) {
-                strBody = await reader.ReadToEndAsync();
-            }
+        return request.FullCode switch
+        {
+            IfoodFullOrderStatus.KEEPALIVE => Accepted(),
 
-            logger.LogInformation("[INFO] Request body: {strBody}", strBody);
+            IfoodFullOrderStatus.PLACED => Accepted("/", await createOrder.ExecuteAsync(request)),
 
-            IfoodRequest? request = JsonSerializer.Deserialize<IfoodRequest>(strBody);
+            IfoodFullOrderStatus.CONFIRMED or
+            IfoodFullOrderStatus.SEPARATION_STARTED or
+            IfoodFullOrderStatus.SEPARATION_ENDED or
+            IfoodFullOrderStatus.READY_TO_PICKUP or
+            IfoodFullOrderStatus.DISPATCHED or
+            IfoodFullOrderStatus.CONCLUDED or
+            IfoodFullOrderStatus.CANCELLED => Accepted( "/", await updateOrder.ExecuteAsync(request)),
 
-            if (IsSignatureValid(Signature, strBody, logger) is false)
-            {
-                return BadRequest(new { Reason = "Invalid signature" });
-            }
-
-            logger.LogInformation("[INFO] Ifood webhook code: {FullCode}", request?.Fullcode);
-
-            IResult response = request?.Fullcode switch
-            {
-                IfoodOrderStatusTypesExtensions.IFOOD_KEEPALIVE_FULL_CODE => Accepted(),
-
-                IfoodOrderStatusTypesExtensions.IFOOD_PLACED_FULL_CODE => Accepted("/",
-                    await ifoodToBizPik.OrderToBizPik(
-                        new(
-                           MerchantId: request.merchantId!,
-                           OrderId: request.OrderId!,
-                           CreatedAt: request.CreatedAt ?? DateTime.UtcNow
-                        )
-                    )
-                ),
-
-                IfoodOrderStatusTypesExtensions.IFOOD_CONFIRMED_FULL_CODE
-                 or IfoodOrderStatusTypesExtensions.IFOOD_SEPARATION_STARTED_FULL_CODE
-                 or IfoodOrderStatusTypesExtensions.IFOOD_SEPARATION_ENDED_FULL_CODE
-                 or IfoodOrderStatusTypesExtensions.IFOOD_READY_TO_PICKUP_FULL_CODE
-                 or IfoodOrderStatusTypesExtensions.IFOOD_DISPATCHED_FULL_CODE
-                 or IfoodOrderStatusTypesExtensions.IFOOD_CONCLUDED_FULL_CODE
-                 or IfoodOrderStatusTypesExtensions.IFOOD_CANCELLED_FULL_CODE
-                 => Accepted( "/",
-                     await ifoodToBizPik.ChangeOrderStatus(
-                         new IfoodOrderChangeOrderStatusInput(
-                             MerchantId: request.merchantId!,
-                             OrderId: request.OrderId!,
-                             Status: IfoodOrderStatusTypesExtensions.FromCode(request.Fullcode),
-                             CreatedAt: request.CreatedAt ?? DateTime.UtcNow
-                         )
-                     )
-                 ),
-
-                _ => Ok(new { message = $"not mapped but ok {request?.Fullcode}" })
-            };
-
-            return response;
-        });
-
-        return routeGroup;
+            _ => BadRequest(new { error = $"not mapped but ok {request.FullCode}" })
+        };
     }
 }
+
+// return request.FullCode switch
+// {
+//     IfoodFullOrderStatus.KEEPALIVE => Accepted(),
+//
+//     IfoodFullOrderStatus.PLACED => Accepted("/",
+//         await ifoodToBizPik.OrderToBizPik(
+//             new(
+//                 MerchantId: request.MerchantId!,
+//                 OrderId: request.OrderId!,
+//                 CreatedAt: request.CreatedAt ?? DateTime.UtcNow
+//             )
+//         )
+//     ),
+//
+//     IfoodFullOrderStatus.CONFIRMED or
+//         IfoodFullOrderStatus.SEPARATION_STARTED or
+//         IfoodFullOrderStatus.SEPARATION_ENDED or
+//         IfoodFullOrderStatus.READY_TO_PICKUP or
+//         IfoodFullOrderStatus.DISPATCHED or
+//         IfoodFullOrderStatus.CONCLUDED or
+//         IfoodFullOrderStatus.CANCELLED
+//         => Accepted( "/",
+//             await ifoodToBizPik.ChangeOrderStatus(
+//                 new IfoodOrderChangeOrderStatusInput(
+//                     MerchantId: request.MerchantId!,
+//                     OrderId: request.OrderId!,
+//                     Status: IfoodOrderStatusTypesExtensions.FromCode(request.FullCode),
+//                     CreatedAt: request.CreatedAt ?? DateTime.UtcNow
+//                 )
+//             )
+//         ),
+//
+//     _ => Accepted("/", new { message = $"not mapped but ok {request.FullCode}" })
+// };

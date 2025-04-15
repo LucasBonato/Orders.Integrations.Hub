@@ -1,3 +1,5 @@
+using BizPik.Orders.Hub.Modules.Integrations;
+
 using FastEndpoints;
 
 using Scalar.AspNetCore;
@@ -6,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services
     .AddOpenApi()
-    .AddFastEndpoints();
+;
 
 var app = builder.Build();
 
@@ -16,6 +18,6 @@ if (app.Environment.IsDevelopment())
     app.MapScalarApiReference();
 }
 
+app.UseIntegrationsModule();
 app.UseHttpsRedirection();
-app.UseFastEndpoints();
 app.Run();
