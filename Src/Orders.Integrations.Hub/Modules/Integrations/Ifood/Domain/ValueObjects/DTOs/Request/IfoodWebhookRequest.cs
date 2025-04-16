@@ -9,7 +9,7 @@ public record IfoodWebhookRequest(
     [property: JsonPropertyName("code")] IfoodOrderStatus Code,
     [property: JsonPropertyName("fullCode")] IfoodFullOrderStatus FullCode,
     [property: JsonPropertyName("orderId")] string OrderId,
-    [property: JsonPropertyName("merchantId")] string? MerchantId,
+    [property: JsonPropertyName("merchantId")] string MerchantId,
     [property: JsonPropertyName("merchantIds")] List<string>? MerchantIds,
     [property: JsonPropertyName("createdAt")] DateTime CreatedAt,
     [property: JsonPropertyName("salesChannel")] string? SalesChannel,

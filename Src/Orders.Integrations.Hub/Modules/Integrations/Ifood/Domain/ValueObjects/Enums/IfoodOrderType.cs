@@ -1,6 +1,6 @@
 ﻿namespace Orders.Integrations.Hub.Modules.Integrations.Ifood.Domain.ValueObjects.Enums;
 
-public enum OrderType
+public enum IfoodOrderType
 {
     DELIVERY,
     INDOOR,

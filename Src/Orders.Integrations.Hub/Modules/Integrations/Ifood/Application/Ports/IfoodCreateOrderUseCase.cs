@@ -6,6 +6,7 @@ using Orders.Integrations.Hub.Modules.Integrations.Common.Application;
 using Orders.Integrations.Hub.Modules.Integrations.Ifood.Application.Extensions;
 using Orders.Integrations.Hub.Modules.Integrations.Ifood.Domain.Contracts;
 using Orders.Integrations.Hub.Modules.Integrations.Ifood.Domain.Entity;
+using Orders.Integrations.Hub.Modules.Integrations.Ifood.Domain.Entity.MerchantDetails;
 using Orders.Integrations.Hub.Modules.Integrations.Ifood.Domain.ValueObjects.DTOs.Request;
 
 using FastEndpoints;

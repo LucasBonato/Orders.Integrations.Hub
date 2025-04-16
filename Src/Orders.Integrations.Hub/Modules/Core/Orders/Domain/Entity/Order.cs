@@ -1,5 +1,4 @@
 ﻿using System.Text.Json.Serialization;
-
 using Orders.Integrations.Hub.Modules.Core.Orders.Domain.Entity.Discount;
 using Orders.Integrations.Hub.Modules.Core.Orders.Domain.Entity.Item;
 using Orders.Integrations.Hub.Modules.Core.Orders.Domain.Entity.Merchant;

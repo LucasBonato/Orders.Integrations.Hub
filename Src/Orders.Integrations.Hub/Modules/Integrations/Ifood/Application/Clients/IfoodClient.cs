@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 using Orders.Integrations.Hub.Modules.Integrations.Ifood.Domain.Contracts;
 using Orders.Integrations.Hub.Modules.Integrations.Ifood.Domain.Entity;
+using Orders.Integrations.Hub.Modules.Integrations.Ifood.Domain.Entity.MerchantDetails;
 using Orders.Integrations.Hub.Modules.Integrations.Ifood.Domain.ValueObjects.DTOs.Request;
 
 namespace Orders.Integrations.Hub.Modules.Integrations.Ifood.Application.Clients;
@@ -15,6 +16,18 @@ public class IfoodClient(
         response.EnsureSuccessStatusCode();
 
         IfoodOrder responseContent = await response.Content.ReadFromJsonAsync<IfoodOrder>()
+                                        ?? throw new Exception();
+
+        return responseContent;
+    }
+
+    public async Task<IfoodMerchant> GetMerchantDetails(string merchantId)
+    {
+        string uri = $"merchant/v1.0/merchants/{merchantId}";
+        HttpResponseMessage response = await httpClient.GetAsync(uri);
+        response.EnsureSuccessStatusCode();
+
+        IfoodMerchant responseContent = await response.Content.ReadFromJsonAsync<IfoodMerchant>()
                                         ?? throw new Exception();
 
         return responseContent;

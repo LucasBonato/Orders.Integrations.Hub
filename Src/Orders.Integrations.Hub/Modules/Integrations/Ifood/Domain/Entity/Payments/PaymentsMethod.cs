@@ -7,7 +7,7 @@ namespace Orders.Integrations.Hub.Modules.Integrations.Ifood.Domain.Entity.Payme
 public record PaymentsMethod(
     [property: JsonPropertyName("value")] decimal Value,
     [property: JsonPropertyName("currency")] string Currency,
-    [property: JsonPropertyName("type")] string Type,
+    [property: JsonPropertyName("type")] IfoodMethodType Type,
     [property: JsonPropertyName("method")] Method Method,
     [property: JsonPropertyName("wallet")] Wallet? Wallet,
     [property: JsonPropertyName("card")] Card? Card,
