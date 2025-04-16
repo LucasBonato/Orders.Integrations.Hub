@@ -1,5 +1,6 @@
 ﻿using BizPik.Orders.Hub.Modules.Integrations.Common.Domain.Contracts;
 using BizPik.Orders.Hub.Modules.Integrations.Ifood.Domain.Entity;
+using BizPik.Orders.Hub.Modules.Integrations.Ifood.Domain.Entity.MerchantDetails;
 using BizPik.Orders.Hub.Modules.Integrations.Ifood.Domain.ValueObjects.DTOs.Request;
 
 namespace BizPik.Orders.Hub.Modules.Integrations.Ifood.Domain.Contracts;
@@ -7,6 +8,7 @@ namespace BizPik.Orders.Hub.Modules.Integrations.Ifood.Domain.Contracts;
 public interface IIFoodClient : IIntegrationClient
 {
     Task<IfoodOrder> GetOrderDetails(string orderId);
+    Task<IfoodMerchant> GetMerchantDetails(string merchantId);
     Task ConfirmOrder(string orderId);
     Task PreparationStartedOrder(string orderId);
     Task ReadyToPickupOrder(string orderId);

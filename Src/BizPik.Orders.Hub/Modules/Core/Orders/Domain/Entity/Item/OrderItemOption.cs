@@ -1,5 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 
+using BizPik.Orders.Hub.Modules.Core.Orders.Domain.ValueObjects.Enums;
+
 namespace BizPik.Orders.Hub.Modules.Core.Orders.Domain.Entity.Item;
 
 public record OrderItemOption(
@@ -8,7 +10,7 @@ public record OrderItemOption(
     [property: JsonPropertyName("name")] string Name,
     [property: JsonPropertyName("externalCode")] string ExternalCode,
     [property: JsonPropertyName("imageUrl")] string ImageUrl,
-    [property: JsonPropertyName("unit")] string Unit,
+    [property: JsonPropertyName("unit")] OrderUnit Unit,
     [property: JsonPropertyName("ean")] string Ean,
     [property: JsonPropertyName("quantity")] int Quantity,
     [property: JsonPropertyName("specialInstructions")] string SpecialInstructions,

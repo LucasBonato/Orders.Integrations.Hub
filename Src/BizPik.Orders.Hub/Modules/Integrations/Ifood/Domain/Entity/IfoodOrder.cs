@@ -12,7 +12,7 @@ namespace BizPik.Orders.Hub.Modules.Integrations.Ifood.Domain.Entity;
 public record IfoodOrder(
     [property: JsonPropertyName("id")] string Id,
     [property: JsonPropertyName("displayId")] string DisplayId,
-    [property: JsonPropertyName("orderType")] OrderType OrderType,
+    [property: JsonPropertyName("orderType")] IfoodOrderType orderType,
     [property: JsonPropertyName("orderTiming")] OrderTimingIfood OrderTiming,
     [property: JsonPropertyName("salesChannel")] SalesChannel SalesChannel,
     [property: JsonPropertyName("category")] Category Category,
@@ -24,7 +24,7 @@ public record IfoodOrder(
     [property: JsonPropertyName("customer")] Customer.Customer Customer,
     [property: JsonPropertyName("items")] IReadOnlyList<Item.Item> Items,
     [property: JsonPropertyName("benefits")] IReadOnlyList<Benefit.Benefit>? Benefits,
-    [property: JsonPropertyName("additionalFees")] IReadOnlyList<AdditionalFee.AdditionalFee> AdditionalFees,
+    [property: JsonPropertyName("additionalFees")] IReadOnlyList<AdditionalFee.AdditionalFee>? AdditionalFees,
     [property: JsonPropertyName("total")] Total Total,
     [property: JsonPropertyName("payments")] Payments.Payments Payments,
     [property: JsonPropertyName("picking")] Picking? Picking,

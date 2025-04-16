@@ -6,6 +6,7 @@ using BizPik.Orders.Hub.Modules.Integrations.Common.Application;
 using BizPik.Orders.Hub.Modules.Integrations.Ifood.Application.Extensions;
 using BizPik.Orders.Hub.Modules.Integrations.Ifood.Domain.Contracts;
 using BizPik.Orders.Hub.Modules.Integrations.Ifood.Domain.Entity;
+using BizPik.Orders.Hub.Modules.Integrations.Ifood.Domain.Entity.MerchantDetails;
 using BizPik.Orders.Hub.Modules.Integrations.Ifood.Domain.ValueObjects.DTOs.Request;
 
 using FastEndpoints;

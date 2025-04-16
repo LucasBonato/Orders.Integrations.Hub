@@ -13,6 +13,7 @@ public record Option(
     [property: JsonPropertyName("externalCode")] string ExternalCode,
     [property: JsonPropertyName("quantity")] int Quantity,
     [property: JsonPropertyName("unit")] Unit Unit,
+    [property: JsonPropertyName("ean")] string Ean,
     [property: JsonPropertyName("unitPrice")] decimal UnitPrice,
     [property: JsonPropertyName("addition")] decimal Addition,
     [property: JsonPropertyName("price")] decimal Price,
