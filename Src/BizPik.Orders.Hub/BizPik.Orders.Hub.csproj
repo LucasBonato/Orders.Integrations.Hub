@@ -19,9 +19,11 @@
 
   <ItemGroup>
     <Folder Include="Modules\Core\BizPik\Application\Ports\" />
-    <Folder Include="Modules\Core\Extensions\" />
-    <Folder Include="Modules\Core\Orders\Adapter\" />
-    <Folder Include="Modules\Integrations\Rappi\" />
+    <Folder Include="Modules\Integrations\Rappi\Clients\" />
+    <Folder Include="Modules\Integrations\Rappi\Extensions\" />
+    <Folder Include="Modules\Integrations\Rappi\Models\" />
+    <Folder Include="Modules\Integrations\Rappi\UseCases\" />
+    <Folder Include="Modules\Integrations\Rappi\Validators\" />
   </ItemGroup>
 
 </Project>

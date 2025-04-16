@@ -16,7 +16,7 @@ public class IfoodAuthClient(
             { "client_secret", request.ClientSecret }
         };
 
-        HttpRequestMessage requestMessage = new(HttpMethod.Post, AppEnv.IFOOD.ENDPOINT.AUTH.NotNull()) { Content = new FormUrlEncodedContent(form) };
+        HttpRequestMessage requestMessage = new(HttpMethod.Post, AppEnv.INTEGRATIONS.IFOOD.ENDPOINT.AUTH.NotNull()) { Content = new FormUrlEncodedContent(form) };
 
         HttpResponseMessage response = await httpClient.SendAsync(requestMessage);
         response.EnsureSuccessStatusCode();
