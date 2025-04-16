@@ -37,12 +37,14 @@ public static class IfoodEndpoints
 
     private static IServiceCollection AddIfoodClients(this IServiceCollection services)
     {
+        string baseUrl = AppEnv.INTEGRATIONS.IFOOD.ENDPOINT.BASE_URL.NotNull();
+
         services.AddHttpClient<IIntegrationAuthClient<IfoodAuthTokenRequest, IfoodAuthTokenResponse>, IfoodAuthClient>(client => {
-            client.BaseAddress = new Uri(AppEnv.IFOOD.BASE_URL.NotNull());
+            client.BaseAddress = new Uri(baseUrl);
         });
 
         services.AddHttpClient<IIFoodClient, IfoodClient>(client => {
-            client.BaseAddress = new Uri(AppEnv.IFOOD.BASE_URL.NotNull());
+            client.BaseAddress = new Uri(baseUrl);
         }).AddHttpMessageHandler<IfoodAuthMessageHandler>();
 
         return services;

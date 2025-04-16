@@ -42,7 +42,7 @@ public class IfoodSignatureValidator(
     {
         logger.LogInformation("[INFO] - IfoodSignatureValidator - Expected Signature: [{signature}]", headerSignature);
 
-        string generatedSignature = GetExpectedSignature(AppEnv.IFOOD.CLIENT.SECRET.NotNull(), body);
+        string generatedSignature = GetExpectedSignature(AppEnv.INTEGRATIONS.IFOOD.CLIENT.SECRET.NotNull(), body);
 
         logger.LogInformation("[INFO] - IfoodSignatureValidator - Generated Signature: [{signature}]", generatedSignature);
 

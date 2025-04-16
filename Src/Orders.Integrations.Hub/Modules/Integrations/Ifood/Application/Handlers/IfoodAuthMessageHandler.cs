@@ -18,8 +18,8 @@ public class IfoodAuthMessageHandler(
         IfoodAuthTokenResponse token = await ifoodAuthClient.RetrieveToken(
             new IfoodAuthTokenRequest(
                 GrantType: "client_credentials",
-                ClientId: AppEnv.IFOOD.CLIENT.ID.NotNull(),
-                ClientSecret: AppEnv.IFOOD.CLIENT.SECRET.NotNull()
+                ClientId: AppEnv.INTEGRATIONS.IFOOD.CLIENT.ID.NotNull(),
+                ClientSecret: AppEnv.INTEGRATIONS.IFOOD.CLIENT.SECRET.NotNull()
             )
         );
 

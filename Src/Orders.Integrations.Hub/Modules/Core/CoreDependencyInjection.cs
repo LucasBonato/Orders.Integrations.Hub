@@ -44,7 +44,7 @@ public static class CoreDependencyInjection
 
     private static AmazonSimpleNotificationServiceClient SimplesNotificationServiceConfiguration()
     {
-        bool isLocalSns = AppEnv.LOCAL_SNS.GetDefault<bool>(false);
+        bool isLocalSns = AppEnv.PUB_SUB.TOPICS.IS_LOCAL.GetDefault<bool>(false);
         string profile;
 
         if (isLocalSns) {
