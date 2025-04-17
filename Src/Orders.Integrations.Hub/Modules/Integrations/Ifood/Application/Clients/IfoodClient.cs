@@ -84,7 +84,7 @@ public class IfoodClient(
     {
         string uri = $"order/v1.0/orders/{orderId}/requestCancellation";
         
-        HttpResponseMessage response = await httpClient.PostAsync(uri, null);
+        HttpResponseMessage response = await httpClient.PostAsync(uri, new StringContent(JsonSerializer.Serialize(request)));
         if (!response.IsSuccessStatusCode)
         {
             throw new Exception(response.Content.ReadAsStringAsync().Result);

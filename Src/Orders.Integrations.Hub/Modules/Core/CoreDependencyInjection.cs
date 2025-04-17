@@ -5,9 +5,11 @@ using Amazon.SimpleNotificationService;
 using .AWS.Credentials;
 using Orders.Integrations.Hub.Modules.Core..Application;
 using Orders.Integrations.Hub.Modules.Core..Domain.Contracts;
+using Orders.Integrations.Hub.Modules.Core.Orders;
 using Orders.Integrations.Hub.Modules.Core.Orders.Application.Clients;
 using Orders.Integrations.Hub.Modules.Core.Orders.Application.UseCases;
 using Orders.Integrations.Hub.Modules.Core.Orders.Domain.Contracts;
+using Orders.Integrations.Hub.Modules.Integrations.Ifood.Application.Ports;
 
 using FastEndpoints;
 
@@ -31,16 +33,18 @@ public static class CoreDependencyInjection
     public static IApplicationBuilder UseCore(this WebApplication app)
     {
         app.UseFastEndpoints();
+        app.AddOrdersHubEndpoints();
         return app;
     }
 
     private static IServiceCollection AddServices(this IServiceCollection services)
     {
+        services.AddTransient<IChangeOrderStatusUseCase, IfoodChangeOrderStatusUseCase>();
+        services.AddScoped<IOrderUseCase, OrderUseCase>();
+        services.AddTransient<IAmazonSimpleNotificationService>(_ => SimplesNotificationServiceConfiguration());
         services.AddFastEndpoints(options => {
             options.DisableAutoDiscovery = false;
         });
-        services.AddScoped<IOrderUseCase, OrderUseCase>();
-        services.AddTransient<IAmazonSimpleNotificationService>(_ => SimplesNotificationServiceConfiguration());
         return services;
     }
 
