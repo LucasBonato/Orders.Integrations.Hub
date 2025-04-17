@@ -1,6 +1,6 @@
 ﻿using BizPik.Orders.Hub.Modules.Core.Orders.Domain.ValueObjects.Events;
 
-namespace BizPik.Orders.Hub.Modules.Core.Orders.Domain.Contracts;
+namespace BizPik.Orders.Hub.Modules.Core.Orders.Domain.Contracts.UseCases;
 
 public interface IOrderUseCase
 {
