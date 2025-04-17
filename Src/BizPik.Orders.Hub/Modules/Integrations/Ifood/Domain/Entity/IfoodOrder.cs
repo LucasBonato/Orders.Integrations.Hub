@@ -9,7 +9,7 @@ namespace BizPik.Orders.Hub.Modules.Integrations.Ifood.Domain.Entity;
 public record IfoodOrder(
     [property: JsonPropertyName("id")] string Id,
     [property: JsonPropertyName("displayId")] string DisplayId,
-    [property: JsonPropertyName("orderType")] [property: JsonConverter(typeof(JsonStringEnumConverter))] IfoodOrderType orderType,
+    [property: JsonPropertyName("orderType")] [property: JsonConverter(typeof(JsonStringEnumConverter))] IfoodOrderType OrderType,
     [property: JsonPropertyName("orderTiming")] [property: JsonConverter(typeof(JsonStringEnumConverter))] OrderTimingIfood OrderTiming,
     [property: JsonPropertyName("salesChannel")] [property: JsonConverter(typeof(JsonStringEnumConverter))] SalesChannel SalesChannel,
     [property: JsonPropertyName("category")] [property: JsonConverter(typeof(JsonStringEnumConverter))] Category Category,

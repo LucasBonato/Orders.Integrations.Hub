@@ -140,7 +140,7 @@ public static class IfoodOrderExtension
 
         return new Order(
             OrderId: order.Id,
-            Type: order.orderType.ToOrder(),
+            Type: order.OrderType.ToOrder(),
             DisplayId: order.DisplayId,
             SourceAppId: OrderSalesChannel.IFOOD.ToString(),
             SalesChannel: order.SalesChannel.ToString(),
