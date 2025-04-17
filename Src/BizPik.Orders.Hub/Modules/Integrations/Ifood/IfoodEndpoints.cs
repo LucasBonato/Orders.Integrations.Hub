@@ -7,8 +7,6 @@ using BizPik.Orders.Hub.Modules.Integrations.Ifood.Application.Ports;
 using BizPik.Orders.Hub.Modules.Integrations.Ifood.Domain.Contracts;
 using BizPik.Orders.Hub.Modules.Integrations.Ifood.Domain.ValueObjects.DTOs.Request;
 
-using FastEndpoints;
-
 using Microsoft.AspNetCore.Mvc;
 
 namespace BizPik.Orders.Hub.Modules.Integrations.Ifood;
@@ -18,13 +16,13 @@ public static class IfoodEndpoints
     public static WebApplication AddIfoodEndpoints(this WebApplication app)
     {
         RouteGroupBuilder routeGroup = app
-                .MapGroup("/ifood")
+                .MapGroup("/Ifood")
                 .WithTags("Ifood")
                 .WithDescription("Ifood Webhook Endpoint")
             ;
 
         routeGroup
-            .MapPost("/webhook", IfoodAdapter.Webhook)
+            .MapPost("/Webhook", IfoodAdapter.Webhook)
             // .AddEndpointFilter<IfoodSignatureValidator>()
         ;
 

@@ -8,7 +8,9 @@ public record IfoodOrderCancellationRequest(
     [property: JsonPropertyName("reason")] string Reason,
     [property: JsonPropertyName("cancellationCode")] string CancellationCode
 ) {
-    public static IfoodCancellationReasons FromBizPik(string reason)
+    public IfoodOrderCancellationRequest(string reason) : this(FromBizPik(reason).ToString(), ((int)FromBizPik(reason)).ToString()) { }
+
+    public static IfoodCancellationReasons FromBizPik(string? reason)
         => reason switch
         {
             "OutOfStock" => IfoodCancellationReasons.ItemUnavailable,

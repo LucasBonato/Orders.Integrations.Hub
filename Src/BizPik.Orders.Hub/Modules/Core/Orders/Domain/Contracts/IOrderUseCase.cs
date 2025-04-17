@@ -1,5 +1,4 @@
-﻿using BizPik.Contracts.Core.Models.OpenDelivery.Orders.Orders.Entities;
-using BizPik.Orders.Hub.Modules.Core.Orders.Domain.ValueObjects.Events;
+﻿using BizPik.Orders.Hub.Modules.Core.Orders.Domain.ValueObjects.Events;
 
 namespace BizPik.Orders.Hub.Modules.Core.Orders.Domain.Contracts;
 
