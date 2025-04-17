@@ -1,7 +1,4 @@
 ﻿using System.Text.Json.Serialization;
-
-using BizPik.Orders.Hub.Modules.Core.Orders.Domain.Contracts;
-using BizPik.Orders.Hub.Modules.Core.Orders.Domain.Entity;
 using BizPik.Orders.Hub.Modules.Integrations.Ifood.Domain.ValueObjects.Enums;
 
 namespace BizPik.Orders.Hub.Modules.Integrations.Ifood.Domain.Entity;
@@ -12,14 +9,14 @@ namespace BizPik.Orders.Hub.Modules.Integrations.Ifood.Domain.Entity;
 public record IfoodOrder(
     [property: JsonPropertyName("id")] string Id,
     [property: JsonPropertyName("displayId")] string DisplayId,
-    [property: JsonPropertyName("orderType")] IfoodOrderType orderType,
-    [property: JsonPropertyName("orderTiming")] OrderTimingIfood OrderTiming,
-    [property: JsonPropertyName("salesChannel")] SalesChannel SalesChannel,
-    [property: JsonPropertyName("category")] Category Category,
+    [property: JsonPropertyName("orderType")] [property: JsonConverter(typeof(JsonStringEnumConverter))] IfoodOrderType orderType,
+    [property: JsonPropertyName("orderTiming")] [property: JsonConverter(typeof(JsonStringEnumConverter))] OrderTimingIfood OrderTiming,
+    [property: JsonPropertyName("salesChannel")] [property: JsonConverter(typeof(JsonStringEnumConverter))] SalesChannel SalesChannel,
+    [property: JsonPropertyName("category")] [property: JsonConverter(typeof(JsonStringEnumConverter))] Category Category,
     [property: JsonPropertyName("createdAt")] DateTime CreatedAt,
     [property: JsonPropertyName("preparationStartDateTime")] DateTime PreparationStartDateTime,
     [property: JsonPropertyName("isTest")] bool IsTest,
-    [property: JsonPropertyName("extraInfo")] string ExtraInfo,
+    [property: JsonPropertyName("extraInfo")] string? ExtraInfo,
     [property: JsonPropertyName("merchant")] Merchant Merchant,
     [property: JsonPropertyName("customer")] Customer.Customer Customer,
     [property: JsonPropertyName("items")] IReadOnlyList<Item.Item> Items,

@@ -6,8 +6,8 @@ namespace BizPik.Orders.Hub.Modules.Integrations.Ifood.Domain.ValueObjects.DTOs.
 
 public record IfoodWebhookRequest(
     [property: JsonPropertyName("id")] string Id,
-    [property: JsonPropertyName("code")] IfoodOrderStatus Code,
-    [property: JsonPropertyName("fullCode")] IfoodFullOrderStatus FullCode,
+    [property: JsonPropertyName("code")] [property: JsonConverter(typeof(JsonStringEnumConverter))] IfoodOrderStatus Code,
+    [property: JsonPropertyName("fullCode")] [property: JsonConverter(typeof(JsonStringEnumConverter))] IfoodFullOrderStatus FullCode,
     [property: JsonPropertyName("orderId")] string OrderId,
     [property: JsonPropertyName("merchantId")] string MerchantId,
     [property: JsonPropertyName("merchantIds")] List<string>? MerchantIds,

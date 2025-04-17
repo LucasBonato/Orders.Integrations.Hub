@@ -10,7 +10,7 @@ public record OrderItem(
     [property: JsonPropertyName("name")] string Name,
     [property: JsonPropertyName("externalCode")] string ExternalCode,
     [property: JsonPropertyName("imageUrl")] string ImageUrl,
-    [property: JsonPropertyName("unit")] OrderUnit Unit,
+    [property: JsonPropertyName("unit")] [property: JsonConverter(typeof(JsonStringEnumConverter))] OrderUnit Unit,
     [property: JsonPropertyName("ean")] string Ean,
     [property: JsonPropertyName("quantity")] int Quantity,
     [property: JsonPropertyName("specialInstructions")] string SpecialInstructions,

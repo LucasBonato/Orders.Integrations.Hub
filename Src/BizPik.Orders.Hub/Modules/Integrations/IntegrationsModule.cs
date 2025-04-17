@@ -6,13 +6,15 @@ public static class IntegrationsModule
 {
     public static IServiceCollection AddIntegrationsModule(this IServiceCollection services)
     {
-        services.AddIfood();
-        return services;
+        return services
+            .AddIfood()
+        ;
     }
 
     public static IApplicationBuilder UseIntegrationsModule(this WebApplication app)
     {
-        app.AddIfoodEndpoints();
-        return app;
+        return app
+            .AddIfoodEndpoints()
+        ;
     }
 }

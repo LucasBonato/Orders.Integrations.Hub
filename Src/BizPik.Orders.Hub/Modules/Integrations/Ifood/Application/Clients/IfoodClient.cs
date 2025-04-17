@@ -7,6 +7,7 @@ using BizPik.Orders.Hub.Modules.Integrations.Ifood.Domain.ValueObjects.DTOs.Requ
 namespace BizPik.Orders.Hub.Modules.Integrations.Ifood.Application.Clients;
 
 public class IfoodClient(
+    ILogger<IfoodClient> logger,
     HttpClient httpClient
 ) : IIFoodClient {
     public async Task<IfoodOrder> GetOrderDetails(string orderId)
@@ -14,6 +15,8 @@ public class IfoodClient(
         string uri = $"order/v1.0/orders/{orderId}";
         HttpResponseMessage response = await httpClient.GetAsync(uri);
         response.EnsureSuccessStatusCode();
+
+        logger.LogInformation("[INFO] - IfoodClient - OrderDetails: {body}", await response.Content.ReadAsStringAsync());
 
         IfoodOrder responseContent = await response.Content.ReadFromJsonAsync<IfoodOrder>()
                                         ?? throw new Exception();

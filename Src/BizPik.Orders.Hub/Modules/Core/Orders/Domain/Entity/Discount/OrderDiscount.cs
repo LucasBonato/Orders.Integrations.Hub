@@ -6,7 +6,7 @@ namespace BizPik.Orders.Hub.Modules.Core.Orders.Domain.Entity.Discount;
 
 public record OrderDiscount(
     [property: JsonPropertyName("amount")] Price Amount,
-    [property: JsonPropertyName("target")] DiscountTarget Target,
+    [property: JsonPropertyName("target")] [property: JsonConverter(typeof(JsonStringEnumConverter))] DiscountTarget Target,
     [property: JsonPropertyName("targetId")] string TargetId,
     [property: JsonPropertyName("sponsorshipValues")] IReadOnlyList<OrderDiscountSponsorshipValue> SponsorshipValues
 );

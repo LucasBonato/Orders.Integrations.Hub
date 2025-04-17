@@ -47,7 +47,7 @@ public static class IfoodOrderExtension
         List<OrderFee> otherFees = order.AdditionalFees?.Select(additionalFee => new OrderFee(
             Name: additionalFee.Description,
             Type: FeeType.SERVICE_FEE,
-            ReceivedBy: FeeReceivedBy.MARCHANT,
+            ReceivedBy: FeeReceivedBy.MERCHANT,
             Price: additionalFee.Value.ToBrl(),
             ReceiverDocument: "None",
             Observation: additionalFee.FullDescription
@@ -57,7 +57,7 @@ public static class IfoodOrderExtension
             otherFees.Add(new OrderFee(
                 Name: "DELIVERY",
                 Type: FeeType.DELIVERY_FEE,
-                ReceivedBy: FeeReceivedBy.MARCHANT,
+                ReceivedBy: FeeReceivedBy.MERCHANT,
                 Price: order.Total.DeliveryFee.ToBrl(),
                 ReceiverDocument: "None",
                 Observation: "The delivery fee"
@@ -188,7 +188,7 @@ public static class IfoodOrderExtension
             SendDelivered: false,
             SendPickedUp: false,
             SendTracking: false,
-            ExtraInfo: order.ExtraInfo,
+            ExtraInfo: order.ExtraInfo?? string.Empty,
             CompanyId: companyId,
             OrderDisplayId: Guid.NewGuid().ToString()[..5],
             ExternalId: order.Id
@@ -325,12 +325,26 @@ public static class IfoodOrderExtension
         };
     }
 
-    public static OrderUpdateStatus FromIfood(this IfoodWebhookRequest request)
+    private static OrderEventType ToOrderEvent(this IfoodFullOrderStatus orderStatus)
+    {
+        return orderStatus switch {
+            IfoodFullOrderStatus.PLACED => OrderEventType.CREATED,
+            IfoodFullOrderStatus.CONFIRMED => OrderEventType.CONFIRMED,
+            IfoodFullOrderStatus.READY_TO_PICKUP => OrderEventType.READY_FOR_PICKUP,
+            IfoodFullOrderStatus.SEPARATION_STARTED => OrderEventType.PREPARING,
+            IfoodFullOrderStatus.DISPATCHED => OrderEventType.DISPATCHED,
+            IfoodFullOrderStatus.CONCLUDED => OrderEventType.CONCLUDED,
+            IfoodFullOrderStatus.CANCELLED => OrderEventType.CANCELLED,
+            _ => OrderEventType.CREATED
+        };
+    }
+
+    public static OrderUpdateStatus FromIfood(this IfoodWebhookRequest request, OrderEventType? eventType)
     {
         return new OrderUpdateStatus(
             OrderId: request.OrderId,
             SourceAppId: "ifood",
-            Type: OrderEventType.CONFIRMED,
+            Type: eventType?? request.FullCode.ToOrderEvent(),
             CreateAt: request.CreatedAt,
             FromIntegration: true
         );

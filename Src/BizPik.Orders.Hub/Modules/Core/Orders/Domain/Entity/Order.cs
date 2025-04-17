@@ -9,14 +9,14 @@ namespace BizPik.Orders.Hub.Modules.Core.Orders.Domain.Entity;
 
 public record Order(
     [property: JsonPropertyName("orderId")]                     string OrderId,
-    [property: JsonPropertyName("type")]                        OrderType Type,
+    [property: JsonPropertyName("type")] [property: JsonConverter(typeof(JsonStringEnumConverter))]                        OrderType Type,
     [property: JsonPropertyName("displayId")]                   string DisplayId,
     [property: JsonPropertyName("sourceAppId")]                 string SourceAppId,
     [property: JsonPropertyName("salesChannel")]                string? SalesChannel,
     [property: JsonPropertyName("virtualBrand")]                string? VirtualBrand,
     [property: JsonPropertyName("createdAt")]                   DateTime CreatedAt,
-    [property: JsonPropertyName("lastEvent")]                   OrderEventType LastEvent,
-    [property: JsonPropertyName("orderTiming")]                 OrderTiming OrderTiming,
+    [property: JsonPropertyName("lastEvent")] [property: JsonConverter(typeof(JsonStringEnumConverter))]                  OrderEventType LastEvent,
+    [property: JsonPropertyName("orderTiming")] [property: JsonConverter(typeof(JsonStringEnumConverter))]                OrderTiming OrderTiming,
     [property: JsonPropertyName("preparationStartDateTime")]    DateTime PreparationStartDateTime,
     [property: JsonPropertyName("merchant")]                    OrderMerchant Merchant,
     [property: JsonPropertyName("items")]                       IReadOnlyList<OrderItem> Items,

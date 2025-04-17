@@ -6,7 +6,6 @@ using BizPik.Orders.Hub.Modules.Integrations.Common.Application;
 using BizPik.Orders.Hub.Modules.Integrations.Ifood.Application.Extensions;
 using BizPik.Orders.Hub.Modules.Integrations.Ifood.Domain.Contracts;
 using BizPik.Orders.Hub.Modules.Integrations.Ifood.Domain.Entity;
-using BizPik.Orders.Hub.Modules.Integrations.Ifood.Domain.Entity.MerchantDetails;
 using BizPik.Orders.Hub.Modules.Integrations.Ifood.Domain.ValueObjects.DTOs.Request;
 
 using FastEndpoints;
@@ -22,7 +21,7 @@ public class IfoodCreateOrderUseCase(
     {
         IfoodOrder ifoodOrder = await iFoodClient.GetOrderDetails(requestOrder.OrderId);
 
-        BizPikResponseWrapper<BizPikIntegrationResponse> integrationWrapper = await bizPikClient.GetIntegrationByExternalId(requestOrder.MerchantId ?? string.Empty, AppEnv.BIZPIK.MONOLITH.API_KEYS.COMPANIES_INTEGRATIONS.NotNull());
+        BizPikResponseWrapper<BizPikIntegrationResponse> integrationWrapper = await bizPikClient.GetIntegrationByExternalId(requestOrder.MerchantId, AppEnv.BIZPIK.MONOLITH.API_KEYS.COMPANIES_INTEGRATIONS.NotNull());
         BizPikIntegrationResponse integration = integrationWrapper.Data;
 
         int companyId = integration.CompanyId ?? 0;
@@ -36,10 +35,10 @@ public class IfoodCreateOrderUseCase(
         if (integration.Resolve().AutoAccept)
         {
             await new SendNotificationEvent() {
-                Message = requestOrder.FromIfood(),
+                Message = requestOrder.FromIfood(OrderEventType.CREATED),
             }.PublishAsync();
         }
 
-        return await Task.Run(() => requestOrder);
+        return await Task.FromResult(requestOrder);
     }
 }

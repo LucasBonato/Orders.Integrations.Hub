@@ -10,12 +10,14 @@ public class IfoodSignatureValidator(
 
     public async ValueTask<object?> InvokeAsync(EndpointFilterInvocationContext context, EndpointFilterDelegate next)
     {
-        var httpContext = context.HttpContext;
+        HttpContext httpContext = context.HttpContext;
 
         httpContext.Request.EnableBuffering();
+        httpContext.Request.Body.Position = 0;
+        logger.LogInformation("IfoodSignatureValidator invoked: {ahsdua}", httpContext.Request.Body.Length);
 
         string body;
-        using (var reader = new StreamReader(httpContext.Request.Body, Encoding.UTF8, leaveOpen: true))
+        using (var reader = new StreamReader(httpContext.Request.Body, Encoding.UTF8, detectEncodingFromByteOrderMarks: false, leaveOpen: true))
         {
             body = await reader.ReadToEndAsync();
             httpContext.Request.Body.Position = 0;
@@ -23,7 +25,9 @@ public class IfoodSignatureValidator(
 
         logger.LogInformation("[INFO] - IfoodSignatureValidator - Request Body: {body}", body);
 
-        string? signature = httpContext.Request.Headers["X-Signature"].FirstOrDefault();
+        string? signature = httpContext.Request.Headers["X-Ifood-Signature"].FirstOrDefault();
+
+        logger.LogInformation("[INFO] - IfoodSignatureValidator - X-Ifood-Signature: {signature}", signature);
 
         if (signature == null)
         {

@@ -11,7 +11,7 @@ public class BizPikMonolithClient(
 ) : IBizPikMonolithClient {
     public async Task<BizPikResponseWrapper<BizPikIntegrationResponse>> GetIntegrationByExternalId(string externalId, string apiKey)
     {
-        string uri = $"companies/lambda/integrations-details/external-id/{externalId}";
+        string uri = $"api/companies/lambda/integrations-details/external-id/{externalId}";
         httpClient.DefaultRequestHeaders.Add("X-API-KEY", apiKey);
         HttpResponseMessage response = await httpClient.GetAsync(uri);
         if (!response.IsSuccessStatusCode)
@@ -28,7 +28,7 @@ public class BizPikMonolithClient(
         HttpResponseMessage response = await httpClient.PostAsync(uri, new StringContent(JsonSerializer.Serialize(merchantIds)));
         if (!response.IsSuccessStatusCode)
         {
-            logger.LogError("[ERROR] - BizPikMonolithClient - Error trying to send merchantIds online: {merchantIds}", merchantIds);
+            logger.LogError("[ERROR] - BizPikMonolithClient - Error trying to send merchantIds online: {merchantIds}", merchantIds.ToList());
             throw new Exception();
         }
         return (await response.Content.ReadFromJsonAsync<BizPikResponseWrapper<BizPikOnlineStoresResponse>>())!;

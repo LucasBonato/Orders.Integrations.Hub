@@ -1,9 +1,15 @@
 using BizPik.Orders.Hub.Modules.Core;
-using BizPik.Orders.Hub.Modules.Core;
 using BizPik.Orders.Hub.Modules.Integrations;
+
+using DotNetEnv;
+
+using FastEndpoints;
+
 using Scalar.AspNetCore;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+
+Env.TraversePath().Load();
 
 builder.Services
     .AddOpenApi()

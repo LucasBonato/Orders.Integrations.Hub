@@ -6,20 +6,24 @@ using BizPik.Orders.Hub.Modules.Integrations.Ifood.Domain.ValueObjects.DTOs.Resp
 namespace BizPik.Orders.Hub.Modules.Integrations.Ifood.Application.Clients;
 
 public class IfoodAuthClient(
+    ILogger<IfoodAuthClient> logger,
     HttpClient httpClient
 ) : IIntegrationAuthClient<IfoodAuthTokenRequest, IfoodAuthTokenResponse> {
     public async Task<IfoodAuthTokenResponse> RetrieveToken(IfoodAuthTokenRequest request)
     {
         Dictionary<string, string> form = new() {
-            { "grant_type", request.GrantType },
-            { "client_id", request.ClientId },
-            { "client_secret", request.ClientSecret }
+            { "grantType", request.GrantType },
+            { "clientId", request.ClientId },
+            { "clientSecret", request.ClientSecret }
         };
 
-        HttpRequestMessage requestMessage = new(HttpMethod.Post, AppEnv.INTEGRATIONS.IFOOD.ENDPOINT.AUTH.NotNull()) { Content = new FormUrlEncodedContent(form) };
+        string uri = AppEnv.INTEGRATIONS.IFOOD.ENDPOINT.AUTH.NotNull();
+
+        HttpRequestMessage requestMessage = new(HttpMethod.Post, uri) { Content = new FormUrlEncodedContent(form) };
+
+        logger.LogInformation("[INFO] - IfoodAuthClient - Uri: {uri}", requestMessage.RequestUri);
 
         HttpResponseMessage response = await httpClient.SendAsync(requestMessage);
-        response.EnsureSuccessStatusCode();
 
         string responseContent = await response.Content.ReadAsStringAsync();
         return JsonSerializer.Deserialize<IfoodAuthTokenResponse>(responseContent)!;

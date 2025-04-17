@@ -7,8 +7,8 @@ namespace BizPik.Orders.Hub.Modules.Integrations.Ifood.Domain.Entity.Payments;
 public record PaymentsMethod(
     [property: JsonPropertyName("value")] decimal Value,
     [property: JsonPropertyName("currency")] string Currency,
-    [property: JsonPropertyName("type")] IfoodMethodType Type,
-    [property: JsonPropertyName("method")] Method Method,
+    [property: JsonPropertyName("type")] [property: JsonConverter(typeof(JsonStringEnumConverter))] IfoodMethodType Type,
+    [property: JsonPropertyName("method")] [property: JsonConverter(typeof(JsonStringEnumConverter))] Method Method,
     [property: JsonPropertyName("wallet")] Wallet? Wallet,
     [property: JsonPropertyName("card")] Card? Card,
     [property: JsonPropertyName("cash")] Cash? Cash,
