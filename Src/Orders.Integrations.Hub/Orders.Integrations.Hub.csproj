@@ -24,14 +24,4 @@
     <PackageReference Include="Scalar.AspNetCore" Version="2.1.*" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Modules\Integrations\Rappi\Adapters\" />
-    <Folder Include="Modules\Integrations\Rappi\Application\Extensions\" />
-    <Folder Include="Modules\Integrations\Rappi\Application\Ports\" />
-    <Folder Include="Modules\Integrations\Rappi\Domain\Contracts\" />
-    <Folder Include="Modules\Integrations\Rappi\Domain\Entity\" />
-    <Folder Include="Modules\Integrations\Rappi\Domain\ValueObjects\" />
-    <Folder Include="Modules\Integrations\Rappi\Validators\" />
-  </ItemGroup>
-
 </Project>
