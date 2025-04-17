@@ -1,7 +1,7 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 
-using BizPik.Orders.Hub.Modules.Integrations.Common.Application;
+using BizPik.Orders.Hub.Modules.Core.Orders.Domain.Contracts.UseCases;
 using BizPik.Orders.Hub.Modules.Integrations.Ifood.Domain.ValueObjects.DTOs.Request;
 using BizPik.Orders.Hub.Modules.Integrations.Ifood.Domain.ValueObjects.Enums;
 

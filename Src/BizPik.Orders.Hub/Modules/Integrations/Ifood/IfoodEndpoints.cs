@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-using BizPik.Orders.Hub.Modules.Integrations.Common.Application;
+using BizPik.Orders.Hub.Modules.Core.Orders.Domain.Contracts.UseCases;
 using BizPik.Orders.Hub.Modules.Integrations.Ifood.Application.Clients;
 using BizPik.Orders.Hub.Modules.Integrations.Ifood.Application.Handlers;
 using BizPik.Orders.Hub.Modules.Integrations.Ifood.Application.Ports;

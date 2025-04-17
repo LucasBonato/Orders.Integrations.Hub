@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
-using BizPik.Orders.Hub.Modules.Integrations.Common.Domain.Contracts;
+
+using BizPik.Orders.Hub.Modules.Integrations.Common.Contracts;
 using BizPik.Orders.Hub.Modules.Integrations.Ifood.Domain.ValueObjects.DTOs.Request;
 using BizPik.Orders.Hub.Modules.Integrations.Ifood.Domain.ValueObjects.DTOs.Response;
 

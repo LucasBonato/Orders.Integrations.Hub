@@ -1,4 +1,4 @@
-﻿namespace BizPik.Orders.Hub.Modules.Integrations.Common.Application;
+﻿namespace BizPik.Orders.Hub.Modules.Core.Orders.Domain.Contracts.UseCases;
 
 public interface IUpdateOrderStatusUseCase<TOrder>
 {
