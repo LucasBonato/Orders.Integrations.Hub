@@ -1,7 +1,7 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 
-using Orders.Integrations.Hub.Modules.Integrations.Common.Application;
+using Orders.Integrations.Hub.Modules.Core.Orders.Domain.Contracts.UseCases;
 using Orders.Integrations.Hub.Modules.Integrations.Ifood.Domain.ValueObjects.DTOs.Request;
 using Orders.Integrations.Hub.Modules.Integrations.Ifood.Domain.ValueObjects.Enums;
 

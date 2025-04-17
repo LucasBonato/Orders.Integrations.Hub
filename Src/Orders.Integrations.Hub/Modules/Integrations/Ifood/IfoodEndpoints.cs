@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-using Orders.Integrations.Hub.Modules.Integrations.Common.Application;
+using Orders.Integrations.Hub.Modules.Core.Orders.Domain.Contracts.UseCases;
 using Orders.Integrations.Hub.Modules.Integrations.Ifood.Application.Clients;
 using Orders.Integrations.Hub.Modules.Integrations.Ifood.Application.Handlers;
 using Orders.Integrations.Hub.Modules.Integrations.Ifood.Application.Ports;

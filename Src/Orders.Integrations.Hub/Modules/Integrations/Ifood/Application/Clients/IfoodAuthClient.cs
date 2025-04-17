@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
-using Orders.Integrations.Hub.Modules.Integrations.Common.Domain.Contracts;
+
+using Orders.Integrations.Hub.Modules.Integrations.Common.Contracts;
 using Orders.Integrations.Hub.Modules.Integrations.Ifood.Domain.ValueObjects.DTOs.Request;
 using Orders.Integrations.Hub.Modules.Integrations.Ifood.Domain.ValueObjects.DTOs.Response;
 

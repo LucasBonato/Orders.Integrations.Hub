@@ -1,4 +1,4 @@
-﻿namespace Orders.Integrations.Hub.Modules.Integrations.Common.Application;
+﻿namespace Orders.Integrations.Hub.Modules.Core.Orders.Domain.Contracts.UseCases;
 
 public interface IUpdateOrderStatusUseCase<TOrder>
 {

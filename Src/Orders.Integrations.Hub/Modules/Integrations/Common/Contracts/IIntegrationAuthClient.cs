@@ -1,4 +1,4 @@
-﻿namespace Orders.Integrations.Hub.Modules.Integrations.Common.Domain.Contracts;
+﻿namespace Orders.Integrations.Hub.Modules.Integrations.Common.Contracts;
 
 public interface IIntegrationAuthClient<in TRequest, TResponse>
 {
