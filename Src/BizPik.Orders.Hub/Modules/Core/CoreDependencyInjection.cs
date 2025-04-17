@@ -2,13 +2,18 @@
 using Amazon.Runtime;
 using Amazon.Runtime.CredentialManagement;
 using Amazon.SimpleNotificationService;
-using Amazon.SimpleNotificationService.Model;
-
 using BizPik.AWS.Credentials;
 using BizPik.Orders.Hub.Modules.Core.BizPik.Application;
 using BizPik.Orders.Hub.Modules.Core.BizPik.Domain.Contracts;
+using BizPik.Orders.Hub.Modules.Core.Orders.Application.Clients;
+using BizPik.Orders.Hub.Modules.Core.Orders.Application.UseCases;
+using BizPik.Orders.Hub.Modules.Core.Orders.Domain.Contracts;
 
-using Newtonsoft.Json;
+using FastEndpoints;
+
+using OpenTelemetry;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 
 namespace BizPik.Orders.Hub.Modules.Core;
 
@@ -17,6 +22,7 @@ public static class CoreDependencyInjection
     public static IServiceCollection AddCore(this IServiceCollection services)
     {
         return services
+                .AddOpenTelemetryConfiguration()
                 .AddServices()
                 .AddClients()
             ;
@@ -24,11 +30,16 @@ public static class CoreDependencyInjection
 
     public static IApplicationBuilder UseCore(this WebApplication app)
     {
+        app.UseFastEndpoints();
         return app;
     }
 
     private static IServiceCollection AddServices(this IServiceCollection services)
     {
+        services.AddFastEndpoints(options => {
+            options.DisableAutoDiscovery = false;
+        });
+        services.AddScoped<IOrderUseCase, OrderUseCase>();
         services.AddTransient<IAmazonSimpleNotificationService>(_ => SimplesNotificationServiceConfiguration());
         return services;
     }
@@ -39,12 +50,57 @@ public static class CoreDependencyInjection
             client.BaseAddress = new Uri(AppEnv.BIZPIK.MONOLITH.ENDPOINT.BASE_URL.NotNull());
         });
 
+        services.AddHttpClient<IOrderClient, OrderClient>(client => {
+            client.BaseAddress = new Uri(AppEnv.BIZPIK.ORDERS.ENDPOINT.BASE_URL.NotNull());
+        });
+
+        services.AddHttpClient<IOrderHttp>(client => {
+            client.BaseAddress = new Uri(AppEnv.BIZPIK.ORDERS.ENDPOINT.BASE_URL.NotNull());
+        });
+
+        return services;
+    }
+
+    private static IServiceCollection AddOpenTelemetryConfiguration(this IServiceCollection services)
+    {
+        string serviceName = AppEnv.OTEL_SERVICE_NAME.NotNull();
+
+        services
+            .AddOpenTelemetry()
+            .UseOtlpExporter()
+            .ConfigureResource(resource => {
+                resource.AddService(serviceName: serviceName);
+            })
+            .WithTracing(tracing => {
+                tracing
+                    .AddSource(serviceName)
+                    .AddAspNetCoreInstrumentation()
+                    .AddAWSInstrumentation()
+                    .AddHttpClientInstrumentation()
+                ;
+            })
+
+        ;
+
+        services.AddLogging(options => {
+            options
+                // .SetMinimumLevel(LogLevel.Information)
+                // .AddFilter("System.Net.Http.HttpClient.OtlpTraceExporter", LogLevel.None)
+                // .AddFilter("System.Net.Http.HttpClient.OtlpMetricExporter", LogLevel.None)
+                .AddOpenTelemetry(logger => {
+                    logger.IncludeScopes = true;
+                    logger.ParseStateValues = true;
+                    logger.IncludeFormattedMessage = true;
+                })
+            ;
+        });
+
         return services;
     }
 
     private static AmazonSimpleNotificationServiceClient SimplesNotificationServiceConfiguration()
     {
-        bool isLocalSns = AppEnv.PUB_SUB.TOPICS.IS_LOCAL.GetDefault<bool>(false);
+        bool isLocalSns = AppEnv.PUB_SUB.TOPICS.IS_LOCAL.GetDefault(false);
         string profile;
 
         if (isLocalSns) {
