@@ -25,10 +25,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Modules\Integrations\Rappi\Clients\" />
-    <Folder Include="Modules\Integrations\Rappi\Extensions\" />
-    <Folder Include="Modules\Integrations\Rappi\Models\" />
-    <Folder Include="Modules\Integrations\Rappi\UseCases\" />
+    <Folder Include="Modules\Integrations\Rappi\Adapters\" />
+    <Folder Include="Modules\Integrations\Rappi\Application\Extensions\" />
+    <Folder Include="Modules\Integrations\Rappi\Application\Ports\" />
+    <Folder Include="Modules\Integrations\Rappi\Domain\Contracts\" />
+    <Folder Include="Modules\Integrations\Rappi\Domain\Entity\" />
+    <Folder Include="Modules\Integrations\Rappi\Domain\ValueObjects\" />
     <Folder Include="Modules\Integrations\Rappi\Validators\" />
   </ItemGroup>
 
