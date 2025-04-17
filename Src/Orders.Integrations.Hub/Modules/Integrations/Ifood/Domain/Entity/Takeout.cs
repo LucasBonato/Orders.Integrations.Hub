@@ -5,7 +5,7 @@ using Orders.Integrations.Hub.Modules.Integrations.Ifood.Domain.ValueObjects.Enu
 namespace Orders.Integrations.Hub.Modules.Integrations.Ifood.Domain.Entity;
 
 public record Takeout(
-    [property: JsonPropertyName("mode")] TakeoutMode Mode,
+    [property: JsonPropertyName("mode")] [property: JsonConverter(typeof(JsonStringEnumConverter))] TakeoutMode Mode,
     [property: JsonPropertyName("takeoutDateTime")] DateTime TakeoutDateTime,
     [property: JsonPropertyName("observations")] string Observations
 );

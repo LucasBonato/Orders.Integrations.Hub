@@ -2,7 +2,7 @@
 
 public enum OrderUnit
 {
-    UN,
+    UN = 1,
     KG,
     L,
     OZ,

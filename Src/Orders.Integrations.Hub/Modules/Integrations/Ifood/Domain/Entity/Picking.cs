@@ -6,5 +6,5 @@ namespace Orders.Integrations.Hub.Modules.Integrations.Ifood.Domain.Entity;
 
 public record Picking(
     [property: JsonPropertyName("picker")] string Picker,
-    [property: JsonPropertyName("replacementOptions")] ReplacementOptions ReplacementOptions
+    [property: JsonPropertyName("replacementOptions")] [property: JsonConverter(typeof(JsonStringEnumConverter))] ReplacementOptions ReplacementOptions
 );

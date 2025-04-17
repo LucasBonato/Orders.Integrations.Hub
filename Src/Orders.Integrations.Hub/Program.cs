@@ -1,9 +1,15 @@
 using Orders.Integrations.Hub.Modules.Core;
-using Orders.Integrations.Hub.Modules.Core;
 using Orders.Integrations.Hub.Modules.Integrations;
+
+using DotNetEnv;
+
+using FastEndpoints;
+
 using Scalar.AspNetCore;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+
+Env.TraversePath().Load();
 
 builder.Services
     .AddOpenApi()

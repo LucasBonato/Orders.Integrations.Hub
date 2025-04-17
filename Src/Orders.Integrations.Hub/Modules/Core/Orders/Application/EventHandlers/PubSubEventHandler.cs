@@ -27,7 +27,5 @@ public class PubSubEventHandler(
             shareConfirmOrderTopicArn,
             eventModel.Message.OrderId
         );
-
-        throw new NotImplementedException();
     }
 }

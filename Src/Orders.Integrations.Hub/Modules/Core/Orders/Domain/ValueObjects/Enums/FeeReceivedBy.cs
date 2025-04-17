@@ -3,6 +3,6 @@
 public enum FeeReceivedBy
 {
     MARKETPLACE,
-    MARCHANT,
+    MERCHANT,
     LOGISTIC_SERVICES
 }

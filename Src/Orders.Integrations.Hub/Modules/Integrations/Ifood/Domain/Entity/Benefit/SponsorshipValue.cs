@@ -5,7 +5,7 @@ using Orders.Integrations.Hub.Modules.Integrations.Ifood.Domain.ValueObjects.Enu
 namespace Orders.Integrations.Hub.Modules.Integrations.Ifood.Domain.Entity.Benefit;
 
 public record SponsorshipValue(
-    [property: JsonPropertyName("name")] SponsorshipName Name,
+    [property: JsonPropertyName("name")] [property: JsonConverter(typeof(JsonStringEnumConverter))] SponsorshipName Name,
     [property: JsonPropertyName("value")] decimal Value,
     [property: JsonPropertyName("description")] string Description
 );

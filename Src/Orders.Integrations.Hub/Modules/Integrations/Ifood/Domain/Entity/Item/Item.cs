@@ -14,7 +14,7 @@ public record Item(
     [property: JsonPropertyName("name")] string Name,
     [property: JsonPropertyName("type")] string Type,
     [property: JsonPropertyName("quantity")] int Quantity,
-    [property: JsonPropertyName("unit")] Unit Unit,
+    [property: JsonPropertyName("unit")] [property: JsonConverter(typeof(JsonStringEnumConverter))] Unit Unit,
     [property: JsonPropertyName("unitPrice")] decimal UnitPrice,
     [property: JsonPropertyName("price")] decimal Price,
     [property: JsonPropertyName("scalePrices")] ScalePrices ScalePrices,
