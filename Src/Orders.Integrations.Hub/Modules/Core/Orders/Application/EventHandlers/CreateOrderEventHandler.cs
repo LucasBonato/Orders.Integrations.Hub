@@ -1,4 +1,5 @@
 ﻿using Orders.Integrations.Hub.Modules.Core.Orders.Domain.Contracts;
+using Orders.Integrations.Hub.Modules.Core.Orders.Domain.Contracts.UseCases;
 using Orders.Integrations.Hub.Modules.Core.Orders.Domain.ValueObjects.Events;
 using FastEndpoints;
 
