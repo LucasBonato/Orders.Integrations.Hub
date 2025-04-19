@@ -44,6 +44,22 @@ public static partial class AppEnv
                 public static readonly AnvEnv AUTH = new("INTEGRATIONS__IFOOD__ENDPOINT__AUTH");
             }
         }
+
+        public static partial class RAPPI
+        {
+            public static partial class CLIENT
+            {
+                public static readonly AnvEnv ID = new("INTEGRATIONS__RAPPI__CLIENT__ID");
+                public static readonly AnvEnv SECRET = new("INTEGRATIONS__RAPPI__CLIENT__SECRET");
+                public static readonly AnvEnv AUDIENCE = new("INTEGRATIONS__RAPPI__CLIENT__AUDIENCE");
+            }
+
+            public static partial class ENDPOINT
+            {
+                public static readonly AnvEnv BASE_URL = new("INTEGRATIONS__RAPPI__ENDPOINT__BASE_URL");
+                public static readonly AnvEnv AUTH = new("INTEGRATIONS__RAPPI__ENDPOINT__AUTH");
+            }
+        }
     }
 
     public static partial class PUB_SUB
