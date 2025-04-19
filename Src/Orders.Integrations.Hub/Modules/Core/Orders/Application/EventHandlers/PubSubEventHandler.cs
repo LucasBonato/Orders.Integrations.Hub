@@ -14,7 +14,7 @@ public class PubSubEventHandler(
 ) : IEventHandler<SendNotificationEvent> {
     public async Task HandleAsync(SendNotificationEvent eventModel, CancellationToken ct)
     {
-        var shareConfirmOrderTopicArn = AppEnv.PUB_SUB.TOPICS.ACCEPT_ORDER.NotNull();
+        var shareConfirmOrderTopicArn = eventModel.TopicArn ?? AppEnv.PUB_SUB.TOPICS.ACCEPT_ORDER.NotNull();
 
         string message = JsonSerializer.Serialize(eventModel.Message);
 
