@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using Orders.Integrations.Hub.Modules.Integrations.Common.Contracts;
-using Orders.Integrations.Hub.Modules.Integrations.Rappi.Domain.DTOs.Request;
-using Orders.Integrations.Hub.Modules.Integrations.Rappi.Domain.DTOs.Response;
+using Orders.Integrations.Hub.Modules.Integrations.Rappi.Domain.ValueObjects.DTOs.Request;
+using Orders.Integrations.Hub.Modules.Integrations.Rappi.Domain.ValueObjects.DTOs.Response;
 
 namespace Orders.Integrations.Hub.Modules.Integrations.Rappi.Application.Clients;
 
