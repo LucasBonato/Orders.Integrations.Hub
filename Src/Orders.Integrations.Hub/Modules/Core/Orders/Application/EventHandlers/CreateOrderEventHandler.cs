@@ -8,7 +8,7 @@ namespace Orders.Integrations.Hub.Modules.Core.Orders.Application.EventHandlers;
 public class CreateOrderEventHandler(
     ILogger<CreateOrderEventHandler> logger,
     IServiceScopeFactory serviceScopeFactory
-) : IEventHandler<CreateOrderEvent>, IOrderHttp {
+) : IEventHandler<CreateOrderEvent> {
     public async Task HandleAsync(CreateOrderEvent orderEvent, CancellationToken cancellationToken)
     {
         using var scope = serviceScopeFactory.CreateScope();
