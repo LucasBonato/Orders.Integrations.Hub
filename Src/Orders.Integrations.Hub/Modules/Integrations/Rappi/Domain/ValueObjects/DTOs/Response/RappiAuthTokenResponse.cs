@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Orders.Integrations.Hub.Modules.Integrations.Rappi.Domain.DTOs.Response;
+namespace Orders.Integrations.Hub.Modules.Integrations.Rappi.Domain.ValueObjects.DTOs.Response;
 
 public record RappiAuthTokenResponse(
     [property: JsonPropertyName("access_token")] string AccessToken,

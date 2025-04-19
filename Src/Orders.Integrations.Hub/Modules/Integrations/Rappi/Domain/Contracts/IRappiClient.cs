@@ -30,15 +30,20 @@ public interface IRappiClient : IIntegrationClient
     Task<List<RappiAvailabilityItemStatusResponse>> GetAvailabilityProducts(RappiAvailabilityItemsStatusRequest request);
 
 
-    // [Put("/api/v2/restaurants-integrations-public-api/orders/{orderId}/take/{cookingTime]")]
-    Task PutOrderStatus(string orderId, string cookingTime);
+    // [Put("restaurants/orders/v1/stores/{storeId}/orders/{orderId}/take")] // CONFIRM
+    Task ConfirmOrder(string orderId, string storeId);
 
-    // [Put("/api/v2/restaurants-integrations-public-api/orders/{orderId}/reject")]
-    Task PutOrderReject(RappiOrderRejectRequest request, string orderId);
+    // [Put("/api/v2/restaurants-integrations-public-api/orders/{orderId}/take/{cookingTime]")] // CONFIRM
+    // [Put("restaurants/orders/v1/stores/{storeId}/orders/{orderId}/cooking_time/{cookingTime}/take")] // CONFIRM
+    Task ConfirmeOrderWithCookingTime(string orderId, string cookingTime);
 
-    // [Post("/api/v2/restaurants-integrations-public-api/orders/{orderId}/ready-for-pickup")]
-    Task PostOrderReadyForPickup(string orderId);
+    // [Put("/api/v2/restaurants-integrations-public-api/orders/{orderId}/reject")] // CANCEL
+    // [Put("restaurants/orders/v1/stores/{storeId}/orders/{orderId}/cancel_type/{cancelType}/reject")] // CANCEL
+    Task RequestOrderCancellation(string orderId, RappiOrderRejectRequest request);
 
-    // // [Put("/api/v2/restaurants-integrations-public-api/orders/{orderId}/send")]
-    // Task UpdateOrderStatusToSend(string orderId);
+    // [Post("/api/v2/restaurants-integrations-public-api/orders/{orderId}/ready-for-pickup")] // READY_FOR_PICKUP
+    // [Post("restaurants/orders/v1/stores/{storeId}/orders/{orderId}/ready-for-pickup")] // READY_FOR_PICKUP
+    Task ReadyToPickupOrder(string orderId);
 }
+
+// restaurants/orders/v1/stores/{storeId}/orders/{orderId}/bag-drink-confirmation
