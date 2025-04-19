@@ -24,4 +24,8 @@
     <PackageReference Include="Scalar.AspNetCore" Version="2.1.*" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Modules\Integrations\Rappi\Validators\" />
+  </ItemGroup>
+
 </Project>

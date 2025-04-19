@@ -1,4 +1,7 @@
 ﻿using BizPik.Orders.Hub.Modules.Integrations.Ifood;
+using BizPik.Orders.Hub.Modules.Integrations.Ifood.Adapter;
+using BizPik.Orders.Hub.Modules.Integrations.Rappi;
+using BizPik.Orders.Hub.Modules.Integrations.Rappi.Adapter;
 
 namespace BizPik.Orders.Hub.Modules.Integrations;
 
@@ -8,6 +11,7 @@ public static class IntegrationsModule
     {
         return services
             .AddIfood()
+            .AddRappi()
         ;
     }
 
@@ -15,6 +19,7 @@ public static class IntegrationsModule
     {
         return app
             .AddIfoodEndpoints()
+            .AddRappiEndpoints()
         ;
     }
 }
