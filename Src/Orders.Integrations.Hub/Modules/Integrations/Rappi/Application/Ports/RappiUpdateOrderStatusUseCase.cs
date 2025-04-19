@@ -1,31 +1,23 @@
-﻿using Orders.Integrations.Hub.Modules.Core..Domain.Contracts;
-using Orders.Integrations.Hub.Modules.Core..Domain.ValueObjects;
-using Orders.Integrations.Hub.Modules.Core.Orders.Domain.Contracts.UseCases;
+﻿using Orders.Integrations.Hub.Modules.Core.Orders.Domain.Contracts.UseCases;
 using Orders.Integrations.Hub.Modules.Core.Orders.Domain.ValueObjects.Enums;
 using Orders.Integrations.Hub.Modules.Core.Orders.Domain.ValueObjects.Events;
-using Orders.Integrations.Hub.Modules.Integrations.Rappi.Domain.Contracts;
-using Orders.Integrations.Hub.Modules.Integrations.Rappi.Domain.Entity;
+using Orders.Integrations.Hub.Modules.Integrations.Rappi.Application.Extensions;
+using Orders.Integrations.Hub.Modules.Integrations.Rappi.Domain.ValueObjects.DTOs.Request;
 
 using FastEndpoints;
 
 namespace Orders.Integrations.Hub.Modules.Integrations.Rappi.Application.Ports;
 
 public class RappiUpdateOrderStatusUseCase(
-    ILogger<RappiUpdateOrderStatusUseCase> logger,
-    IInternalClient Client,
-    IRappiClient rappiClient
-) : IUpdateOrderStatusUseCase<RappiOrder> {
-    public async Task<RappiOrder> ExecuteAsync(RappiOrder requestOrder)
+    ILogger<RappiUpdateOrderStatusUseCase> logger
+) : IUpdateOrderStatusUseCase<RappiWebhookEventOrderRequest> {
+    public async Task<RappiWebhookEventOrderRequest> ExecuteAsync(RappiWebhookEventOrderRequest requestOrder)
     {
-        ResponseWrapper<IntegrationResponse> integrationWrapper = await Client.GetIntegrationByExternalId(requestOrder.Store.ExternalId, AppEnv..MONOLITH.API_KEYS.COMPANIES_INTEGRATIONS.NotNull());
-        IntegrationResponse integration = integrationWrapper.Data;
+        await new UpdateOrderStatusEvent(
+            OrderUpdateStatus: requestOrder.FromRappi(),
+            SalesChannel: OrderSalesChannel.RAPPI
+        ).PublishAsync();
 
-        int companyId = integration.CompanyId ?? 0;
-
-        await new CreateOrderEvent()
-        {
-            Order = requestOrder.ToOrder(companyId),
-            SalesChannel = OrderSalesChannel.RAPPI
-        }.PublishAsync();
+        return requestOrder;
     }
 }
