@@ -29,6 +29,7 @@ public class IfoodOrderChangeStatusUseCase(
                 break;
             case OrderEventType.CANCELLED:
             case OrderEventType.CANCELLATION_REQUESTED:
+            case OrderEventType.ORDER_CANCELLATION_REQUEST:
                 await iFoodClient.RequestOrderCancellation(
                     request.ExternalId,
                     new IfoodOrderCancellationRequest(request.CancellationReason!)
