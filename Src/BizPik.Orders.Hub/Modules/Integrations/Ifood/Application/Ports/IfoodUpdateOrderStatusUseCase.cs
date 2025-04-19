@@ -12,10 +12,10 @@ public class IfoodUpdateOrderStatusUseCase : IUpdateOrderStatusUseCase<IfoodWebh
 {
     public async Task<IfoodWebhookRequest> ExecuteAsync(IfoodWebhookRequest ifoodOrder)
     {
-        await new UpdateOrderStatusEvent() {
-            OrderUpdateStatus = ifoodOrder.FromIfood(null),
-            SalesChannel = OrderSalesChannel.IFOOD
-        }.PublishAsync();
+        await new UpdateOrderStatusEvent(
+            OrderUpdateStatus: ifoodOrder.FromIfood(null),
+            SalesChannel: OrderSalesChannel.IFOOD
+        ).PublishAsync();
 
         return await Task.FromResult(ifoodOrder);
     }

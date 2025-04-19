@@ -26,19 +26,20 @@ public class IfoodCreateOrderUseCase(
 
         int companyId = integration.CompanyId ?? 0;
 
-        await new CreateOrderEvent() {
-            Order = ifoodOrder.ToOrder(companyId),
-            SalesChannel = OrderSalesChannel.IFOOD,
-        }.PublishAsync();
+        await new CreateOrderEvent(
+            Order: ifoodOrder.ToOrder(companyId),
+            SalesChannel: OrderSalesChannel.IFOOD
+        ).PublishAsync();
 
 
         if (integration.Resolve().AutoAccept)
         {
-            await new SendNotificationEvent() {
-                Message = requestOrder.FromIfood(OrderEventType.CREATED),
-            }.PublishAsync();
+            await new SendNotificationEvent(
+                Message: requestOrder.FromIfood(OrderEventType.CONFIRMED),
+                TopicArn: null
+            ).PublishAsync();
         }
 
-        return await Task.FromResult(requestOrder);
+        return requestOrder;
     }
 }
