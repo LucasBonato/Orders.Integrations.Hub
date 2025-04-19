@@ -43,18 +43,50 @@ public class RappiClient(
         throw new NotImplementedException();
     }
 
-    public Task PutOrderStatus(string orderId, string cookingTime)
+    public async Task ConfirmOrder(string orderId, string storeId)
     {
-        throw new NotImplementedException();
+        string uri = $"restaurants/orders/v1/stores/{storeId}/orders/{orderId}/take";
+
+        HttpResponseMessage response = await httpClient.PutAsync(uri, null);
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new Exception(response.Content.ReadAsStringAsync().Result);
+        }
     }
 
-    public Task PutOrderReject(RappiOrderRejectRequest request, string orderId)
+    public async Task ConfirmeOrderWithCookingTime(string orderId, string cookingTime)
     {
-        throw new NotImplementedException();
+        string uri = $"orders/{orderId}/take/{cookingTime}";
+        // string uri = $"restaurants/orders/v1/stores/{storeId}/orders/{orderId}/cooking_time/{cookingTime}/take";
+
+        HttpResponseMessage response = await httpClient.PutAsync(uri, null);
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new Exception(response.Content.ReadAsStringAsync().Result);
+        }
     }
 
-    public Task PostOrderReadyForPickup(string orderId)
+    public async Task RequestOrderCancellation(string orderId, RappiOrderRejectRequest request)
     {
-        throw new NotImplementedException();
+        string uri = $"orders/{orderId}/reject";
+        // string uri = $"restaurants/orders/v1/stores/{storeId}/orders/{orderId}/cancel_type/{request.CancelType}/reject";
+
+        HttpResponseMessage response = await httpClient.PutAsync(uri, null);
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new Exception(response.Content.ReadAsStringAsync().Result);
+        }
+    }
+
+    public async Task ReadyToPickupOrder(string orderId)
+    {
+        string uri = $"orders/{orderId}/ready-for-pickup";
+        // string uri = $"restaurants/orders/v1/stores/{storeId}/orders/{orderId}/ready-for-pickup";
+
+        HttpResponseMessage response = await httpClient.PostAsync(uri, null);
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new Exception(response.Content.ReadAsStringAsync().Result);
+        }
     }
 }

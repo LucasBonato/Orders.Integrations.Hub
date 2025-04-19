@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using BizPik.Orders.Hub.Modules.Integrations.Common.Contracts;
-using BizPik.Orders.Hub.Modules.Integrations.Rappi.Domain.DTOs.Request;
-using BizPik.Orders.Hub.Modules.Integrations.Rappi.Domain.DTOs.Response;
+using BizPik.Orders.Hub.Modules.Integrations.Rappi.Domain.ValueObjects.DTOs.Request;
+using BizPik.Orders.Hub.Modules.Integrations.Rappi.Domain.ValueObjects.DTOs.Response;
 
 namespace BizPik.Orders.Hub.Modules.Integrations.Rappi.Application.Clients;
 
