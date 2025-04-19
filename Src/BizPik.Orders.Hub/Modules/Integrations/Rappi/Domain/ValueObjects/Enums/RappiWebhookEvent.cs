@@ -1,6 +1,6 @@
 ﻿namespace BizPik.Orders.Hub.Modules.Integrations.Rappi.Domain.ValueObjects.Enums;
 
-public enum RappiWebhookEvents
+public enum RappiWebhookEvent
 {
     NEW_ORDER,
     ORDER_EVENT_CANCEL,
@@ -8,5 +8,6 @@ public enum RappiWebhookEvents
     MENU_APPROVED,
     MENU_REJECTED,
     PING,
-    STORE_CONNECTIVITY
+    STORE_CONNECTIVITY,
+    ORDER_RT_TRACKING
 }
