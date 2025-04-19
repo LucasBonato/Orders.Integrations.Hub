@@ -1,8 +1,16 @@
 ﻿using System.Text;
 using System.Text.Json;
 using BizPik.Orders.Hub.Modules.Core.Orders.Domain.Contracts.UseCases;
+using BizPik.Orders.Hub.Modules.Core.Orders.Domain.ValueObjects.Enums;
+using BizPik.Orders.Hub.Modules.Core.Orders.Domain.ValueObjects.Events;
+using BizPik.Orders.Hub.Modules.Integrations.Common.Validators;
+using BizPik.Orders.Hub.Modules.Integrations.Rappi.Application.Extensions;
 using BizPik.Orders.Hub.Modules.Integrations.Rappi.Domain.Entity;
-using BizPik.Orders.Hub.Modules.Integrations.Rappi.Validators;
+using BizPik.Orders.Hub.Modules.Integrations.Rappi.Domain.ValueObjects.DTOs.Request;
+using BizPik.Orders.Hub.Modules.Integrations.Rappi.Domain.ValueObjects.DTOs.Response;
+
+using FastEndpoints;
+
 using Microsoft.AspNetCore.Mvc;
 using static Microsoft.AspNetCore.Http.Results;
 
@@ -13,41 +21,74 @@ public abstract class RappiWebhookAdapterLog;
 public static class RappiWebhookAdapter {
     public static async Task<IResult> CreateOrder(
         [FromServices] ICreateOrderUseCase<RappiOrder> createOrder,
-        [FromServices] IUpdateOrderStatusUseCase<RappiOrder> updateOrder,
         ILogger<RappiWebhookAdapterLog> logger,
         HttpContext context
     ) {
-        RappiOrder request = await HandleSignature(context, logger);
+        RappiOrder request = await HandleSignature<RappiOrder>(context, logger);
+        
+        await createOrder.ExecuteAsync(request);
+
         return Created();
     }
 
-    public static async Task<IResult> AutoAcceptOrder(HttpContext context)
-    {
-        throw new NotImplementedException();
+    public static async Task<IResult> AutoAcceptOrder(
+        [FromServices] ICreateOrderUseCase<RappiOrder> createOrder,
+        ILogger<RappiWebhookAdapterLog> logger,
+        HttpContext context
+    ) {
+        RappiOrder request = await HandleSignature<RappiOrder>(context, logger);
+        
+        await createOrder.ExecuteAsync(request);
+        
+        await new SendNotificationEvent(
+            Message: request.FromRappi(OrderEventType.CONFIRMED),
+            TopicArn: null
+        ).PublishAsync();
+        
+        return Created();
     }
 
-    public static async Task<IResult> CancelOrder(HttpContext context)
-    {
-        throw new NotImplementedException();
+    public static async Task<IResult> CancelOrder(
+        [FromServices] IUpdateOrderStatusUseCase<RappiWebhookEventOrderRequest> updateOrder,
+        ILogger<RappiWebhookAdapterLog> logger,
+        HttpContext context
+    ) {
+        RappiWebhookEventOrderRequest request = await HandleSignature<RappiWebhookEventOrderRequest>(context, logger);
+        await updateOrder.ExecuteAsync(request);
+        return Accepted();
     }
 
-    public static async Task<IResult> PatchOrder(HttpContext context)
-    {
-        throw new NotImplementedException();
+    public static async Task<IResult> PatchOrder(
+        [FromServices] IUpdateOrderStatusUseCase<RappiWebhookEventOrderRequest> updateOrder,
+        ILogger<RappiWebhookAdapterLog> logger,
+        HttpContext context
+    ) {
+        RappiWebhookEventOrderRequest request = await HandleSignature<RappiWebhookEventOrderRequest>(context, logger);
+        await updateOrder.ExecuteAsync(request);
+        return Accepted();
     }
 
-    public static async Task<IResult> PingStore(HttpContext context)
-    {
-        throw new NotImplementedException();
+    public static async Task<IResult> PingStore(
+        ILogger<RappiWebhookAdapterLog> logger,
+        HttpContext context
+    ) {
+        RappiWebhookPingRequest request = await HandleSignature<RappiWebhookPingRequest>(context, logger);
+
+        // TODO - Manage better this response finding somewhere if the store is on
+
+        return Ok(new RappiWebhookPingResponse(
+            Status: "Ok",
+            Description: "Store on"
+        ));
     }
 
     /// <summary>
-    /// É chamado toda vez que uma requisição é realizada, pegando o corpo da requisição <br/>
-    /// e tratando para verificar se o header `Rappi-Signature` é válido e foi enviado pela Rappi.
+    /// This will valid the signature <c>Rappi-Signature</c>
     /// </summary>
-    /// <param name="context">Informações da requição http</param>
-    /// <returns></returns>
-    private static async Task<RappiOrder> HandleSignature(HttpContext context, ILogger<RappiWebhookAdapterLog> logger) {
+    /// <param name="context">The HttpContext of the request</param>
+    /// <param name="logger">A logger</param>
+    /// <returns>The Body of the request formatted as a RappiOrder</returns>
+    private static async Task<TRequest> HandleSignature<TRequest>(HttpContext context, ILogger<RappiWebhookAdapterLog> logger) {
         var request = context.Request;
 
         if (!request.Headers.TryGetValue("Rappi-Signature", out var signatureHeader)) {
@@ -73,35 +114,34 @@ public static class RappiWebhookAdapter {
 
         body = $"{timestampAndSign["t"]}.{body}";
 
-        string secret = string.Empty;
-        // string secret = AppEnv.INTEGRATIONS.RAPPI.CLIENT.SECRET.NotNull();
+        string signature = timestampAndSign["sign"];
 
-        if (!RappiSignatureValidator.VerifyHmacSHA256(secret, body, timestampAndSign["sign"])) {
+        string secret = AppEnv.INTEGRATIONS.RAPPI.CLIENT.SECRET.NotNull();
+
+        if (!signature.IsSignatureValid(secret, body)) {
             context.Response.StatusCode = 403;
-            logger.LogError("Signature Header invalid\n\nSignature sended: {signatureS}\n\nSignature Expected: {signatureE}", timestampAndSign["sign"], RappiSignatureValidator.GetExpectedSignature(secret, body));
+            // logger.LogError("Signature Header invalid\n\nSignature sended: {signatureS}\n\nSignature Expected: {signatureE}", timestampAndSign["sign"], RappiSignatureValidator.GetExpectedSignature(secret, body));
             await context.Response.WriteAsJsonAsync("Invalid Signature");
         }
 
-        return JsonSerializer.Deserialize<RappiOrder>(body)!;
+        return JsonSerializer.Deserialize<TRequest>(body)!;
     }
 
     /// <summary>
-    /// Divide o header `Rappi-Signature`, pegando o timestamp ('t') e a signature ('sign') separadamente.
+    /// Split the Header <c>Rappi-Signature</c> into a dictionary <br/>
+    /// getting the timestamp <c>t</c> and the signature <c>sign</c>
     /// </summary>
-    /// <param name="header">Header `Rappi-Signature` recebido na requisição.</param>
-    /// <returns>Retorna um Dictionary com os valores do timestamp e signature, sendo chamada com as seguintes keys: ["t"] e ["sign"]</returns>
-    /// <exception cref="ArgumentException"></exception>
+    /// <param name="header">The <c>Rappi-Signature</c> received.</param>
+    /// <returns>A Dictionary with the timestamp <c>t</c> and signature <c>sign</c></returns>
+    /// <exception cref="ArgumentException">Occurs when there isn't <c>t</c> or <c>sign</c> keys</exception>
     private static Dictionary<string, string> GetTimestampAndSign(string header) {
-        Dictionary<string, string> response = new();
         string[] timestampAndSignature = header.Split(",");
-        foreach (string item in timestampAndSignature) {
 
-            string[] timestampOrSignatureDivided = item.Split("=");
+        Dictionary<string, string> response = timestampAndSignature
+            .Select(item => item.Split("="))
+            .Where(timestampOrSignatureDivided => timestampOrSignatureDivided[0] == "t" || timestampOrSignatureDivided[0] == "sign")
+            .ToDictionary(timestampOrSignatureDivided => timestampOrSignatureDivided[0], timestampOrSignatureDivided => timestampOrSignatureDivided[1]);
 
-            if (timestampOrSignatureDivided[0] == "t" || timestampOrSignatureDivided[0] == "sign") {
-                response.Add(timestampOrSignatureDivided[0], timestampOrSignatureDivided[1]);
-            }
-        }
         if (response.Count < 1)
             throw new ArgumentException("O Header não possui 't' e 'sign'.");
         return response;
