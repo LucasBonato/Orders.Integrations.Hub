@@ -10,13 +10,19 @@ public static class OrdersHubEndpoints
                 .WithDescription("Change status for integration")
             ;
 
+        RouteGroupBuilder routeGroupStatus = routeGroup
+                .MapGroup("/Status")
+                .WithTags("Change Order Status")
+                .WithDescription("Change order status in integrations")
+            ;
+
         RouteGroupBuilder routeGroupProductStatus = routeGroup
                 .MapGroup("/Product")
                 .WithTags("Product Status")
-                .WithDescription("Change status of the products for integration")
+                .WithDescription("Change status of the products in integrations")
             ;
 
-        routeGroup.MapPatch("/", OrdersHubAdapter.ChangeIntegrationStatus);
+        routeGroupStatus.MapPatch("/", OrdersHubAdapter.ChangeIntegrationStatus);
 
         routeGroupProductStatus.MapPost("/Enable", OrdersHubAdapter.EnableIntegrationProduct);
         routeGroupProductStatus.MapPost("/Disable", OrdersHubAdapter.DisableIntegrationProduct);
