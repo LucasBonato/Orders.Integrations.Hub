@@ -1,31 +1,23 @@
-﻿using BizPik.Orders.Hub.Modules.Core.BizPik.Domain.Contracts;
-using BizPik.Orders.Hub.Modules.Core.BizPik.Domain.ValueObjects;
-using BizPik.Orders.Hub.Modules.Core.Orders.Domain.Contracts.UseCases;
+﻿using BizPik.Orders.Hub.Modules.Core.Orders.Domain.Contracts.UseCases;
 using BizPik.Orders.Hub.Modules.Core.Orders.Domain.ValueObjects.Enums;
 using BizPik.Orders.Hub.Modules.Core.Orders.Domain.ValueObjects.Events;
-using BizPik.Orders.Hub.Modules.Integrations.Rappi.Domain.Contracts;
-using BizPik.Orders.Hub.Modules.Integrations.Rappi.Domain.Entity;
+using BizPik.Orders.Hub.Modules.Integrations.Rappi.Application.Extensions;
+using BizPik.Orders.Hub.Modules.Integrations.Rappi.Domain.ValueObjects.DTOs.Request;
 
 using FastEndpoints;
 
 namespace BizPik.Orders.Hub.Modules.Integrations.Rappi.Application.Ports;
 
 public class RappiUpdateOrderStatusUseCase(
-    ILogger<RappiUpdateOrderStatusUseCase> logger,
-    IBizPikMonolithClient bizPikClient,
-    IRappiClient rappiClient
-) : IUpdateOrderStatusUseCase<RappiOrder> {
-    public async Task<RappiOrder> ExecuteAsync(RappiOrder requestOrder)
+    ILogger<RappiUpdateOrderStatusUseCase> logger
+) : IUpdateOrderStatusUseCase<RappiWebhookEventOrderRequest> {
+    public async Task<RappiWebhookEventOrderRequest> ExecuteAsync(RappiWebhookEventOrderRequest requestOrder)
     {
-        BizPikResponseWrapper<BizPikIntegrationResponse> integrationWrapper = await bizPikClient.GetIntegrationByExternalId(requestOrder.Store.ExternalId, AppEnv.BIZPIK.MONOLITH.API_KEYS.COMPANIES_INTEGRATIONS.NotNull());
-        BizPikIntegrationResponse integration = integrationWrapper.Data;
+        await new UpdateOrderStatusEvent(
+            OrderUpdateStatus: requestOrder.FromRappi(),
+            SalesChannel: OrderSalesChannel.RAPPI
+        ).PublishAsync();
 
-        int companyId = integration.CompanyId ?? 0;
-
-        await new CreateOrderEvent()
-        {
-            Order = requestOrder.ToOrder(companyId),
-            SalesChannel = OrderSalesChannel.RAPPI
-        }.PublishAsync();
+        return requestOrder;
     }
 }
