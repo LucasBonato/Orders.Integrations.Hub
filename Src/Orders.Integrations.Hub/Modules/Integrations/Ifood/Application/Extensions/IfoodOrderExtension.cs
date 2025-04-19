@@ -334,7 +334,10 @@ public static class IfoodOrderExtension
             IfoodFullOrderStatus.SEPARATION_STARTED => OrderEventType.PREPARING,
             IfoodFullOrderStatus.DISPATCHED => OrderEventType.DISPATCHED,
             IfoodFullOrderStatus.CONCLUDED => OrderEventType.CONCLUDED,
-            IfoodFullOrderStatus.CANCELLED => OrderEventType.CANCELLED,
+            IfoodFullOrderStatus.CANCELLED or
+                IfoodFullOrderStatus.CONSUMER_CANCELLATION_REQUESTED or
+                IfoodFullOrderStatus.CANCELLATION_REQUESTED or
+                IfoodFullOrderStatus.DELIVERY_CANCELLATION_REQUESTED => OrderEventType.CANCELLED,
             _ => OrderEventType.CREATED
         };
     }
