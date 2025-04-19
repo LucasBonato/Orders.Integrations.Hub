@@ -7,7 +7,7 @@ namespace BizPik.Orders.Hub.Modules.Core.Orders.Application.UseCases;
 public class OrderUseCase(
     ILogger<OrderUseCase> logger,
     IOrderClient orderClient
-) : IOrderUseCase {
+) : IOrderUseCase, IOrderHttp {
     public async Task CreateOrder(CreateOrderEvent order)
     {
         logger.LogInformation("[INFO] - CreateOrderEventHandler - Creating Order From {salesChannel}", order.SalesChannel);
