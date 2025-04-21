@@ -21,7 +21,7 @@ public class IfoodOrderCreateUseCase(
     {
         IfoodOrder ifoodOrder = await iFoodClient.GetOrderDetails(requestOrder.OrderId);
 
-        BizPikResponseWrapper<BizPikIntegrationResponse> integrationWrapper = await bizPikClient.GetIntegrationByExternalId(requestOrder.MerchantId, AppEnv.BIZPIK.MONOLITH.API_KEYS.COMPANIES_INTEGRATIONS.NotNull());
+        BizPikResponseWrapper<BizPikIntegrationResponse> integrationWrapper = await bizPikClient.GetIntegrationByExternalId(requestOrder.MerchantId);
         BizPikIntegrationResponse integration = integrationWrapper.Data;
 
         int companyId = integration.CompanyId ?? 0;

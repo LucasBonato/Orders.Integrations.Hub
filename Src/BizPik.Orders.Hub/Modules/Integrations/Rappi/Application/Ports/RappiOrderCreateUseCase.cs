@@ -16,7 +16,7 @@ public class RappiOrderCreateUseCase(
 ) : IOrderCreateUseCase<RappiOrder> {
     public async Task<RappiOrder> ExecuteAsync(RappiOrder requestOrder)
     {
-        BizPikResponseWrapper<BizPikIntegrationResponse> integrationWrapper = await bizPikClient.GetIntegrationByExternalId(requestOrder.Store.ExternalId, AppEnv.BIZPIK.MONOLITH.API_KEYS.COMPANIES_INTEGRATIONS.NotNull());
+        BizPikResponseWrapper<BizPikIntegrationResponse> integrationWrapper = await bizPikClient.GetIntegrationByExternalId(requestOrder.Store.ExternalId);
         BizPikIntegrationResponse integration = integrationWrapper.Data;
 
         int companyId = integration.CompanyId ?? 0;
