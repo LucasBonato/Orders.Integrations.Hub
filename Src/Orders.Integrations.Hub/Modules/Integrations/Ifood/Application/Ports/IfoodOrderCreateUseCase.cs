@@ -21,7 +21,7 @@ public class IfoodOrderCreateUseCase(
     {
         IfoodOrder ifoodOrder = await iFoodClient.GetOrderDetails(requestOrder.OrderId);
 
-        ResponseWrapper<IntegrationResponse> integrationWrapper = await Client.GetIntegrationByExternalId(requestOrder.MerchantId, AppEnv..MONOLITH.API_KEYS.COMPANIES_INTEGRATIONS.NotNull());
+        ResponseWrapper<IntegrationResponse> integrationWrapper = await Client.GetIntegrationByExternalId(requestOrder.MerchantId);
         IntegrationResponse integration = integrationWrapper.Data;
 
         int companyId = integration.CompanyId ?? 0;

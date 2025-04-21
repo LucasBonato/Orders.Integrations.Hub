@@ -16,7 +16,7 @@ public class RappiOrderCreateUseCase(
 ) : IOrderCreateUseCase<RappiOrder> {
     public async Task<RappiOrder> ExecuteAsync(RappiOrder requestOrder)
     {
-        ResponseWrapper<IntegrationResponse> integrationWrapper = await Client.GetIntegrationByExternalId(requestOrder.Store.ExternalId, AppEnv..MONOLITH.API_KEYS.COMPANIES_INTEGRATIONS.NotNull());
+        ResponseWrapper<IntegrationResponse> integrationWrapper = await Client.GetIntegrationByExternalId(requestOrder.Store.ExternalId);
         IntegrationResponse integration = integrationWrapper.Data;
 
         int companyId = integration.CompanyId ?? 0;

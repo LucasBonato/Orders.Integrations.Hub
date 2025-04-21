@@ -25,7 +25,6 @@ public interface IRappiClient : IIntegrationClient
     // [Put("/api/v2/restaurants-integrations-public-api/availability/stores/items")]
     Task PutAvailabilityProductsStatus(List<RappiAvailabilityUpdateItemsRequest> request);
 
-    // TODO: Check here
     // [Post("/api/v2/restaurants-integrations-public-api/availability/items/status")]
     Task<List<RappiAvailabilityItemStatusResponse>> GetAvailabilityProducts(RappiAvailabilityItemsStatusRequest request);
 
