@@ -8,7 +8,7 @@ using FastEndpoints;
 
 namespace Orders.Integrations.Hub.Modules.Integrations.Ifood.Application.Ports;
 
-public class IfoodUpdateOrderStatusUseCase : IUpdateOrderStatusUseCase<IfoodWebhookRequest>
+public class IfoodOrderUpdateStatusUseCase : IOrderUpdateStatusUseCase<IfoodWebhookRequest>
 {
     public async Task<IfoodWebhookRequest> ExecuteAsync(IfoodWebhookRequest ifoodOrder)
     {

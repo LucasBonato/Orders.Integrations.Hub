@@ -21,8 +21,8 @@ public static class IfoodDependencyInjection
 
     private static IServiceCollection AddIfoodServices(this IServiceCollection services)
     {
-        services.AddTransient<ICreateOrderUseCase<IfoodWebhookRequest>, IfoodCreateOrderUseCase>();
-        services.AddTransient<IUpdateOrderStatusUseCase<IfoodWebhookRequest>, IfoodUpdateOrderStatusUseCase>();
+        services.AddTransient<IOrderCreateUseCase<IfoodWebhookRequest>, IfoodOrderCreateUseCase>();
+        services.AddTransient<IOrderUpdateStatusUseCase<IfoodWebhookRequest>, IfoodOrderUpdateStatusUseCase>();
 
         return services
                 .Configure<JsonOptions>(options => {

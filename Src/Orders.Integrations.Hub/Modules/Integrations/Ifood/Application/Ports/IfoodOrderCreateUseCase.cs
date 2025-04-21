@@ -12,11 +12,11 @@ using FastEndpoints;
 
 namespace Orders.Integrations.Hub.Modules.Integrations.Ifood.Application.Ports;
 
-public class IfoodCreateOrderUseCase(
-    ILogger<IfoodCreateOrderUseCase> logger,
+public class IfoodOrderCreateUseCase(
+    ILogger<IfoodOrderCreateUseCase> logger,
     IInternalClient Client,
     IIFoodClient iFoodClient
-) : ICreateOrderUseCase<IfoodWebhookRequest> {
+) : IOrderCreateUseCase<IfoodWebhookRequest> {
     public async Task<IfoodWebhookRequest> ExecuteAsync(IfoodWebhookRequest requestOrder)
     {
         IfoodOrder ifoodOrder = await iFoodClient.GetOrderDetails(requestOrder.OrderId);

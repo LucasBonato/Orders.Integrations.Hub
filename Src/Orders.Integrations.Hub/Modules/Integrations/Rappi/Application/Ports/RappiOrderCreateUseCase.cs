@@ -10,10 +10,10 @@ using FastEndpoints;
 
 namespace Orders.Integrations.Hub.Modules.Integrations.Rappi.Application.Ports;
 
-public class RappiCreateOrderUseCase(
-    ILogger<RappiCreateOrderUseCase> logger,
+public class RappiOrderCreateUseCase(
+    ILogger<RappiOrderCreateUseCase> logger,
     IInternalClient Client
-) : ICreateOrderUseCase<RappiOrder> {
+) : IOrderCreateUseCase<RappiOrder> {
     public async Task<RappiOrder> ExecuteAsync(RappiOrder requestOrder)
     {
         ResponseWrapper<IntegrationResponse> integrationWrapper = await Client.GetIntegrationByExternalId(requestOrder.Store.ExternalId, AppEnv..MONOLITH.API_KEYS.COMPANIES_INTEGRATIONS.NotNull());

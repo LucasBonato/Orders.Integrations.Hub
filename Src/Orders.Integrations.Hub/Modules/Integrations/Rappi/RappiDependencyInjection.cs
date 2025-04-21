@@ -21,8 +21,8 @@ public static class RappiDependencyInjection
 
     private static IServiceCollection AddRappiServices(this IServiceCollection services)
     {
-        services.AddTransient<ICreateOrderUseCase<RappiOrder>, RappiCreateOrderUseCase>();
-        services.AddTransient<IUpdateOrderStatusUseCase<RappiWebhookEventOrderRequest>, RappiUpdateOrderStatusUseCase>();
+        services.AddTransient<IOrderCreateUseCase<RappiOrder>, RappiOrderCreateUseCase>();
+        services.AddTransient<IOrderUpdateStatusUseCase<RappiWebhookEventOrderRequest>, RappiOrderUpdateStatusUseCase>();
 
         return services
                 .Configure<JsonOptions>(options => {
