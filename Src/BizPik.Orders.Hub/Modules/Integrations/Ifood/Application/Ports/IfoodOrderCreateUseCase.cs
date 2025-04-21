@@ -12,11 +12,11 @@ using FastEndpoints;
 
 namespace BizPik.Orders.Hub.Modules.Integrations.Ifood.Application.Ports;
 
-public class IfoodCreateOrderUseCase(
-    ILogger<IfoodCreateOrderUseCase> logger,
+public class IfoodOrderCreateUseCase(
+    ILogger<IfoodOrderCreateUseCase> logger,
     IBizPikMonolithClient bizPikClient,
     IIFoodClient iFoodClient
-) : ICreateOrderUseCase<IfoodWebhookRequest> {
+) : IOrderCreateUseCase<IfoodWebhookRequest> {
     public async Task<IfoodWebhookRequest> ExecuteAsync(IfoodWebhookRequest requestOrder)
     {
         IfoodOrder ifoodOrder = await iFoodClient.GetOrderDetails(requestOrder.OrderId);

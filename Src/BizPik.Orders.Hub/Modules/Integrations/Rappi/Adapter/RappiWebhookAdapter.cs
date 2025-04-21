@@ -20,25 +20,25 @@ public abstract class RappiWebhookAdapterLog;
 
 public static class RappiWebhookAdapter {
     public static async Task<IResult> CreateOrder(
-        [FromServices] ICreateOrderUseCase<RappiOrder> createOrder,
+        [FromServices] IOrderCreateUseCase<RappiOrder> orderCreate,
         ILogger<RappiWebhookAdapterLog> logger,
         HttpContext context
     ) {
         RappiOrder request = await HandleSignature<RappiOrder>(context, logger);
         
-        await createOrder.ExecuteAsync(request);
+        await orderCreate.ExecuteAsync(request);
 
         return Created();
     }
 
     public static async Task<IResult> AutoAcceptOrder(
-        [FromServices] ICreateOrderUseCase<RappiOrder> createOrder,
+        [FromServices] IOrderCreateUseCase<RappiOrder> orderCreate,
         ILogger<RappiWebhookAdapterLog> logger,
         HttpContext context
     ) {
         RappiOrder request = await HandleSignature<RappiOrder>(context, logger);
         
-        await createOrder.ExecuteAsync(request);
+        await orderCreate.ExecuteAsync(request);
         
         await new SendNotificationEvent(
             Message: request.FromRappi(OrderEventType.CONFIRMED),
@@ -49,22 +49,22 @@ public static class RappiWebhookAdapter {
     }
 
     public static async Task<IResult> CancelOrder(
-        [FromServices] IUpdateOrderStatusUseCase<RappiWebhookEventOrderRequest> updateOrder,
+        [FromServices] IOrderUpdateStatusUseCase<RappiWebhookEventOrderRequest> orderUpdate,
         ILogger<RappiWebhookAdapterLog> logger,
         HttpContext context
     ) {
         RappiWebhookEventOrderRequest request = await HandleSignature<RappiWebhookEventOrderRequest>(context, logger);
-        await updateOrder.ExecuteAsync(request);
+        await orderUpdate.ExecuteAsync(request);
         return Accepted();
     }
 
     public static async Task<IResult> PatchOrder(
-        [FromServices] IUpdateOrderStatusUseCase<RappiWebhookEventOrderRequest> updateOrder,
+        [FromServices] IOrderUpdateStatusUseCase<RappiWebhookEventOrderRequest> orderUpdate,
         ILogger<RappiWebhookAdapterLog> logger,
         HttpContext context
     ) {
         RappiWebhookEventOrderRequest request = await HandleSignature<RappiWebhookEventOrderRequest>(context, logger);
-        await updateOrder.ExecuteAsync(request);
+        await orderUpdate.ExecuteAsync(request);
         return Accepted();
     }
 
