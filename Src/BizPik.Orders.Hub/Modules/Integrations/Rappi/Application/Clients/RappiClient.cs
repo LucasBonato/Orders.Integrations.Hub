@@ -1,4 +1,6 @@
-﻿using BizPik.Orders.Hub.Modules.Integrations.Rappi.Domain.Contracts;
+﻿using System.Text.Json;
+
+using BizPik.Orders.Hub.Modules.Integrations.Rappi.Domain.Contracts;
 using BizPik.Orders.Hub.Modules.Integrations.Rappi.Domain.ValueObjects.DTOs.Request;
 using BizPik.Orders.Hub.Modules.Integrations.Rappi.Domain.ValueObjects.DTOs.Response;
 
@@ -38,9 +40,18 @@ public class RappiClient(
         throw new NotImplementedException();
     }
 
-    public Task<List<RappiAvailabilityItemStatusResponse>> GetAvailabilityProducts(RappiAvailabilityItemsStatusRequest request)
+    public async Task<List<RappiAvailabilityItemStatusResponse>> GetAvailabilityProducts(RappiAvailabilityItemsStatusRequest request)
     {
-        throw new NotImplementedException();
+        const string uri = "availability/stores/items";
+
+        HttpResponseMessage response = await httpClient.PutAsync(uri, new StringContent(JsonSerializer.Serialize(request)));
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new Exception(response.Content.ReadAsStringAsync().Result);
+        }
+
+        string responseContent = await response.Content.ReadAsStringAsync();
+        return JsonSerializer.Deserialize<List<RappiAvailabilityItemStatusResponse>>(responseContent)!;
     }
 
     public async Task ConfirmOrder(string orderId, string storeId)
