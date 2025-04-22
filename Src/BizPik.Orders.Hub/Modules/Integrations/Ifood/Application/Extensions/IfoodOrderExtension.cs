@@ -164,7 +164,7 @@ public static class IfoodOrderExtension
             ),
             Payments: new OrderPayment(
                 Prepaid: (int)order.Payments.Prepaid,
-                Pending: (double)order.Payments.Pending,
+                Pending: order.Payments.Pending,
                 Methods: paymentMethods
             ),
             TaxInvoice: null,

@@ -1,9 +1,17 @@
 ﻿using BizPik.Orders.Hub.Modules.Core.Orders.Domain.Entity;
+using BizPik.Orders.Hub.Modules.Core.Orders.Domain.Entity.Address;
+using BizPik.Orders.Hub.Modules.Core.Orders.Domain.Entity.Discount;
+using BizPik.Orders.Hub.Modules.Core.Orders.Domain.Entity.Item;
+using BizPik.Orders.Hub.Modules.Core.Orders.Domain.Entity.Merchant;
+using BizPik.Orders.Hub.Modules.Core.Orders.Domain.Entity.Payment;
 using BizPik.Orders.Hub.Modules.Core.Orders.Domain.ValueObjects.DTOs;
 using BizPik.Orders.Hub.Modules.Core.Orders.Domain.ValueObjects.Enums;
 using BizPik.Orders.Hub.Modules.Integrations.Rappi.Domain.Entity;
 using BizPik.Orders.Hub.Modules.Integrations.Rappi.Domain.ValueObjects.DTOs.Request;
 using BizPik.Orders.Hub.Modules.Integrations.Rappi.Domain.ValueObjects.Enums;
+
+using OrderPayment = BizPik.Orders.Hub.Modules.Core.Orders.Domain.Entity.Payment.OrderPayment;
+using OrderTotal = BizPik.Orders.Hub.Modules.Core.Orders.Domain.Entity.OrderTotal;
 
 namespace BizPik.Orders.Hub.Modules.Integrations.Rappi.Application.Extensions;
 
@@ -11,62 +19,239 @@ public static class RappiOrderExtension
 {
     public static Order ToOrder(this RappiOrder order, int companyId)
     {
-        throw new NotImplementedException();
-        // return new Order(
-        //     OrderId: order.OrderDetail.OrderId,
-        //     Type: order.OrderDetail.DeliveryMethod.ToOrder(),
-        //     DisplayId: Guid.NewGuid().ToString()[..5],
-        //     SourceAppId: OrderSalesChannel.RAPPI.ToString(),
-        //     SalesChannel: OrderSalesChannel.RAPPI.ToString(),
-        //     VirtualBrand: order.Store.InternalId,
-        //     CreatedAt: order.OrderDetail.CreatedAt,
-        //     LastEvent: OrderEventType.CREATED,
-        //     OrderTiming: order.OrderDetail..OrderTiming.ToOrder(),
-        //     PreparationStartDateTime: order.PreparationStartDateTime,
-        //     Merchant: new OrderMerchant(
-        //         Id: order.Merchant.Id,
-        //         Name: order.Merchant.Name
-        //     ),
-        //     Items: items,
-        //     OtherFees: otherFees,
-        //     Discounts: discounts,
-        //     Total: new OrderTotal(
-        //         Discount: order.Total.Benefits.ToBrl(),
-        //         ItemsPrice: order.Total.SubTotal.ToBrl(),
-        //         OrderAmount: order.Total.OrderAmount.ToBrl(),
-        //         OtherFees: (order.Total.DeliveryFee + order.Total.AdditionalFees).ToBrl()
-        //     ),
-        //     Payments: new OrderPayment(
-        //         Prepaid: (int)order.Payments.Prepaid,
-        //         Pending: (double)order.Payments.Pending,
-        //         Methods: paymentMethods
-        //     ),
-        //     TaxInvoice: null,
-        //     Customer: new OrderCustomer(
-        //         Id: order.Customer.Id,
-        //         Name: order.Customer.Name,
-        //         DocumentNumber: order.Customer.DocumentNumber,
-        //         Email: string.Empty,
-        //         OrdersCountOnMerchant: order.Customer.OrdersCountOnMerchant,
-        //         Phone: new Phone(
-        //             Extension: order.Customer.Phone?.Localizer?? string.Empty,
-        //             Number: order.Customer.Phone?.Number?? string.Empty
-        //         )
-        //     ),
-        //     Schedule: orderSchedule,
-        //     OrderPriority: order.Delivery?.Mode.ToOrderPriority(),
-        //     Delivery: orderDelivery,
-        //     Takeout: orderTakeout,
-        //     Indoor: orderIndoor,
-        //     SendPreparing: false,
-        //     SendDelivered: false,
-        //     SendPickedUp: false,
-        //     SendTracking: false,
-        //     ExtraInfo: order.ExtraInfo?? string.Empty,
-        //     CompanyId: companyId,
-        //     OrderDisplayId: Guid.NewGuid().ToString()[..5],
-        //     ExternalId: order.Id
-        // );
+
+        decimal? orderTotal = order.OrderDetail.Totals.TotalProducts
+                              + order.OrderDetail.Totals.Charges.Shipping
+                              + order.OrderDetail.Totals.Charges.ServiceFee
+                              - order.OrderDetail.Totals.TotalDiscounts
+            // - (orderRappi.OrderDetail.Discounts ?? []).Sum(discount => discount.AmountByRappi)
+            ;
+        List<OrderItem> items = order.OrderDetail.Items.Select(item => new OrderItem(
+            Id: item.Id,
+            Index: 0,
+            Name: item.Name,
+            ExternalCode: item.Sku ?? string.Empty,
+            ImageUrl: string.Empty,
+            Unit: OrderUnit.UN,
+            Ean: string.Empty,
+            Quantity: item.Quantity,
+            SpecialInstructions: item.Comments?? string.Empty,
+            UnitPrice: (item.Price / item.Quantity).ToBrl(),
+            TotalPrice: item.Price.ToBrl(),
+            OptionsPrice: item.Subitems.Sum(option => option.Price).ToBrl(),
+            Options: item.Subitems.Select(option  => new OrderItemOption(
+                Id: option.Id,
+                Index: 0,
+                Name: option.Name,
+                ExternalCode: option.Sku ?? string.Empty,
+                ImageUrl: string.Empty,
+                Unit: OrderUnit.UN,
+                Ean: string.Empty,
+                Quantity: option.Quantity?? 0,
+                SpecialInstructions: string.Empty,
+                UnitPrice: (option.Price / option.Quantity).ToBrl(),
+                TotalPrice: option.Price.ToBrl()
+            )).ToList()
+        )).ToList();
+
+        List<OrderDiscount> discounts = order.OrderDetail.Discounts?.Select(discount => new OrderDiscount(
+            Amount: discount.Value.ToBrl(),
+            Target: discount.Type.ToOrder(),
+            TargetId: discount.ProductId.ToString()?? string.Empty,
+            SponsorshipValues: [
+                new OrderDiscountSponsorshipValue(
+                    Amount: discount.AmountByRappi.ToBrl(),
+                    Name: OrderSponsorshipName.MARKETPLACE
+                ),
+                new OrderDiscountSponsorshipValue(
+                    Amount: discount.AmountByPartner.ToBrl(),
+                    Name: OrderSponsorshipName.MERCHANT
+                )
+            ]
+        )).ToList() ?? [];
+
+        List<OrderPaymentMethod> paymentMethods = [
+            new OrderPaymentMethod(
+                Value: orderTotal?? 0,
+                Currency: "BRL",
+                Type: order.OrderDetail.BillingInformation == null ? MethodType.PREPAID : MethodType.PENDING,
+                Method: order.OrderDetail.PaymentMethod.ToOrder(),
+                Brand: MethodBrand.OTHER,
+                MethodInfo: string.Empty,
+                ChangeFor: null,
+                Transaction: null
+            )
+        ];
+
+        OrderDelivery? orderDelivery = order.OrderDetail.DeliveryInformation is { } delivery
+            ? new OrderDelivery(
+                DeliveredBy: OrderDeliveredBy.MERCHANT,
+                DeliveryDateTime: DateTime.UtcNow.AddMinutes(order.OrderDetail.CookingTime ?? 0),
+                EstimatedDeliveryDateTime: DateTime.Now,
+                DeliveryAddress: new Address(
+                    City: delivery.City,
+                    Complement: delivery.Complement,
+                    Country: "BR",
+                    District: delivery.Neighborhood,
+                    FormattedAddress: delivery.CompleteAddress,
+                    Number: delivery.StreetNumber,
+                    PostalCode: delivery.PostalCode,
+                    Reference: string.Empty,
+                    State: "São Paulo",
+                    Street: delivery.StreetName,
+                    Coordinates: new AddressCoordinates(
+                        Longitude: 0,
+                        Latitude: 0
+                    )
+                )
+            )
+            : null;
+
+        return new Order(
+            OrderId: order.OrderDetail.OrderId,
+            Type: OrderType.DELIVERY,
+            DisplayId: Guid.NewGuid().ToString()[..5],
+            SourceAppId: OrderSalesChannel.RAPPI.ToString(),
+            SalesChannel: OrderSalesChannel.RAPPI.ToString(),
+            VirtualBrand: order.Store.InternalId,
+            CreatedAt: order.OrderDetail.CreatedAt,
+            LastEvent: OrderEventType.CREATED,
+            OrderTiming: OrderTiming.INSTANT,
+            PreparationStartDateTime: DateTime.Now,
+            Merchant: new OrderMerchant(
+                Id: order.Store.ExternalId,
+                Name: order.Store.Name
+            ),
+            Items: items,
+            OtherFees: order.MapRappiOtherFeesToOpenDelivery(),
+            Discounts: discounts,
+            Total: new OrderTotal(
+                Discount: order.OrderDetail.Totals.TotalDiscounts.ToBrl(),
+                ItemsPrice: order.OrderDetail.Totals.TotalProducts.ToBrl(),
+                OrderAmount: order.OrderDetail.Totals.TotalOrder.ToBrl(),
+                OtherFees: (order.OrderDetail.Totals.Charges.ServiceFee + order.OrderDetail.Totals.Charges.Shipping).ToBrl()
+            ),
+            Payments: new OrderPayment(
+                Prepaid: 0,
+                Pending: order.OrderDetail.Totals.TotalToPay?? 0,
+                Methods: paymentMethods
+            ),
+            TaxInvoice: null,
+            Customer: new OrderCustomer(
+                Id: Guid.NewGuid().ToString()[5..],
+                Name: order.Customer?.FirstName + " " + order.Customer?.LastName,
+                DocumentNumber: order.Customer?.DocumentNumber?? string.Empty,
+                Email: order.OrderDetail.BillingInformation?.Email,
+                OrdersCountOnMerchant: 0,
+                Phone: new Phone(
+                    Extension: string.Empty,
+                    Number: order.Customer?.PhoneNumber?? string.Empty
+                )
+            ),
+            Schedule: null,
+            OrderPriority: OrderPriority.PRIORITY5,
+            Delivery: orderDelivery,
+            Takeout: null,
+            Indoor: null,
+            SendPreparing: false,
+            SendDelivered: false,
+            SendPickedUp: false,
+            SendTracking: false,
+            ExtraInfo: string.Empty,
+            CompanyId: companyId,
+            OrderDisplayId: Guid.NewGuid().ToString()[..5],
+            ExternalId: order.OrderDetail.OrderId
+        );
+    }
+
+    private static MethodMethod ToOrder(this RappiOrderPaymentMethod method)
+    {
+        return method switch
+        {
+            RappiOrderPaymentMethod.visa_checkout => MethodMethod.CREDIT,
+            RappiOrderPaymentMethod.rappi_pay or
+                RappiOrderPaymentMethod.paypal or
+                RappiOrderPaymentMethod.webpay or
+                RappiOrderPaymentMethod.google_pay or
+                RappiOrderPaymentMethod.apple_pay or
+                RappiOrderPaymentMethod.masterpass or
+                RappiOrderPaymentMethod.dc => MethodMethod.DIGITAL_WALLET,
+            RappiOrderPaymentMethod.pos_terminal or
+                RappiOrderPaymentMethod.elo => MethodMethod.DEBIT,
+            RappiOrderPaymentMethod.vale_r or
+                RappiOrderPaymentMethod.ticket_r or
+                RappiOrderPaymentMethod.sodexo => MethodMethod.MEAL_VOUCHER,
+            RappiOrderPaymentMethod.PIX => MethodMethod.PIX,
+            RappiOrderPaymentMethod.cash => MethodMethod.CASH,
+            RappiOrderPaymentMethod.rappicorp => MethodMethod.CREDIT_DEBIT,
+            RappiOrderPaymentMethod.cc => MethodMethod.COUPON,
+            RappiOrderPaymentMethod.edenred => MethodMethod.REDEEM,
+            _ => MethodMethod.OTHER
+        };
+    }
+
+    private static DiscountTarget ToOrder(this string target)
+    {
+        return DiscountTarget.ITEM;
+    }
+
+    private static List<OrderFee> MapRappiOtherFeesToOpenDelivery(this RappiOrder order)
+    {
+        List<OrderFee> otherFees = [];
+
+        if (order.OrderDetail.Totals.Charges.Shipping is not null)
+        {
+            otherFees.Add(new OrderFee(
+                Name: "TIP",
+                Type: FeeType.DELIVERY_FEE,
+                ReceivedBy: FeeReceivedBy.MERCHANT,
+                Price: order.OrderDetail.Totals.Charges.Shipping.ToBrl(),
+                ReceiverDocument: "None",
+                Observation: "The delivery fee"
+            ));
+        }
+
+        if (order.OrderDetail.Totals.Charges.ServiceFee is not null)
+        {
+            otherFees.Add(new OrderFee(
+                Name: "TIP",
+                Type: FeeType.SERVICE_FEE,
+                ReceivedBy: FeeReceivedBy.MERCHANT,
+                Price: order.OrderDetail.Totals.Charges.ServiceFee.ToBrl(),
+                ReceiverDocument: "None",
+                Observation: "The service fee"
+            ));
+        }
+
+        if (order.OrderDetail.Totals.OtherTotals.Tip is not null)
+        {
+            otherFees.Add(new OrderFee(
+                Name: "TIP",
+                Type: FeeType.TIP,
+                ReceivedBy: FeeReceivedBy.MERCHANT,
+                Price: order.OrderDetail.Totals.OtherTotals.Tip.ToBrl(),
+                ReceiverDocument: "None",
+                Observation: "The delivery fee"
+            ));
+        }
+
+        return otherFees;
+    }
+
+    private static Price ToBrl(this decimal? price)
+    {
+        return new Price(
+            Value: price?? 0,
+            Currency: "BRL"
+        );
+    }
+
+    private static Price ToBrl(this decimal price)
+    {
+        return new Price(
+            Value: price,
+            Currency: "BRL"
+        );
     }
 
     private static OrderEventType ToOrderEvent(this RappiWebhookOrderEvent orderEvent) {
