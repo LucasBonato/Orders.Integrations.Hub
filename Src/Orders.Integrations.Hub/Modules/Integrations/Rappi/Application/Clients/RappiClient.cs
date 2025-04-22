@@ -35,12 +35,7 @@ public class RappiClient(
         throw new NotImplementedException();
     }
 
-    public Task PutAvailabilityProductsStatus(List<RappiAvailabilityUpdateItemsRequest> request)
-    {
-        throw new NotImplementedException();
-    }
-
-    public async Task<List<RappiAvailabilityItemStatusResponse>> GetAvailabilityProducts(RappiAvailabilityItemsStatusRequest request)
+    public async Task PutAvailabilityProductsStatus(List<RappiAvailabilityUpdateItemsRequest> request)
     {
         const string uri = "availability/stores/items";
 
@@ -49,9 +44,11 @@ public class RappiClient(
         {
             throw new Exception(response.Content.ReadAsStringAsync().Result);
         }
+    }
 
-        string responseContent = await response.Content.ReadAsStringAsync();
-        return JsonSerializer.Deserialize<List<RappiAvailabilityItemStatusResponse>>(responseContent)!;
+    public Task<List<RappiAvailabilityItemStatusResponse>> GetAvailabilityProducts(RappiAvailabilityItemsStatusRequest request)
+    {
+        throw new NotImplementedException();
     }
 
     public async Task ConfirmOrder(string orderId, string storeId)
