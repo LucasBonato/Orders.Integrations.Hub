@@ -10,7 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="Anv" Version="1.0.0" />
-    <PackageReference Include="AWSSDK.SimpleNotificationService" Version="3.7.400.134" />
+    <PackageReference Include="AWSSDK.SimpleNotificationService" Version="3.7.400.138" />
     <PackageReference Include="BizPik.AWS" Version="1.0.73" />
     <PackageReference Include="DotNetEnv" Version="3.1.1" />
     <PackageReference Include="FastEndpoints" Version="6.0.0" />
@@ -21,7 +21,7 @@
     <PackageReference Include="OpenTelemetry.Instrumentation.AWS" Version="1.11.2" />
     <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.11.1" />
     <PackageReference Include="OpenTelemetry.Instrumentation.Runtime" Version="1.11.1" />
-    <PackageReference Include="Scalar.AspNetCore" Version="2.1.*" />
+    <PackageReference Include="Scalar.AspNetCore" Version="2.2.1" />
   </ItemGroup>
 
   <ItemGroup>
