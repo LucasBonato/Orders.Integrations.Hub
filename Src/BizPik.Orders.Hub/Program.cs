@@ -25,5 +25,4 @@ if (app.Environment.IsDevelopment())
 
 app.UseCore();
 app.UseIntegrationsModule();
-app.UseHttpsRedirection();
 app.Run();

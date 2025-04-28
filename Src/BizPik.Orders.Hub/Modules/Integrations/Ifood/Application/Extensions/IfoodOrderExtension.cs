@@ -67,7 +67,7 @@ public static class IfoodOrderExtension
         List<OrderDiscount> discounts = order.Benefits?.Select(benefit => new OrderDiscount(
             Amount: benefit.Value.ToBrl(),
             Target: benefit.Target.ToOrder(),
-            TargetId: benefit.TargetId,
+            TargetId: benefit.TargetId?? string.Empty,
             SponsorshipValues: benefit.SponsorshipValues?.Select(sponsorshipValue => new OrderDiscountSponsorshipValue(
                 Amount: sponsorshipValue.Value.ToBrl(),
                 Name: sponsorshipValue.Name.ToOrder()
