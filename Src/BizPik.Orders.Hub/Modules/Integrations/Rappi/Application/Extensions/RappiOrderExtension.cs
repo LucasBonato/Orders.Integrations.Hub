@@ -61,11 +61,13 @@ public static class RappiOrderExtension
             SponsorshipValues: [
                 new OrderDiscountSponsorshipValue(
                     Amount: discount.AmountByRappi.ToBrl(),
-                    Name: OrderSponsorshipName.MARKETPLACE
+                    Name: OrderSponsorshipName.MARKETPLACE,
+                    Description: discount.Description
                 ),
                 new OrderDiscountSponsorshipValue(
                     Amount: discount.AmountByPartner.ToBrl(),
-                    Name: OrderSponsorshipName.MERCHANT
+                    Name: OrderSponsorshipName.MERCHANT,
+                    Description: discount.Description
                 )
             ]
         )).ToList() ?? [];

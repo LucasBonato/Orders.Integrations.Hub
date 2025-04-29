@@ -6,5 +6,6 @@ namespace BizPik.Orders.Hub.Modules.Core.Orders.Domain.Entity.Discount;
 
 public record OrderDiscountSponsorshipValue(
     [property: JsonPropertyName("name")] [property: JsonConverter(typeof(JsonStringEnumConverter))] OrderSponsorshipName Name,
-    [property: JsonPropertyName("amount")] Price Amount
+    [property: JsonPropertyName("amount")] Price Amount,
+    [property: JsonPropertyName("description")] string? Description
 );
