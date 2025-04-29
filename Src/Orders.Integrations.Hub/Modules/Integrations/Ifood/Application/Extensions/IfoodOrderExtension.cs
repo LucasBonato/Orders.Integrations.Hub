@@ -70,7 +70,8 @@ public static class IfoodOrderExtension
             TargetId: benefit.TargetId?? string.Empty,
             SponsorshipValues: benefit.SponsorshipValues?.Select(sponsorshipValue => new OrderDiscountSponsorshipValue(
                 Amount: sponsorshipValue.Value.ToBrl(),
-                Name: sponsorshipValue.Name.ToOrder()
+                Name: sponsorshipValue.Name.ToOrder(),
+                Description: sponsorshipValue.Description
             )).ToList()?? []
         )).ToList() ?? [];
         
