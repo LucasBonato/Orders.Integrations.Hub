@@ -91,6 +91,7 @@ public static class IfoodOrderExtension
 
         OrderDelivery? orderDelivery = order.Delivery is { } delivery
             ? new OrderDelivery(
+                PickupCode: delivery.PickupCode,
                 DeliveredBy: delivery.DeliveredBy.ToOrder(),
                 DeliveryDateTime: delivery.DeliveryDateTime,
                 EstimatedDeliveryDateTime: delivery.DeliveryDateTime,

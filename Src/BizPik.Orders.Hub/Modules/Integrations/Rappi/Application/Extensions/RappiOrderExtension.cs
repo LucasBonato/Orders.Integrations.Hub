@@ -87,6 +87,7 @@ public static class RappiOrderExtension
 
         OrderDelivery? orderDelivery = order.OrderDetail.DeliveryInformation is { } delivery
             ? new OrderDelivery(
+                PickupCode: null,
                 DeliveredBy: OrderDeliveredBy.MERCHANT,
                 DeliveryDateTime: DateTime.UtcNow.AddMinutes(order.OrderDetail.CookingTime ?? 0),
                 EstimatedDeliveryDateTime: DateTime.Now,
