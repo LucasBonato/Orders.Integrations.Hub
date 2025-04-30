@@ -1,0 +1,81 @@
+{
+  "containerDefinitions": [
+    {
+      "name": "bizpik-orders-hub",
+      "image": "273354632664.dkr.ecr.us-east-1.amazonaws.com/bizpik-orders-hub:latest",
+      "cpu": 0,
+      "portMappings": [
+        {
+          "name": "bizpik-orders-hub-8080-tcp",
+          "containerPort": 8080,
+          "hostPort": 8080,
+          "protocol": "tcp",
+          "appProtocol": "http"
+        }
+      ],
+      "essential": true,
+      "environment": [
+
+      ],
+      "environmentFiles": [],
+      "mountPoints": [],
+      "volumesFrom": [],
+      "secrets": [
+
+      ],
+      "ulimits": [],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/bizpik-orders-hub",
+          "mode": "non-blocking",
+          "awslogs-create-group": "true",
+          "max-buffer-size": "25m",
+          "awslogs-region": "us-east-1",
+          "awslogs-stream-prefix": "ecs"
+        },
+        "secretOptions": []
+      },
+      "systemControls": []
+    }
+  ],
+  "family": "bizpik-orders-hub",
+  "taskRoleArn": "arn:aws:iam::273354632664:role/ecs-bizpik-orders-hub",
+  "executionRoleArn": "arn:aws:iam::273354632664:role/ecsTaskExecutionRole",
+  "networkMode": "awsvpc",
+  "revision": 2,
+  "volumes": [],
+  "status": "ACTIVE",
+  "requiresAttributes": [
+    {
+      "name": "com.amazonaws.ecs.capability.ecr-auth"
+    },
+    {
+      "name": "ecs.capability.secrets.asm.environment-variables"
+    },
+    {
+      "name": "com.amazonaws.ecs.capability.task-iam-role"
+    },
+    {
+      "name": "ecs.capability.execution-role-ecr-pull"
+    },
+    {
+      "name": "com.amazonaws.ecs.capability.docker-remote-hub.1.18"
+    },
+    {
+      "name": "ecs.capability.task-eni"
+    }
+  ],
+  "placementConstraints": [],
+  "compatibilities": ["EC2", "FARGATE"],
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "1024",
+  "memory": "4096",
+  "runtimePlatform": {
+    "cpuArchitecture": "X86_64",
+    "operatingSystemFamily": "LINUX"
+  },
+  "registeredAt": "2025-03-13T16:13:34.755Z",
+  "registeredBy": "arn:aws:sts::273354632664:assumed-role/AWSReservedSSO_AdministratorAccess_1f5e854a495dc8dc/luciano.lopes@cloud3.io",
+  "tags": []
+}
