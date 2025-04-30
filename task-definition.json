@@ -85,6 +85,5 @@
   },
   "registeredAt": "2025-04-25T12:31:24.392Z",
   "registeredBy": "arn:aws:sts::273354632664:assumed-role/AWSReservedSSO_AdministratorAccess_1f5e854a495dc8dc/douglas.santos@cloud3.io",
-  "enableFaultInjection": false,
   "tags": []
 }
