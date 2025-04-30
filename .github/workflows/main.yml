@@ -16,7 +16,7 @@ env:
   ECS_SERVICE: bizpik-order-hub
   ECS_CLUSTER: bizpik-prod-ecs
   ECS_TASK_DEFINITION: task-definition.json
-  CONTAINER_NAME: Node
+  CONTAINER_NAME: bizpik-orders-hub
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
