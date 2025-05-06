@@ -35,6 +35,18 @@
         {
           "name": "AWS_API_GATEWAY_PROXY",
           "value": "https://vwiaw8omca.execute-api.sa-east-1.amazonaws.com/prod/out/"
+        },
+        {
+          "name": "INTEGRATIONS__IFOOD__ENDPOINT__BASE_URL",
+          "value": "https://merchant-api.ifood.com.br"
+        },
+        {
+          "name": "INTEGRATIONS__RAPPI__ENDPOINT__BASE_URL",
+          "value": "https://microservices.dev.rappi.com/api/v2/restaurants-integrations-public-api"
+        },
+        {
+          "name": "INTEGRATIONS__RAPPI__ENDPOINT__AUTH",
+          "value": "https://rests-integrations-dev.auth0.com/"
         }
       ],
       "environmentFiles": [],
