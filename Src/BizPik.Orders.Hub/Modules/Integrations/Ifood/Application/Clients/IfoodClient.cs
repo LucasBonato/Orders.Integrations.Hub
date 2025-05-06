@@ -14,7 +14,10 @@ public class IfoodClient(
     {
         string uri = $"order/v1.0/orders/{orderId}";
         HttpResponseMessage response = await httpClient.GetAsync(uri);
-        response.EnsureSuccessStatusCode();
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new ApplicationException(await response.Content.ReadAsStringAsync());
+        }
 
         logger.LogInformation("[INFO] - IfoodClient - OrderDetails: {body}", await response.Content.ReadAsStringAsync());
 

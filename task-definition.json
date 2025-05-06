@@ -34,7 +34,7 @@
         },
         {
           "name": "AWS_API_GATEWAY_PROXY",
-          "value": "https://vwiaw8omca.execute-api.sa-east-1.amazonaws.com/prod/"
+          "value": "https://vwiaw8omca.execute-api.sa-east-1.amazonaws.com/prod/out/"
         }
       ],
       "environmentFiles": [],
