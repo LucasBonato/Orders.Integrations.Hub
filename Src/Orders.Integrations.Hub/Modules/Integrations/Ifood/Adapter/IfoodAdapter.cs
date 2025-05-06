@@ -60,12 +60,14 @@ public static class IfoodAdapter
 
         if (signature == null)
         {
-            throw new("Signature header is missing.");
+            logger.LogError("Signature header is missing.");
+            // throw new("Signature header is missing.");
         }
 
         if (!signature.IsSignatureValid(secret, body))
         {
-            throw new("Invalid signature");
+            logger.LogError("Invalid signature.");
+            // throw new("Invalid signature");
         }
 
         return JsonSerializer.Deserialize<IfoodWebhookRequest>(body)!;
