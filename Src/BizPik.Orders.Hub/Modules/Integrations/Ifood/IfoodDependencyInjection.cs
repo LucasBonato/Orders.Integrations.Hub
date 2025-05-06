@@ -33,7 +33,7 @@ public static class IfoodDependencyInjection
 
     private static IServiceCollection AddIfoodClients(this IServiceCollection services)
     {
-        string baseUrl = AppEnv.INTEGRATIONS.IFOOD.ENDPOINT.BASE_URL.NotNull();
+        string baseUrl = AppEnv.AWS_API_GATEWAY_PROXY.NotNull();
 
         services.AddHttpClient<IfoodAuthClient, IfoodAuthClient>(client => {
             client.BaseAddress = new Uri(baseUrl);

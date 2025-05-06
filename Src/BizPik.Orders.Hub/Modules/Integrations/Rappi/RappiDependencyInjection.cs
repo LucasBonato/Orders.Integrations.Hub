@@ -33,8 +33,8 @@ public static class RappiDependencyInjection
 
     private static IServiceCollection AddRappiClients(this IServiceCollection services)
     {
-        string baseUrl = AppEnv.INTEGRATIONS.RAPPI.ENDPOINT.BASE_URL.NotNull();
-        string baseAuthUrl = AppEnv.INTEGRATIONS.RAPPI.ENDPOINT.AUTH.NotNull();
+        string baseUrl = AppEnv.AWS_API_GATEWAY_PROXY.NotNull();
+        string baseAuthUrl = AppEnv.AWS_API_GATEWAY_PROXY.NotNull();
 
         services.AddHttpClient<RappiAuthClient, RappiAuthClient>(client => {
             client.BaseAddress = new Uri(baseAuthUrl);

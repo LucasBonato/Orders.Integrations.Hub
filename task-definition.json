@@ -15,10 +15,57 @@
         }
       ],
       "essential": true,
-      "environment": [],
+      "environment": [
+        {
+          "name": "OTEL_SERVICE_NAME",
+          "value": "BizPik.Orders.Hub"
+        },
+        {
+          "name": "BIZPIK__MONOLITH__ENDPOINT__BASE_URL",
+          "value": "https://api.bizpik.com.br/api/"
+        },
+        {
+          "name": "BIZPIK__ORDERS__ENDPOINT__BASE_URL",
+          "value": "https://orders-hml.bizpik.com.br/api/"
+        },
+        {
+          "name": "PUB_SUB__TOPICS__ACCEPT_ORDER",
+          "value": "arn:aws:sns:sa-east-1:525838862931:rappi-order-take-requested"
+        },
+        {
+          "name": "AWS_API_GATEWAY_PROXY",
+          "value": "https://vwiaw8omca.execute-api.sa-east-1.amazonaws.com/prod/"
+        }
+      ],
       "environmentFiles": [],
       "mountPoints": [],
       "volumesFrom": [],
+      "secrets": [
+        {
+          "name": "BIZPIK__MONOLITH__API_KEYS__COMPANIES_INTEGRATIONS",
+          "valueFrom": "arn:aws:secretsmanager:us-east-1:273354632664:secret:bizpik-orders-hub-Y9NRCF:BIZPIK__MONOLITH__API_KEYS__COMPANIES_INTEGRATIONS::"
+        },
+        {
+          "name": "INTEGRATIONS__IFOOD__CLIENT__ID",
+          "valueFrom": "arn:aws:secretsmanager:us-east-1:273354632664:secret:bizpik-orders-hub-Y9NRCF:INTEGRATIONS__IFOOD__CLIENT__ID::"
+        },
+        {
+          "name": "INTEGRATIONS__IFOOD__CLIENT__SECRET",
+          "valueFrom": "arn:aws:secretsmanager:us-east-1:273354632664:secret:bizpik-orders-hub-Y9NRCF:INTEGRATIONS__IFOOD__CLIENT__SECRET::"
+        },
+        {
+          "name": "INTEGRATIONS__RAPPI__CLIENT__ID",
+          "valueFrom": "arn:aws:secretsmanager:us-east-1:273354632664:secret:bizpik-orders-hub-Y9NRCF:INTEGRATIONS__RAPPI__CLIENT__ID::"
+        },
+        {
+          "name": "INTEGRATIONS__RAPPI__CLIENT__SECRET",
+          "valueFrom": "arn:aws:secretsmanager:us-east-1:273354632664:secret:bizpik-orders-hub-Y9NRCF:INTEGRATIONS__RAPPI__CLIENT__SECRET::"
+        },
+        {
+          "name": "INTEGRATIONS__RAPPI__CLIENT__AUDIENCE",
+          "valueFrom": "arn:aws:secretsmanager:us-east-1:273354632664:secret:bizpik-orders-hub-Y9NRCF:INTEGRATIONS__RAPPI__CLIENT__AUDIENCE::"
+        }
+      ],
       "ulimits": [],
       "logConfiguration": {
         "logDriver": "awslogs",

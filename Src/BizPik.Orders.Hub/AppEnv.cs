@@ -71,6 +71,7 @@ public static partial class AppEnv
         }
     }
 
+    public static readonly AnvEnv AWS_API_GATEWAY_PROXY = new("AWS_API_GATEWAY_PROXY");
     public static readonly AnvEnv AWS_PROFILE = new("AWS_PROFILE");
     public static readonly AnvEnv OTEL_SERVICE_NAME = new("OTEL_SERVICE_NAME");
 }
