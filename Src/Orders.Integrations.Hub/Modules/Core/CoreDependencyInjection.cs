@@ -25,7 +25,7 @@ public static class CoreDependencyInjection
     public static IServiceCollection AddCore(this IServiceCollection services)
     {
         return services
-                .AddOpenTelemetryConfiguration()
+                // .AddOpenTelemetryConfiguration()
                 .AddServices()
                 .AddClients()
             ;
