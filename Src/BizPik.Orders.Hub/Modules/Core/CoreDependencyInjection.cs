@@ -7,8 +7,10 @@ using BizPik.Orders.Hub.Modules.Core.BizPik.Application;
 using BizPik.Orders.Hub.Modules.Core.BizPik.Domain.Contracts;
 using BizPik.Orders.Hub.Modules.Core.Orders;
 using BizPik.Orders.Hub.Modules.Core.Orders.Application.Clients;
+using BizPik.Orders.Hub.Modules.Core.Orders.Application.Providers;
 using BizPik.Orders.Hub.Modules.Core.Orders.Application.UseCases;
 using BizPik.Orders.Hub.Modules.Core.Orders.Domain.Contracts;
+using BizPik.Orders.Hub.Modules.Core.Orders.Domain.Contracts.Providers;
 using BizPik.Orders.Hub.Modules.Core.Orders.Domain.Contracts.UseCases;
 using BizPik.Orders.Hub.Modules.Integrations.Ifood.Application.Ports;
 
@@ -41,6 +43,8 @@ public static class CoreDependencyInjection
     private static IServiceCollection AddServices(this IServiceCollection services)
     {
         services.AddTransient<IOrderChangeStatusUseCase, IfoodOrderChangeStatusUseCase>();
+        services.AddTransient<IOrderChangeProductStatusUseCaseProvider, OrderChangeProductStatusUseCaseProvider>();
+        services.AddTransient<IOrderChangeStatusUseCaseProvider, OrderChangeStatusUseCaseProvider>();
         services.AddScoped<IOrderUseCase, OrderUseCase>();
         services.AddTransient<IAmazonSimpleNotificationService>(_ => SimplesNotificationServiceConfiguration());
         services.AddFastEndpoints(options => {
