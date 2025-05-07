@@ -200,7 +200,7 @@ public static class IfoodOrderExtension
     private static OrderUnit ToOrderUnit(this Unit unit) {
         return unit switch {
             Unit.UN => OrderUnit.UN,
-            Unit.G or Unit.KG => OrderUnit.KG,
+            Unit.G or Unit.KG or Unit.GRAMS => OrderUnit.KG,
             Unit.L or Unit.ML => OrderUnit.L,
             _ => OrderUnit.UN,
         };
