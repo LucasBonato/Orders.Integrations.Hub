@@ -3,6 +3,7 @@ using Orders.Integrations.Hub.Modules.Integrations.Ifood.Domain.Contracts;
 using Orders.Integrations.Hub.Modules.Integrations.Ifood.Domain.Entity;
 using Orders.Integrations.Hub.Modules.Integrations.Ifood.Domain.Entity.MerchantDetails;
 using Orders.Integrations.Hub.Modules.Integrations.Ifood.Domain.ValueObjects.DTOs.Request;
+using Orders.Integrations.Hub.Modules.Integrations.Ifood.Domain.ValueObjects.DTOs.Response;
 
 namespace Orders.Integrations.Hub.Modules.Integrations.Ifood.Application.Clients;
 
@@ -103,5 +104,19 @@ public class IfoodClient(
         {
             throw new Exception(response.Content.ReadAsStringAsync().Result);
         }
+    }
+
+    public async Task<IReadOnlyList<IfoodCancellationReasonResponse>> GetCancellationReasons(string orderId)
+    {
+        string uri = $"order/v1.0/orders/{orderId}/cancellationReasons";
+
+        HttpResponseMessage response = await httpClient.GetAsync(uri);
+
+        response.EnsureSuccessStatusCode();
+
+        IReadOnlyList<IfoodCancellationReasonResponse> responseContent = await response.Content.ReadFromJsonAsync<IReadOnlyList<IfoodCancellationReasonResponse>>()
+                                                                         ?? throw new Exception();
+
+        return responseContent;
     }
 }

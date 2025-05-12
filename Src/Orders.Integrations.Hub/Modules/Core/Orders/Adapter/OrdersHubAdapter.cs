@@ -2,13 +2,21 @@
 using Orders.Integrations.Hub.Modules.Core.Orders.Application.Extensions;
 using Orders.Integrations.Hub.Modules.Core.Orders.Domain.Contracts.Providers;
 using Orders.Integrations.Hub.Modules.Core.Orders.Domain.ValueObjects.DTOs.Request;
+
 using Microsoft.AspNetCore.Mvc;
+
 using static Microsoft.AspNetCore.Http.Results;
 
-namespace Orders.Integrations.Hub.Modules.Core.Orders;
+namespace Orders.Integrations.Hub.Modules.Core.Orders.Adapter;
 
 public static class OrdersHubAdapter
 {
+    public static Task GetIntegrationCancellationReason(
+        HttpContext context
+    ) {
+        throw new NotImplementedException();
+    }
+
     public static async Task<IResult> ChangeIntegrationStatus(
         [FromBody] ChangeOrderStatusRequest request,
         [FromServices] IOrderChangeStatusUseCaseProvider provider

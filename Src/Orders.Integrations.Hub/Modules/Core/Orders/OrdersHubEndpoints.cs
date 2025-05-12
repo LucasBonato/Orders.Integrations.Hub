@@ -1,4 +1,6 @@
-﻿namespace Orders.Integrations.Hub.Modules.Core.Orders;
+﻿using Orders.Integrations.Hub.Modules.Core.Orders.Adapter;
+
+namespace Orders.Integrations.Hub.Modules.Core.Orders;
 
 public static class OrdersHubEndpoints
 {
@@ -21,6 +23,8 @@ public static class OrdersHubEndpoints
                 .WithTags("Product Status")
                 .WithDescription("Change status of the products in integrations")
             ;
+
+        routeGroup.MapGet("/Cancellation-Reason", OrdersHubAdapter.GetIntegrationCancellationReason);
 
         routeGroupStatus.MapPatch("/", OrdersHubAdapter.ChangeIntegrationStatus);
 
