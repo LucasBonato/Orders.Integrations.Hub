@@ -1,4 +1,6 @@
-﻿using BizPik.Orders.Hub.Modules.Core.Orders.Domain.Contracts;
+﻿using System.Text.Json;
+
+using BizPik.Orders.Hub.Modules.Core.Orders.Domain.Contracts;
 using BizPik.Orders.Hub.Modules.Core.Orders.Domain.Contracts.UseCases;
 using BizPik.Orders.Hub.Modules.Core.Orders.Domain.ValueObjects.Events;
 
@@ -11,6 +13,7 @@ public class OrderUseCase(
     public async Task CreateOrder(CreateOrderEvent order)
     {
         logger.LogInformation("[INFO] - CreateOrderEventHandler - Creating Order From {salesChannel}", order.SalesChannel);
+        logger.LogInformation("[INFO] - CreateOrderEventHandler - Order: {order}", JsonSerializer.Serialize(order.Order));
         await orderClient.CreateOrder(order.Order);
     }
 
