@@ -3,6 +3,7 @@ using BizPik.Orders.Hub.Modules.Integrations.Ifood.Domain.Contracts;
 using BizPik.Orders.Hub.Modules.Integrations.Ifood.Domain.Entity;
 using BizPik.Orders.Hub.Modules.Integrations.Ifood.Domain.Entity.MerchantDetails;
 using BizPik.Orders.Hub.Modules.Integrations.Ifood.Domain.ValueObjects.DTOs.Request;
+using BizPik.Orders.Hub.Modules.Integrations.Ifood.Domain.ValueObjects.DTOs.Response;
 
 namespace BizPik.Orders.Hub.Modules.Integrations.Ifood.Application.Clients;
 
@@ -14,7 +15,10 @@ public class IfoodClient(
     {
         string uri = $"order/v1.0/orders/{orderId}";
         HttpResponseMessage response = await httpClient.GetAsync(uri);
-        response.EnsureSuccessStatusCode();
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new ApplicationException(await response.Content.ReadAsStringAsync());
+        }
 
         logger.LogInformation("[INFO] - IfoodClient - OrderDetails: {body}", await response.Content.ReadAsStringAsync());
 
@@ -100,5 +104,19 @@ public class IfoodClient(
         {
             throw new Exception(response.Content.ReadAsStringAsync().Result);
         }
+    }
+
+    public async Task<IReadOnlyList<IfoodCancellationReasonResponse>> GetCancellationReasons(string orderId)
+    {
+        string uri = $"order/v1.0/orders/{orderId}/cancellationReasons";
+
+        HttpResponseMessage response = await httpClient.GetAsync(uri);
+
+        response.EnsureSuccessStatusCode();
+
+        IReadOnlyList<IfoodCancellationReasonResponse> responseContent = await response.Content.ReadFromJsonAsync<IReadOnlyList<IfoodCancellationReasonResponse>>()
+                                                                         ?? throw new Exception();
+
+        return responseContent;
     }
 }

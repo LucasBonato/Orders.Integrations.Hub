@@ -4,6 +4,7 @@ public enum Unit
 {
     UN,
     G,
+    GRAMS,
     KG,
     L,
     ML

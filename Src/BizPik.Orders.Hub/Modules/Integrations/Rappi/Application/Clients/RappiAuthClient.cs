@@ -11,7 +11,7 @@ public class RappiAuthClient(
 ) : IIntegrationAuthClient<RappiAuthTokenRequest, RappiAuthTokenResponse> {
     public async Task<RappiAuthTokenResponse> RetrieveToken(RappiAuthTokenRequest request)
     {
-        string uri = "/oauth/token";
+        string uri = "oauth/token";
 
         logger.LogInformation("[INFO] - IfoodAuthClient - Uri: {uri}", uri);
 
