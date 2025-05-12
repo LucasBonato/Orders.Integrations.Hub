@@ -3,7 +3,7 @@
 public enum Target
 {
     CART,
-    DELIVERT_FEE,
+    DELIVERY_FEE,
     ITEM,
     PROGRESSIVE_DISCOUNT_ITEM
 }
