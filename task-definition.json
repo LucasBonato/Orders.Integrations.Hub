@@ -26,7 +26,7 @@
         },
         {
           "name": "BIZPIK__ORDERS__ENDPOINT__BASE_URL",
-          "value": "https://orders-hml.bizpik.com.br/api/"
+          "value": "https://orders.bizpik.com.br/api/"
         },
         {
           "name": "PUB_SUB__TOPICS__ACCEPT_ORDER",

@@ -3,57 +3,57 @@
 public enum IfoodCancellationReasons
 {
     /// <summary>
-    /// PROBLEMAS DE SISTEMA
+    /// Problemas de sistema na loja
     /// </summary>
     SystemProblems = 501,
 
     /// <summary>
-    /// PEDIDO EM DUPLICIDADE
+    /// O pedido está duplicado
     /// </summary>
     OrderDuplicate = 502,
 
     /// <summary>
-    /// ITEM INDISPONÍVEL
+    /// Item indisponível
     /// </summary>
     ItemUnavailable = 503,
 
     /// <summary>
-    /// RESTAURANTE SEM MOTOBOY
+    /// A loja está sem entregadores disponíveis
     /// </summary>
     MerchantWithoutDeliveryMan = 504,
 
     /// <summary>
-    /// CARDÁPIO DESATUALIZADO
+    /// O cardápio está desatualizado
     /// </summary>
     MenuOutdated = 505,
 
     /// <summary>
-    /// PEDIDO FORA DA ÁREA DE ENTREGA
+    /// O pedido está fora da área de entrega
     /// </summary>
     OrderOutOfDeliveryZone = 506,
 
     /// <summary>
-    /// CLIENTE GOLPISTA / TROTE
+    /// Suspeita de golpe ou trote
     /// </summary>
     Fraude = 507,
 
     /// <summary>
-    /// FORA DO HORÁRIO DO DELIVERY
+    /// O pedido foi feito fora do horário de funcionamento da loja
     /// </summary>
     OutOfDeliveryTime = 508,
 
     /// <summary>
-    /// DIFICULDADES INTERNAS DO RESTAURANTE
+    /// A loja está passando por dificuldades internas
     /// </summary>
     MerchantInternalProblems = 509,
 
     /// <summary>
-    /// ÁREA DE RISCO
+    /// A entrega é em uma área de risco
     /// </summary>
     RiskZone = 511,
 
     /// <summary>
-    /// RESTAURANTE ABRIRÁ MAIS TARDE
+    /// A loja só abrirá mais tardeÄ
     /// </summary>
     MerchantOpenLater = 512
 }

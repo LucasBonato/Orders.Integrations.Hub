@@ -2,6 +2,7 @@
 using BizPik.Orders.Hub.Modules.Integrations.Ifood.Domain.Entity;
 using BizPik.Orders.Hub.Modules.Integrations.Ifood.Domain.Entity.MerchantDetails;
 using BizPik.Orders.Hub.Modules.Integrations.Ifood.Domain.ValueObjects.DTOs.Request;
+using BizPik.Orders.Hub.Modules.Integrations.Ifood.Domain.ValueObjects.DTOs.Response;
 
 namespace BizPik.Orders.Hub.Modules.Integrations.Ifood.Domain.Contracts;
 
@@ -15,4 +16,6 @@ public interface IIFoodClient : IIntegrationClient
     Task DispatchOrder(string orderId);
     Task RequestOrderCancellation(string orderId, IfoodOrderCancellationRequest request);
     Task PatchProductStatus(string merchantId, IfoodPatchProductStatusRequest request);
+
+    Task<IReadOnlyList<IfoodCancellationReasonResponse>> GetCancellationReasons(string orderId);
 }
