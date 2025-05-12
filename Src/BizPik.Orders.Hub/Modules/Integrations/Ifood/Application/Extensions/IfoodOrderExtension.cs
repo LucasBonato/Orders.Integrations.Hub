@@ -240,7 +240,7 @@ public static class IfoodOrderExtension
         return target switch {
             Target.CART => DiscountTarget.CART,
             Target.ITEM => DiscountTarget.ITEM,
-            Target.DELIVERT_FEE => DiscountTarget.DELIVERY_FEE,
+            Target.DELIVERY_FEE => DiscountTarget.DELIVERY_FEE,
             _ => DiscountTarget.CART,
         };
     }
