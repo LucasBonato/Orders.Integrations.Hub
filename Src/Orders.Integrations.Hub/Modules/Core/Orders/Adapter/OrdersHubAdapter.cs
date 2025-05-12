@@ -1,7 +1,9 @@
 ﻿using Orders.Integrations.Hub.Modules.Core..Domain.ValueObjects;
 using Orders.Integrations.Hub.Modules.Core.Orders.Application.Extensions;
 using Orders.Integrations.Hub.Modules.Core.Orders.Domain.Contracts.Providers;
+using Orders.Integrations.Hub.Modules.Core.Orders.Domain.Contracts.UseCases;
 using Orders.Integrations.Hub.Modules.Core.Orders.Domain.ValueObjects.DTOs.Request;
+using Orders.Integrations.Hub.Modules.Core.Orders.Domain.ValueObjects.Enums;
 
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,10 +13,13 @@ namespace Orders.Integrations.Hub.Modules.Core.Orders.Adapter;
 
 public static class OrdersHubAdapter
 {
-    public static Task GetIntegrationCancellationReason(
-        HttpContext context
+    public static async Task<IResult> GetIntegrationCancellationReason(
+        [FromQuery] string orderId,
+        [FromQuery] OrderIntegration integration,
+        [FromServices] IServiceProvider serviceProvider
     ) {
-        throw new NotImplementedException();
+        IOrderGetCancellationReasonUseCase service = serviceProvider.GetRequiredKeyedService<IOrderGetCancellationReasonUseCase>(integration);
+        return Ok(await service.ExecuteAsync(orderId));
     }
 
     public static async Task<IResult> ChangeIntegrationStatus(
