@@ -1,5 +1,6 @@
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS base
 WORKDIR /app
+ENV ASPNETCORE_URLS=http://+:5077
 EXPOSE 5077
 
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build

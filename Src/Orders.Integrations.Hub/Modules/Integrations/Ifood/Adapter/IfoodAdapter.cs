@@ -60,11 +60,13 @@ public static class IfoodAdapter
 
         if (signature == null)
         {
+            logger.LogWarning("[WARN] - Signature header is missing.");
             throw new("Signature header is missing.");
         }
 
         if (!signature.IsSignatureValid(secret, body))
         {
+            logger.LogWarning("[WARN] - Invalid signature.");
             throw new("Invalid signature");
         }
 

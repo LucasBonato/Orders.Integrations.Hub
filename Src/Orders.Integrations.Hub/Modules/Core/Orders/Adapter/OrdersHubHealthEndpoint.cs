@@ -1,6 +1,6 @@
 ﻿using FastEndpoints;
 
-namespace Orders.Integrations.Hub.Modules.Core.Orders;
+namespace Orders.Integrations.Hub.Modules.Core.Orders.Adapter;
 
 public class OrdersHubHealthEndpoint : Endpoint<EmptyRequest, string>
 {
@@ -12,6 +12,6 @@ public class OrdersHubHealthEndpoint : Endpoint<EmptyRequest, string>
 
     public override Task<string> ExecuteAsync(EmptyRequest req, CancellationToken ct)
     {
-        return Task.Run(() => "Healthy");
+        return Task.FromResult("Healthy");
     }
 }

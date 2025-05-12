@@ -13,7 +13,7 @@ public class OrderClient(
     {
         logger.LogInformation("[INFO] - CreateOrderEventHandler - Creating Order, Id: {orderId}", order.OrderId);
 
-        HttpResponseMessage response = await httpClient.PostAsJsonAsync("api/Orders", order);
+        HttpResponseMessage response = await httpClient.PostAsJsonAsync("Orders", order);
 
         if (!response.IsSuccessStatusCode)
         {
@@ -26,7 +26,7 @@ public class OrderClient(
     {
         logger.LogInformation("[INFO] - UpdateOrderStatusEventHandler - Updating Order From Id: {orderId}", order.OrderId);
 
-        HttpResponseMessage response = await httpClient.PatchAsJsonAsync("api/Orders", order);
+        HttpResponseMessage response = await httpClient.PatchAsJsonAsync("Orders", order);
 
         if (!response.IsSuccessStatusCode)
         {

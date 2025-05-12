@@ -46,8 +46,16 @@ public class RappiClient(
         }
     }
 
-    public Task<List<RappiAvailabilityItemStatusResponse>> GetAvailabilityProducts(RappiAvailabilityItemsStatusRequest request)
+    public async Task<List<RappiAvailabilityItemStatusResponse>> GetAvailabilityProducts(RappiAvailabilityItemsStatusRequest request)
     {
+        const string uri = "/api/v2/restaurants-integrations-public-api/availability/items/status";
+
+        HttpResponseMessage response = await httpClient.PostAsync(uri, new StringContent(JsonSerializer.Serialize(request)));
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new Exception(response.Content.ReadAsStringAsync().Result);
+        }
+
         throw new NotImplementedException();
     }
 

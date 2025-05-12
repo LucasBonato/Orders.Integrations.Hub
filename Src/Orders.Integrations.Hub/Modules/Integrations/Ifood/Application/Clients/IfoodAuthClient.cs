@@ -18,7 +18,7 @@ public class IfoodAuthClient(
             { "clientSecret", request.ClientSecret }
         };
 
-        string uri = AppEnv.INTEGRATIONS.IFOOD.ENDPOINT.AUTH.NotNull();
+        const string uri = "authentication/v1.0/oauth/token";
 
         HttpRequestMessage requestMessage = new(HttpMethod.Post, uri) { Content = new FormUrlEncodedContent(form) };
 
