@@ -1,8 +1,8 @@
-﻿using Orders.Integrations.Hub.Modules.Core.Orders.Domain.ValueObjects.DTOs.Request;
+﻿using Orders.Integrations.Hub.Modules.Core.Orders.Domain.ValueObjects.DTOs.Response;
 
 namespace Orders.Integrations.Hub.Modules.Core.Orders.Domain.Contracts.UseCases;
 
 public interface IOrderGetCancellationReasonUseCase
 {
-    Task<List<string>> ExecuteAsync(string orderId);
+    Task<List<CancellationReasonsResponse>> ExecuteAsync(string? orderId);
 }
