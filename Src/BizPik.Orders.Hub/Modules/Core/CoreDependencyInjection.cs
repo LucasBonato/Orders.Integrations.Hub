@@ -7,6 +7,7 @@ using BizPik.Orders.Hub.Modules.Core.BizPik.Application;
 using BizPik.Orders.Hub.Modules.Core.BizPik.Domain.Contracts;
 using BizPik.Orders.Hub.Modules.Core.Orders;
 using BizPik.Orders.Hub.Modules.Core.Orders.Application.Clients;
+using BizPik.Orders.Hub.Modules.Core.Orders.Application.Middlewares;
 using BizPik.Orders.Hub.Modules.Core.Orders.Application.Providers;
 using BizPik.Orders.Hub.Modules.Core.Orders.Application.UseCases;
 using BizPik.Orders.Hub.Modules.Core.Orders.Domain.Contracts;
@@ -27,7 +28,7 @@ public static class CoreDependencyInjection
     public static IServiceCollection AddCore(this IServiceCollection services)
     {
         return services
-                // .AddOpenTelemetryConfiguration()
+                .AddOpenTelemetryConfiguration()
                 .AddServices()
                 .AddClients()
             ;
@@ -35,6 +36,7 @@ public static class CoreDependencyInjection
 
     public static IApplicationBuilder UseCore(this WebApplication app)
     {
+        app.UseExceptionHandler(_ => { });
         app.UseFastEndpoints();
         app.AddOrdersHubEndpoints();
         return app;
@@ -42,6 +44,7 @@ public static class CoreDependencyInjection
 
     private static IServiceCollection AddServices(this IServiceCollection services)
     {
+        services.AddExceptionHandler<ExceptionHandlerMiddleware>();
         services.AddTransient<IOrderChangeStatusUseCase, IfoodOrderChangeStatusUseCase>();
         services.AddTransient<IOrderChangeProductStatusUseCaseProvider, OrderChangeProductStatusUseCaseProvider>();
         services.AddTransient<IOrderChangeStatusUseCaseProvider, OrderChangeStatusUseCaseProvider>();
