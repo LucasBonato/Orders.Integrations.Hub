@@ -1,6 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 
 using Orders.Integrations.Hub.Modules.Core.Orders.Domain.Contracts.UseCases;
+using Orders.Integrations.Hub.Modules.Core.Orders.Domain.ValueObjects.Enums;
 using Orders.Integrations.Hub.Modules.Integrations.Ifood.Application.Clients;
 using Orders.Integrations.Hub.Modules.Integrations.Ifood.Application.Handlers;
 using Orders.Integrations.Hub.Modules.Integrations.Ifood.Application.Ports;
@@ -23,6 +24,7 @@ public static class IfoodDependencyInjection
     {
         services.AddTransient<IOrderCreateUseCase<IfoodWebhookRequest>, IfoodOrderCreateUseCase>();
         services.AddTransient<IOrderUpdateStatusUseCase<IfoodWebhookRequest>, IfoodOrderUpdateStatusUseCase>();
+        services.AddKeyedScoped<IOrderGetCancellationReasonUseCase, IfoodOrderGetCancellationReasonUseCase>(OrderIntegration.IFOOD);
 
         return services
                 .Configure<JsonOptions>(options => {
