@@ -1,8 +1,8 @@
-﻿using BizPik.Orders.Hub.Modules.Core.Orders.Domain.ValueObjects.DTOs.Request;
+﻿using BizPik.Orders.Hub.Modules.Core.Orders.Domain.ValueObjects.DTOs.Response;
 
 namespace BizPik.Orders.Hub.Modules.Core.Orders.Domain.Contracts.UseCases;
 
 public interface IOrderGetCancellationReasonUseCase
 {
-    Task<List<string>> ExecuteAsync(string orderId);
+    Task<List<CancellationReasonsResponse>> ExecuteAsync(string? orderId);
 }

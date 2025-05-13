@@ -13,7 +13,7 @@ public record IfoodOrderCancellationRequest(
     public static IfoodCancellationReasons FromBizPik(string? reason)
         => reason switch
         {
-            "OutOfStock" => IfoodCancellationReasons.ItemUnavailable,
-            _ => IfoodCancellationReasons.SystemProblems
+            "OutOfStock" => IfoodCancellationReasons.ITEM_UNAVAILABLE,
+            _ => IfoodCancellationReasons.MERCHANT_SYSTEM_PROBLEMS
         };
 };

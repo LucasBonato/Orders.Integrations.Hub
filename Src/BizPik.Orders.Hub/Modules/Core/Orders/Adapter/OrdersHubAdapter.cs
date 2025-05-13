@@ -11,10 +11,13 @@ using static Microsoft.AspNetCore.Http.Results;
 
 namespace BizPik.Orders.Hub.Modules.Core.Orders.Adapter;
 
+public abstract class OrdersHubAdapterLog;
+
 public static class OrdersHubAdapter
 {
     public static async Task<IResult> GetIntegrationCancellationReason(
-        [FromQuery] string orderId,
+        ILogger<OrdersHubAdapterLog> logger,
+        [FromQuery] string? orderId,
         [FromQuery] OrderIntegration integration,
         [FromServices] IServiceProvider serviceProvider
     ) {
