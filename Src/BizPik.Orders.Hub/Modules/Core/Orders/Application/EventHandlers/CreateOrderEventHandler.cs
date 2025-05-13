@@ -1,5 +1,4 @@
-﻿using BizPik.Orders.Hub.Modules.Core.Orders.Domain.Contracts;
-using BizPik.Orders.Hub.Modules.Core.Orders.Domain.Contracts.UseCases;
+﻿using BizPik.Orders.Hub.Modules.Core.Orders.Domain.Contracts.UseCases;
 using BizPik.Orders.Hub.Modules.Core.Orders.Domain.ValueObjects.Events;
 using FastEndpoints;
 

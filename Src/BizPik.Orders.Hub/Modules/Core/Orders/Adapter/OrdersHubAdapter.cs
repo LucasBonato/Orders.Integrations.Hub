@@ -1,7 +1,9 @@
 ﻿using BizPik.Orders.Hub.Modules.Core.BizPik.Domain.ValueObjects;
 using BizPik.Orders.Hub.Modules.Core.Orders.Application.Extensions;
 using BizPik.Orders.Hub.Modules.Core.Orders.Domain.Contracts.Providers;
+using BizPik.Orders.Hub.Modules.Core.Orders.Domain.Contracts.UseCases;
 using BizPik.Orders.Hub.Modules.Core.Orders.Domain.ValueObjects.DTOs.Request;
+using BizPik.Orders.Hub.Modules.Core.Orders.Domain.ValueObjects.Enums;
 
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,12 +11,18 @@ using static Microsoft.AspNetCore.Http.Results;
 
 namespace BizPik.Orders.Hub.Modules.Core.Orders.Adapter;
 
+public abstract class OrdersHubAdapterLog;
+
 public static class OrdersHubAdapter
 {
-    public static Task GetIntegrationCancellationReason(
-        HttpContext context
+    public static async Task<IResult> GetIntegrationCancellationReason(
+        ILogger<OrdersHubAdapterLog> logger,
+        [FromQuery] string? orderId,
+        [FromQuery] OrderIntegration integration,
+        [FromServices] IServiceProvider serviceProvider
     ) {
-        throw new NotImplementedException();
+        IOrderGetCancellationReasonUseCase service = serviceProvider.GetRequiredKeyedService<IOrderGetCancellationReasonUseCase>(integration);
+        return Ok(await service.ExecuteAsync(orderId));
     }
 
     public static async Task<IResult> ChangeIntegrationStatus(
