@@ -1,5 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 using BizPik.Orders.Hub.Modules.Core.Orders.Domain.Contracts.UseCases;
+using BizPik.Orders.Hub.Modules.Core.Orders.Domain.ValueObjects.Enums;
 using BizPik.Orders.Hub.Modules.Integrations.Rappi.Application.Clients;
 using BizPik.Orders.Hub.Modules.Integrations.Rappi.Application.Handlers;
 using BizPik.Orders.Hub.Modules.Integrations.Rappi.Application.Ports;
@@ -8,6 +9,7 @@ using BizPik.Orders.Hub.Modules.Integrations.Rappi.Domain.Entity;
 using BizPik.Orders.Hub.Modules.Integrations.Rappi.Domain.ValueObjects.DTOs.Request;
 
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace BizPik.Orders.Hub.Modules.Integrations.Rappi;
 
@@ -23,6 +25,7 @@ public static class RappiDependencyInjection
     {
         services.AddTransient<IOrderCreateUseCase<RappiOrder>, RappiOrderCreateUseCase>();
         services.AddTransient<IOrderUpdateStatusUseCase<RappiWebhookEventOrderRequest>, RappiOrderUpdateStatusUseCase>();
+        services.AddKeyedScoped<IOrderGetCancellationReasonUseCase, RappiOrderGetCancellationReasonUseCase>(OrderIntegration.RAPPI);
 
         return services
                 .Configure<JsonOptions>(options => {
