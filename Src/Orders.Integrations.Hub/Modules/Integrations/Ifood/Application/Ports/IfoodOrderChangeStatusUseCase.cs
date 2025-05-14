@@ -10,9 +10,7 @@ public class IfoodOrderChangeStatusUseCase(
     ILogger<IfoodOrderChangeStatusUseCase> logger,
     IIFoodClient iFoodClient
 ) : IOrderChangeStatusUseCase {
-    public OrderIntegration Integration => OrderIntegration.IFOOD;
-
-    public async Task Execute(ChangeOrderStatusRequest request) {
+    public async Task ExecuteAsync(ChangeOrderStatusRequest request) {
         logger.LogInformation("[INFO] {status} Order [{orderId}] with external id [{orderExternalId}]", request.Status, request.OrderId, request.ExternalId);
         switch (request.Status) {
             case OrderEventType.CONFIRMED:
