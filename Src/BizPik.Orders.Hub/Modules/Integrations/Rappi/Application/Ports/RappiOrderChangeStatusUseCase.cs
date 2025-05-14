@@ -11,9 +11,7 @@ public class RappiOrderChangeStatusUseCase(
     ILogger<RappiOrderChangeStatusUseCase> logger,
     IRappiClient rappiClient
 ) : IOrderChangeStatusUseCase {
-    public OrderIntegration Integration => OrderIntegration.RAPPI;
-
-    public async Task Execute(ChangeOrderStatusRequest request)
+    public async Task ExecuteAsync(ChangeOrderStatusRequest request)
     {
         logger.LogInformation("[INFO] {status} Order [{orderId}] with external id [{orderExternalId}]", request.Status, request.OrderId, request.ExternalId);
         switch (request.Status) {
