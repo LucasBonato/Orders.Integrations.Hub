@@ -6,7 +6,7 @@ namespace BizPik.Orders.Hub.Modules.Integrations.Rappi.Application.Ports;
 
 public class RappiOrderGetCancellationReasonUseCase : IOrderGetCancellationReasonUseCase
 {
-    public async Task<List<CancellationReasonsResponse>> ExecuteAsync(string? orderId)
+    public async Task<List<CancellationReasonsResponse>> ExecuteAsync(string? externalOrderId)
     {
         return await Task.Run(() => Enum.GetValues<RappiOrderCancelType>()
             .Select(value => new CancellationReasonsResponse(
