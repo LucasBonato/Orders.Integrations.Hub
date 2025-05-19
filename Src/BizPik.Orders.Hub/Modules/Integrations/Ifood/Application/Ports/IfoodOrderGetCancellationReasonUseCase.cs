@@ -8,11 +8,13 @@ namespace BizPik.Orders.Hub.Modules.Integrations.Ifood.Application.Ports;
 public class IfoodOrderGetCancellationReasonUseCase(
     IIFoodClient iFoodClient
 ) : IOrderGetCancellationReasonUseCase {
-    public async Task<List<CancellationReasonsResponse>> ExecuteAsync(string? orderId)
+    public async Task<List<CancellationReasonsResponse>> ExecuteAsync(string? externalOrderId)
     {
-        ArgumentNullException.ThrowIfNull(orderId);
+        if (string.IsNullOrEmpty(externalOrderId)) {
+            throw new ArgumentNullException(nameof(externalOrderId));
+        }
 
-        var ifoodCancellationReasons = await iFoodClient.GetCancellationReasons(orderId);
+        var ifoodCancellationReasons = await iFoodClient.GetCancellationReasons(externalOrderId);
         return ifoodCancellationReasons
             .Select(reason => new CancellationReasonsResponse(
                 Code: Convert.ToInt32(reason.CancelCodeId),
