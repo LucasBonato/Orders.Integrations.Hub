@@ -1,5 +1,8 @@
 ﻿using System.Net;
+using System.Net.Http.Headers;
+using System.Text;
 using System.Text.Json;
+
 using BizPik.Orders.Hub.Modules.Integrations.Ifood.Domain.Contracts;
 using BizPik.Orders.Hub.Modules.Integrations.Ifood.Domain.Entity;
 using BizPik.Orders.Hub.Modules.Integrations.Ifood.Domain.Entity.MerchantDetails;
@@ -88,11 +91,18 @@ public class IfoodClient(
     public async Task RequestOrderCancellation(string orderId, IfoodOrderCancellationRequest request)
     {
         string uri = $"order/v1.0/orders/{orderId}/requestCancellation";
-        
-        HttpResponseMessage response = await httpClient.PostAsync(uri, new StringContent(JsonSerializer.Serialize(request)));
+
+        HttpRequestMessage requestMessage = new (HttpMethod.Post, uri);
+        var content = new StringContent(JsonSerializer.Serialize(request), Encoding.Default,"application/json");
+        content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+        requestMessage.Content = content;
+
+        HttpResponseMessage response = await httpClient.SendAsync(requestMessage);
+
         if (!response.IsSuccessStatusCode)
         {
-            throw new Exception(response.Content.ReadAsStringAsync().Result);
+            string responseContent = await response.Content.ReadAsStringAsync();
+            throw new Exception(responseContent);
         }
     }
 
