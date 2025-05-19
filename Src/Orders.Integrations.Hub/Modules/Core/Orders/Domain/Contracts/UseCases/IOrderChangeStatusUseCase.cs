@@ -5,6 +5,5 @@ namespace Orders.Integrations.Hub.Modules.Core.Orders.Domain.Contracts.UseCases;
 
 public interface IOrderChangeStatusUseCase
 {
-    OrderIntegration Integration { get; }
-    Task Execute(ChangeOrderStatusRequest request);
+    Task ExecuteAsync(ChangeOrderStatusRequest request);
 }
