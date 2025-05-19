@@ -14,12 +14,12 @@ public static class OrdersHubAdapter
 {
     public static async Task<IResult> GetIntegrationCancellationReason(
         ILogger<OrdersHubAdapterLog> logger,
-        [FromQuery] string? orderId,
+        [FromQuery] string? externalOrderId,
         [FromQuery] OrderIntegration integration,
         [FromServices] IServiceProvider serviceProvider
     ) {
         IOrderGetCancellationReasonUseCase service = serviceProvider.GetRequiredKeyedService<IOrderGetCancellationReasonUseCase>(integration);
-        return Ok(await service.ExecuteAsync(orderId));
+        return Ok(await service.ExecuteAsync(externalOrderId));
     }
 
     public static async Task<IResult> ChangeIntegrationStatus(
