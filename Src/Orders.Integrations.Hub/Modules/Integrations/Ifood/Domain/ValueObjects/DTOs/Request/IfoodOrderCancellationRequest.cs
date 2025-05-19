@@ -8,12 +8,17 @@ public record IfoodOrderCancellationRequest(
     [property: JsonPropertyName("reason")] string Reason,
     [property: JsonPropertyName("cancellationCode")] string CancellationCode
 ) {
-    public IfoodOrderCancellationRequest(string reason) : this(From(reason).ToString(), ((int)From(reason)).ToString()) { }
+    public IfoodOrderCancellationRequest(string reason) : this(
+        From(reason).ToString(),
+        ((int)From(reason)).ToString()
+    ) { }
 
-    public static IfoodCancellationReasons From(string? reason)
-        => reason switch
-        {
-            "OutOfStock" => IfoodCancellationReasons.ITEM_UNAVAILABLE,
-            _ => IfoodCancellationReasons.MERCHANT_SYSTEM_PROBLEMS
-        };
+    private static IfoodCancellationReasons From(string? reason)
+    {
+        int reasonCode = Convert.ToInt32(reason);
+        if (reasonCode == 2) {
+            return IfoodCancellationReasons.ITEM_UNAVAILABLE;
+        }
+        return (IfoodCancellationReasons)reasonCode;
+    }
 };
