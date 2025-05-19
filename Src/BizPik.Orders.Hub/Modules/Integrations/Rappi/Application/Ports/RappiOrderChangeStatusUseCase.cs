@@ -2,6 +2,7 @@
 using BizPik.Orders.Hub.Modules.Core.Orders.Domain.ValueObjects.DTOs.Request;
 using BizPik.Orders.Hub.Modules.Core.Orders.Domain.ValueObjects.Enums;
 using BizPik.Orders.Hub.Modules.Integrations.Rappi.Domain.Contracts;
+using BizPik.Orders.Hub.Modules.Integrations.Rappi.Domain.Entity;
 using BizPik.Orders.Hub.Modules.Integrations.Rappi.Domain.ValueObjects.DTOs.Request;
 using BizPik.Orders.Hub.Modules.Integrations.Rappi.Domain.ValueObjects.Enums;
 
@@ -24,13 +25,14 @@ public class RappiOrderChangeStatusUseCase(
             case OrderEventType.CANCELLED:
             case OrderEventType.CANCELLATION_REQUESTED:
             case OrderEventType.ORDER_CANCELLATION_REQUEST:
+                RappiOrderCancelType cancelType = (RappiOrderCancelType)Convert.ToInt32(request.CancellationReason);
                 await rappiClient.RequestOrderCancellation(
                     request.ExternalId,
                     new RappiOrderRejectRequest(
-                        request.CancellationReason!,
+                        request.CancellationMetadata?.ToString()?? cancelType.ToString(),
                         null,
                         null,
-                        RappiOrderCancelType.ORDER_MISSING_INFORMATION
+                        cancelType
                     )
                 );
                 break;
