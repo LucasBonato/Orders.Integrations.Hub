@@ -1,4 +1,5 @@
-﻿using BizPik.Orders.Hub.Modules.Integrations.Ifood.Application.Clients;
+﻿using BizPik.Orders.Hub.Modules.Core.Orders.Application.Extensions;
+using BizPik.Orders.Hub.Modules.Integrations.Ifood.Application.Clients;
 using BizPik.Orders.Hub.Modules.Integrations.Ifood.Domain.ValueObjects.DTOs.Request;
 using BizPik.Orders.Hub.Modules.Integrations.Ifood.Domain.ValueObjects.DTOs.Response;
 
@@ -18,8 +19,8 @@ public class IfoodAuthMessageHandler(
         IfoodAuthTokenResponse token = await ifoodAuthClient.RetrieveToken(
             new IfoodAuthTokenRequest(
                 GrantType: "client_credentials",
-                ClientId: AppEnv.INTEGRATIONS.IFOOD.CLIENT.ID.NotNull(),
-                ClientSecret: AppEnv.INTEGRATIONS.IFOOD.CLIENT.SECRET.NotNull()
+                ClientId: AppEnv.INTEGRATIONS.IFOOD.CLIENT.ID.NotNullEnv(),
+                ClientSecret: AppEnv.INTEGRATIONS.IFOOD.CLIENT.SECRET.NotNullEnv()
             )
         );
 

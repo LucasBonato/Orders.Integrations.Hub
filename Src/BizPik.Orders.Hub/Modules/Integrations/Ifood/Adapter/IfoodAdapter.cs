@@ -1,5 +1,6 @@
 ﻿using System.Text;
 
+using BizPik.Orders.Hub.Modules.Core.Orders.Application.Extensions;
 using BizPik.Orders.Hub.Modules.Core.Orders.Domain.Contracts.UseCases;
 using BizPik.Orders.Hub.Modules.Integrations.Common.Validators;
 using BizPik.Orders.Hub.Modules.Integrations.Ifood.Domain.ValueObjects.DTOs.Request;
@@ -56,7 +57,7 @@ public static class IfoodAdapter
         logger.LogInformation("[INFO] - IfoodSignatureValidator - Request Body: {body}", body);
 
         string? signature = context.Request.Headers["X-Ifood-Signature"].FirstOrDefault();
-        string secret = AppEnv.INTEGRATIONS.IFOOD.CLIENT.SECRET.NotNull();
+        string secret = AppEnv.INTEGRATIONS.IFOOD.CLIENT.SECRET.NotNullEnv();
 
         if (signature == null)
         {

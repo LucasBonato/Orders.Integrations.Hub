@@ -7,8 +7,7 @@ using BizPik.Orders.Hub.Modules.Integrations.Rappi.Domain.ValueObjects.DTOs.Resp
 namespace BizPik.Orders.Hub.Modules.Integrations.Rappi.Application.Clients;
 
 public class RappiClient(
-    HttpClient httpClient,
-    ILogger<RappiClient> logger
+    HttpClient httpClient
 ) : IRappiClient {
     public Task<List<RappiWebhookEventsResponse>> GetWebhooks()
     {
