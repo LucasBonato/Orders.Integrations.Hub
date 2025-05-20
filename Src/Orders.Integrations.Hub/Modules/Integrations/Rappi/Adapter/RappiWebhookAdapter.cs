@@ -1,5 +1,7 @@
 ﻿using System.Text;
 using System.Text.Json;
+
+using Orders.Integrations.Hub.Modules.Core.Orders.Application.Extensions;
 using Orders.Integrations.Hub.Modules.Core.Orders.Domain.Contracts.UseCases;
 using Orders.Integrations.Hub.Modules.Core.Orders.Domain.ValueObjects.Enums;
 using Orders.Integrations.Hub.Modules.Core.Orders.Domain.ValueObjects.Events;
@@ -116,7 +118,7 @@ public static class RappiWebhookAdapter {
 
         string signature = timestampAndSign["sign"];
 
-        string secret = AppEnv.INTEGRATIONS.RAPPI.CLIENT.SECRET.NotNull();
+        string secret = AppEnv.INTEGRATIONS.RAPPI.CLIENT.SECRET.NotNullEnv();
 
         if (!signature.IsSignatureValid(secret, body)) {
             context.Response.StatusCode = 403;

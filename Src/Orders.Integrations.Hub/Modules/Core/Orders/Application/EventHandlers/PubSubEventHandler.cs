@@ -2,6 +2,7 @@
 
 using Amazon.SimpleNotificationService;
 
+using Orders.Integrations.Hub.Modules.Core.Orders.Application.Extensions;
 using Orders.Integrations.Hub.Modules.Core.Orders.Domain.ValueObjects.Events;
 
 using FastEndpoints;
@@ -14,7 +15,7 @@ public class PubSubEventHandler(
 ) : IEventHandler<SendNotificationEvent> {
     public async Task HandleAsync(SendNotificationEvent eventModel, CancellationToken ct)
     {
-        var shareConfirmOrderTopicArn = eventModel.TopicArn ?? AppEnv.PUB_SUB.TOPICS.ACCEPT_ORDER.NotNull();
+        var shareConfirmOrderTopicArn = eventModel.TopicArn ?? AppEnv.PUB_SUB.TOPICS.ACCEPT_ORDER.NotNullEnv();
 
         string message = JsonSerializer.Serialize(eventModel.Message);
 

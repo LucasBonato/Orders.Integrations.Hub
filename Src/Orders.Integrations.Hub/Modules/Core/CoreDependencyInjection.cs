@@ -9,6 +9,7 @@ using Orders.Integrations.Hub.Modules.Core..Application;
 using Orders.Integrations.Hub.Modules.Core..Domain.Contracts;
 using Orders.Integrations.Hub.Modules.Core.Orders;
 using Orders.Integrations.Hub.Modules.Core.Orders.Application.Clients;
+using Orders.Integrations.Hub.Modules.Core.Orders.Application.Extensions;
 using Orders.Integrations.Hub.Modules.Core.Orders.Application.Middlewares;
 using Orders.Integrations.Hub.Modules.Core.Orders.Application.UseCases;
 using Orders.Integrations.Hub.Modules.Core.Orders.Domain.Contracts;
@@ -55,15 +56,15 @@ public static class CoreDependencyInjection
     private static IServiceCollection AddClients(this IServiceCollection services)
     {
         services.AddHttpClient<IInternalClient, InternalClient>(client => {
-            client.BaseAddress = new Uri(AppEnv..MONOLITH.ENDPOINT.BASE_URL.NotNull());
+            client.BaseAddress = new Uri(AppEnv..MONOLITH.ENDPOINT.BASE_URL.NotNullEnv());
         });
 
         services.AddHttpClient<IOrderClient, OrderClient>(client => {
-            client.BaseAddress = new Uri(AppEnv..ORDERS.ENDPOINT.BASE_URL.NotNull());
+            client.BaseAddress = new Uri(AppEnv..ORDERS.ENDPOINT.BASE_URL.NotNullEnv());
         });
 
         services.AddHttpClient<IOrderHttp>(client => {
-            client.BaseAddress = new Uri(AppEnv..ORDERS.ENDPOINT.BASE_URL.NotNull());
+            client.BaseAddress = new Uri(AppEnv..ORDERS.ENDPOINT.BASE_URL.NotNullEnv());
         });
 
         return services;
@@ -71,7 +72,7 @@ public static class CoreDependencyInjection
 
     private static IServiceCollection AddOpenTelemetryConfiguration(this IServiceCollection services)
     {
-        string serviceName = AppEnv.OTEL_SERVICE_NAME.NotNull();
+        string serviceName = AppEnv.OTEL_SERVICE_NAME.NotNullEnv();
 
         services
             .AddOpenTelemetry()
@@ -120,7 +121,7 @@ public static class CoreDependencyInjection
             return new AmazonSimpleNotificationServiceClient(credentials: credentials, clientConfig: config);
         }
 
-        profile = AppEnv.AWS_PROFILE.NotNull();
+        profile = AppEnv.AWS_PROFILE.NotNullEnv();
         return new AmazonSimpleNotificationServiceClient(SSOCredentials.LoadSsoCredentials(profile));
     }
 }

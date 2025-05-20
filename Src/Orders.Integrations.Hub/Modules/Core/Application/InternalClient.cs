@@ -2,6 +2,7 @@
 
 using Orders.Integrations.Hub.Modules.Core..Domain.Contracts;
 using Orders.Integrations.Hub.Modules.Core..Domain.ValueObjects;
+using Orders.Integrations.Hub.Modules.Core.Orders.Application.Extensions;
 
 namespace Orders.Integrations.Hub.Modules.Core..Application;
 
@@ -9,7 +10,7 @@ public class InternalClient(
     ILogger<InternalClient> logger,
     HttpClient httpClient
 ) : IInternalClient {
-    string apiKey = AppEnv..MONOLITH.API_KEYS.COMPANIES_INTEGRATIONS.NotNull();
+    string apiKey = AppEnv..MONOLITH.API_KEYS.COMPANIES_INTEGRATIONS.NotNullEnv();
 
     public async Task<ResponseWrapper<IntegrationResponse>> GetIntegrationByExternalId(string externalId)
     {

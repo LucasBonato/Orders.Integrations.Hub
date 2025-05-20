@@ -11,7 +11,6 @@ using FastEndpoints;
 namespace Orders.Integrations.Hub.Modules.Integrations.Rappi.Application.Ports;
 
 public class RappiOrderCreateUseCase(
-    ILogger<RappiOrderCreateUseCase> logger,
     IInternalClient Client
 ) : IOrderCreateUseCase<RappiOrder> {
     public async Task<RappiOrder> ExecuteAsync(RappiOrder requestOrder)
@@ -26,6 +25,6 @@ public class RappiOrderCreateUseCase(
             SalesChannel: OrderSalesChannel.RAPPI
         ).PublishAsync();
 
-        throw new NotImplementedException();
+        return requestOrder;
     }
 }
