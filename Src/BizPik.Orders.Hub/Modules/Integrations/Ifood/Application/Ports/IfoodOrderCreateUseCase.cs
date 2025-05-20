@@ -13,7 +13,6 @@ using FastEndpoints;
 namespace BizPik.Orders.Hub.Modules.Integrations.Ifood.Application.Ports;
 
 public class IfoodOrderCreateUseCase(
-    ILogger<IfoodOrderCreateUseCase> logger,
     IBizPikMonolithClient bizPikClient,
     IIFoodClient iFoodClient
 ) : IOrderCreateUseCase<IfoodWebhookRequest> {

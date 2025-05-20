@@ -1,4 +1,6 @@
-﻿using System.Net;
+﻿using System.Diagnostics;
+using System.Net;
+using BizPik.Orders.Hub.Modules.Core.Orders.Application.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Diagnostics;
 using BizPik.Orders.Hub.Modules.Core.Orders.Application.Extensions;
@@ -11,11 +13,13 @@ public class ExceptionHandlerMiddleware(
 ) : IExceptionHandler {
     public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
     {
-        string traceId = httpContext.TraceIdentifier;
+        string traceId = Activity.Current?.TraceId.ToString()?? httpContext.TraceIdentifier;
+        string traceParent = Activity.Current?.Id ?? httpContext.TraceIdentifier;
 
-        logger.LogStructuredException(exception, httpContext, traceId);
+        logger.LogStructuredException(exception, httpContext, traceId, traceParent);
 
         ProblemDetails details = exception switch {
+            EnvironmentVariableNotFoundException e => e.HandleException(),
             InvalidOperationException e => e.HandleException(),
             ArgumentNullException e => e.HandleException(),
             _ => exception.HandleException()
@@ -30,6 +34,8 @@ public class ExceptionHandlerMiddleware(
 
         httpContext.Response.ContentType = "application/json";
         httpContext.Response.StatusCode = details.Status?? (int)HttpStatusCode.InternalServerError;
+
+        httpContext.Response.Headers.TryAdd("traceparent", traceParent);
 
         await httpContext.Response.WriteAsJsonAsync(details, cancellationToken);
 

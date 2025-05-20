@@ -5,7 +5,6 @@ using FastEndpoints;
 namespace BizPik.Orders.Hub.Modules.Core.Orders.Application.EventHandlers;
 
 public class CreateOrderEventHandler(
-    ILogger<CreateOrderEventHandler> logger,
     IServiceScopeFactory serviceScopeFactory
 ) : IEventHandler<CreateOrderEvent> {
     public async Task HandleAsync(CreateOrderEvent orderEvent, CancellationToken cancellationToken)

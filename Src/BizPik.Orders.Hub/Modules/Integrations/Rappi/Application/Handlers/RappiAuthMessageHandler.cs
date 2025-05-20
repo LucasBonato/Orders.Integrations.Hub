@@ -1,4 +1,5 @@
-﻿using BizPik.Orders.Hub.Modules.Integrations.Rappi.Application.Clients;
+﻿using BizPik.Orders.Hub.Modules.Core.Orders.Application.Extensions;
+using BizPik.Orders.Hub.Modules.Integrations.Rappi.Application.Clients;
 using BizPik.Orders.Hub.Modules.Integrations.Rappi.Domain.ValueObjects.DTOs.Request;
 using BizPik.Orders.Hub.Modules.Integrations.Rappi.Domain.ValueObjects.DTOs.Response;
 
@@ -16,9 +17,9 @@ public class RappiAuthMessageHandler(
 
         RappiAuthTokenResponse token = await rappiAuthClient.RetrieveToken(
             new RappiAuthTokenRequest(
-                ClienteId: AppEnv.INTEGRATIONS.RAPPI.CLIENT.ID.NotNull(),
-                ClienteSecret: AppEnv.INTEGRATIONS.RAPPI.CLIENT.SECRET.NotNull(),
-                Audience: AppEnv.INTEGRATIONS.RAPPI.CLIENT.AUDIENCE.NotNull()
+                ClienteId: AppEnv.INTEGRATIONS.RAPPI.CLIENT.ID.NotNullEnv(),
+                ClienteSecret: AppEnv.INTEGRATIONS.RAPPI.CLIENT.SECRET.NotNullEnv(),
+                Audience: AppEnv.INTEGRATIONS.RAPPI.CLIENT.AUDIENCE.NotNullEnv()
             )
         );
 

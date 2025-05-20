@@ -2,6 +2,7 @@
 
 using BizPik.Orders.Hub.Modules.Core.BizPik.Domain.Contracts;
 using BizPik.Orders.Hub.Modules.Core.BizPik.Domain.ValueObjects;
+using BizPik.Orders.Hub.Modules.Core.Orders.Application.Extensions;
 
 namespace BizPik.Orders.Hub.Modules.Core.BizPik.Application;
 
@@ -9,7 +10,7 @@ public class BizPikMonolithClient(
     ILogger<BizPikMonolithClient> logger,
     HttpClient httpClient
 ) : IBizPikMonolithClient {
-    string apiKey = AppEnv.BIZPIK.MONOLITH.API_KEYS.COMPANIES_INTEGRATIONS.NotNull();
+    string apiKey = AppEnv.BIZPIK.MONOLITH.API_KEYS.COMPANIES_INTEGRATIONS.NotNullEnv();
 
     public async Task<BizPikResponseWrapper<BizPikIntegrationResponse>> GetIntegrationByExternalId(string externalId)
     {

@@ -1,29 +1,32 @@
-﻿namespace BizPik.Orders.Hub.Modules.Core.Orders.Application.Extensions;
+﻿using System.Text.Encodings.Web;
+using System.Text.Json;
+
+namespace BizPik.Orders.Hub.Modules.Core.Orders.Application.Extensions;
 
 public static class LoggerExtensions
 {
-    public static void LogStructuredException(this ILogger logger, Exception ex, HttpContext context, string traceId)
+    public static void LogStructuredException(this ILogger logger, Exception ex, HttpContext context, string traceId, string traceParent)
     {
-        using (logger.BeginScope(new Dictionary<string, object>
-               {
-                   ["traceId"] = traceId,
-                   ["exceptionType"] = ex.GetType().FullName!,
-                   ["requestPath"] = context.Request.Path
-               }))
+        using (logger.BeginScope(new Dictionary<string, object> { ["ExceptionType"] = ex.GetType().FullName! }))
         {
             var message = new {
                 TraceId = traceId,
-                Path = context.Request.Path,
+                TraceParent = traceParent,
+                context.Request.Path,
                 Type = ex.GetType().Name,
-                Message = ex.Message,
-                StackTrace = ex.StackTrace,
+                ex.Message,
+                ex.StackTrace,
             };
 
-            logger.LogError(
-                new EventId(0, "ExceptionThrown"),
-                "[ERROR] {body}",
-                message
-            );
+            string json = JsonSerializer.Serialize(message, new JsonSerializerOptions {
+                WriteIndented = true,
+                Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+            });
+
+            string formattedJson = json.Replace(@"\r\n", Environment.NewLine);
+
+
+            logger.LogError("{Body}", formattedJson);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
+using BizPik.Orders.Hub.Modules.Core.Orders.Application.Extensions;
 using BizPik.Orders.Hub.Modules.Core.Orders.Domain.Contracts.UseCases;
 using BizPik.Orders.Hub.Modules.Core.Orders.Domain.ValueObjects.Enums;
 using BizPik.Orders.Hub.Modules.Integrations.Ifood.Application.Clients;
@@ -39,7 +40,7 @@ public static class IfoodDependencyInjection
 
     private static IServiceCollection AddIfoodClients(this IServiceCollection services)
     {
-        string baseUrl = AppEnv.INTEGRATIONS.IFOOD.ENDPOINT.BASE_URL.NotNull();
+        string baseUrl = AppEnv.INTEGRATIONS.IFOOD.ENDPOINT.BASE_URL.NotNullEnv();
 
         services.AddHttpClient<IfoodAuthClient, IfoodAuthClient>(client => {
             client.BaseAddress = new Uri(baseUrl);
