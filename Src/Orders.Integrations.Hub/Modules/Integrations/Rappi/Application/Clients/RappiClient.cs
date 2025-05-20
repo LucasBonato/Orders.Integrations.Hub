@@ -7,8 +7,7 @@ using Orders.Integrations.Hub.Modules.Integrations.Rappi.Domain.ValueObjects.DTO
 namespace Orders.Integrations.Hub.Modules.Integrations.Rappi.Application.Clients;
 
 public class RappiClient(
-    HttpClient httpClient,
-    ILogger<RappiClient> logger
+    HttpClient httpClient
 ) : IRappiClient {
     public Task<List<RappiWebhookEventsResponse>> GetWebhooks()
     {

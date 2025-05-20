@@ -13,7 +13,6 @@ using FastEndpoints;
 namespace Orders.Integrations.Hub.Modules.Integrations.Ifood.Application.Ports;
 
 public class IfoodOrderCreateUseCase(
-    ILogger<IfoodOrderCreateUseCase> logger,
     IInternalClient Client,
     IIFoodClient iFoodClient
 ) : IOrderCreateUseCase<IfoodWebhookRequest> {
