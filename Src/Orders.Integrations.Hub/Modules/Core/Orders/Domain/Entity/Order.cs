@@ -1,5 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 using Orders.Integrations.Hub.Modules.Core.Orders.Domain.Entity.Discount;
+using Orders.Integrations.Hub.Modules.Core.Orders.Domain.Entity.Dispute;
 using Orders.Integrations.Hub.Modules.Core.Orders.Domain.Entity.Item;
 using Orders.Integrations.Hub.Modules.Core.Orders.Domain.Entity.Merchant;
 using Orders.Integrations.Hub.Modules.Core.Orders.Domain.Entity.Payment;
@@ -39,5 +40,7 @@ public record Order(
 
     [property: JsonPropertyName("externalId")]                  string ExternalId,
     [property: JsonPropertyName("orderDisplayId")]              string? OrderDisplayId,
-    [property: JsonPropertyName("companyId")]                   int CompanyId
+    [property: JsonPropertyName("companyId")]                   int CompanyId,
+
+    [property: JsonPropertyName("dispute")]                     OrderDispute? Dispute
 );

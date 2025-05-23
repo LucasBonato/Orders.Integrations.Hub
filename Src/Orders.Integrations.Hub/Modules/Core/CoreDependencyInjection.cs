@@ -88,7 +88,6 @@ public static class CoreDependencyInjection
                     .AddHttpClientInstrumentation()
                 ;
             })
-
         ;
 
         services.AddLogging(options => {
