@@ -1,6 +1,6 @@
 ﻿using BizPik.Orders.Hub.Modules.Integrations.Common.Contracts;
-using BizPik.Orders.Hub.Modules.Integrations.Ifood.Domain.Entity;
-using BizPik.Orders.Hub.Modules.Integrations.Ifood.Domain.Entity.MerchantDetails;
+using BizPik.Orders.Hub.Modules.Integrations.Ifood.Domain.Entity.Order;
+using BizPik.Orders.Hub.Modules.Integrations.Ifood.Domain.Entity.Order.MerchantDetails;
 using BizPik.Orders.Hub.Modules.Integrations.Ifood.Domain.ValueObjects.DTOs.Request;
 using BizPik.Orders.Hub.Modules.Integrations.Ifood.Domain.ValueObjects.DTOs.Response;
 
@@ -10,6 +10,7 @@ public interface IIFoodClient : IIntegrationClient
 {
     Task<IfoodOrder> GetOrderDetails(string orderId);
     Task<IfoodMerchant> GetMerchantDetails(string merchantId);
+    Task<IReadOnlyList<IfoodCancellationReasonResponse>> GetCancellationReasons(string orderId);
     Task ConfirmOrder(string orderId);
     Task PreparationStartedOrder(string orderId);
     Task ReadyToPickupOrder(string orderId);
@@ -17,5 +18,7 @@ public interface IIFoodClient : IIntegrationClient
     Task RequestOrderCancellation(string orderId, IfoodOrderCancellationRequest request);
     Task PatchProductStatus(string merchantId, IfoodPatchProductStatusRequest request);
 
-    Task<IReadOnlyList<IfoodCancellationReasonResponse>> GetCancellationReasons(string orderId);
+    Task PostHandshakeDisputesAccept(string disputeId);
+    Task PostHandshakeDisputesReject(string disputeId);
+    Task PostHandshakeDisputesAlternatives(string disputeId, string alternativeId, HandshakeAlternativeRequest request);
 }

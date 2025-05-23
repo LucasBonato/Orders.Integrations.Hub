@@ -7,6 +7,7 @@ using BizPik.Orders.Hub.Modules.Core.Orders.Domain.Entity.Payment;
 using BizPik.Orders.Hub.Modules.Core.Orders.Domain.ValueObjects.DTOs;
 using BizPik.Orders.Hub.Modules.Core.Orders.Domain.ValueObjects.Enums;
 using BizPik.Orders.Hub.Modules.Integrations.Ifood.Domain.Entity;
+using BizPik.Orders.Hub.Modules.Integrations.Ifood.Domain.Entity.Order;
 using BizPik.Orders.Hub.Modules.Integrations.Ifood.Domain.ValueObjects.DTOs.Request;
 using BizPik.Orders.Hub.Modules.Integrations.Ifood.Domain.ValueObjects.Enums;
 
@@ -193,7 +194,8 @@ public static class IfoodOrderExtension
             ExtraInfo: order.ExtraInfo?? string.Empty,
             CompanyId: companyId,
             OrderDisplayId: Guid.NewGuid().ToString()[..5],
-            ExternalId: order.Id
+            ExternalId: order.Id,
+            Dispute: null
         );
     }
 
@@ -277,7 +279,6 @@ public static class IfoodOrderExtension
             Method.GIFT_CARD => MethodMethod.REDEEM,
             Method.DIGITAL_WALLET => MethodMethod.DIGITAL_WALLET,
             Method.PIX => MethodMethod.PIX,
-            Method.OTHER => MethodMethod.OTHER,
             _ => MethodMethod.OTHER
         };
     }
@@ -348,7 +349,7 @@ public static class IfoodOrderExtension
     {
         return new OrderUpdateStatus(
             OrderId: request.OrderId,
-            SourceAppId: "ifood",
+            SourceAppId: nameof(OrderIntegration.IFOOD),
             Type: eventType?? request.FullCode.ToOrderEvent(),
             CreateAt: request.CreatedAt,
             FromIntegration: true

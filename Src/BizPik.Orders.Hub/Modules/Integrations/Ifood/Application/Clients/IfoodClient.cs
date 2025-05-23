@@ -5,7 +5,8 @@ using System.Text.Json;
 
 using BizPik.Orders.Hub.Modules.Integrations.Ifood.Domain.Contracts;
 using BizPik.Orders.Hub.Modules.Integrations.Ifood.Domain.Entity;
-using BizPik.Orders.Hub.Modules.Integrations.Ifood.Domain.Entity.MerchantDetails;
+using BizPik.Orders.Hub.Modules.Integrations.Ifood.Domain.Entity.Order;
+using BizPik.Orders.Hub.Modules.Integrations.Ifood.Domain.Entity.Order.MerchantDetails;
 using BizPik.Orders.Hub.Modules.Integrations.Ifood.Domain.ValueObjects.DTOs.Request;
 using BizPik.Orders.Hub.Modules.Integrations.Ifood.Domain.ValueObjects.DTOs.Response;
 
@@ -136,5 +137,45 @@ public class IfoodClient(
         IReadOnlyList<IfoodCancellationReasonResponse> responseContent = await response.Content.ReadFromJsonAsync<IReadOnlyList<IfoodCancellationReasonResponse>>()?? [];
 
         return responseContent;
+    }
+
+    public async Task PostHandshakeDisputesAccept(string disputeId)
+    {
+        string uri = $"order/v1.0/disputes/{disputeId}/accept";
+
+        HttpResponseMessage response = await httpClient.PostAsync(uri, null);
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new Exception(response.Content.ReadAsStringAsync().Result);
+        }
+    }
+
+    public async Task PostHandshakeDisputesReject(string disputeId)
+    {
+        string uri = $"order/v1.0/disputes/{disputeId}/reject";
+
+        HttpResponseMessage response = await httpClient.PostAsync(uri, null);
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new Exception(response.Content.ReadAsStringAsync().Result);
+        }
+    }
+
+    public async Task PostHandshakeDisputesAlternatives(string disputeId, string alternativeId, HandshakeAlternativeRequest request)
+    {
+        string uri = $"order/v1.0/disputes/{disputeId}/alternatives/{alternativeId}";
+
+        HttpRequestMessage requestMessage = new (HttpMethod.Post, uri);
+        var content = new StringContent(JsonSerializer.Serialize(request), Encoding.Default,"application/json");
+        content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+        requestMessage.Content = content;
+
+        HttpResponseMessage response = await httpClient.SendAsync(requestMessage);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            string responseContent = await response.Content.ReadAsStringAsync();
+            throw new Exception(responseContent);
+        }
     }
 }
