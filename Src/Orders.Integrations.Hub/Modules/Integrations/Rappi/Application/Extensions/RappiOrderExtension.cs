@@ -163,7 +163,8 @@ public static class RappiOrderExtension
             ExtraInfo: string.Empty,
             CompanyId: companyId,
             OrderDisplayId: Guid.NewGuid().ToString()[..5],
-            ExternalId: order.OrderDetail.OrderId
+            ExternalId: order.OrderDetail.OrderId,
+            Dispute: null
         );
     }
 
