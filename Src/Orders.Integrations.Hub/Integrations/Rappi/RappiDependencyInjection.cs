@@ -1,0 +1,58 @@
+﻿using System.Text.Json.Serialization;
+
+using Orders.Integrations.Hub.Core.Orders.Application.Extensions;
+using Orders.Integrations.Hub.Core.Orders.Domain.Contracts.UseCases;
+using Orders.Integrations.Hub.Core.Orders.Domain.ValueObjects.Enums;
+using Orders.Integrations.Hub.Integrations.Rappi.Application.Clients;
+using Orders.Integrations.Hub.Integrations.Rappi.Application.Handlers;
+using Orders.Integrations.Hub.Integrations.Rappi.Application.Ports;
+using Orders.Integrations.Hub.Integrations.Rappi.Domain.Contracts;
+using Orders.Integrations.Hub.Integrations.Rappi.Domain.Entity;
+using Orders.Integrations.Hub.Integrations.Rappi.Domain.ValueObjects.DTOs.Request;
+
+using Microsoft.AspNetCore.Mvc;
+
+namespace Orders.Integrations.Hub.Integrations.Rappi;
+
+public static class RappiDependencyInjection
+{
+    public static IServiceCollection AddRappi(this IServiceCollection services)
+        => services
+            .AddRappiServices()
+            .AddRappiClients()
+        ;
+
+    private static IServiceCollection AddRappiServices(this IServiceCollection services)
+    {
+        services.AddTransient<IOrderCreateUseCase<RappiOrder>, RappiOrderCreateUseCase>();
+        services.AddTransient<IOrderUpdateStatusUseCase<RappiWebhookEventOrderRequest>, RappiOrderUpdateStatusUseCase>();
+
+        services.AddKeyedScoped<IOrderChangeStatusUseCase, RappiOrderChangeStatusUseCase>(OrderIntegration.RAPPI);
+        services.AddKeyedScoped<IOrderChangeProductStatusUseCase, RappiOrderChangeProductStatusUseCase>(OrderIntegration.RAPPI);
+        services.AddKeyedScoped<IOrderGetCancellationReasonUseCase, RappiOrderGetCancellationReasonUseCase>(OrderIntegration.RAPPI);
+
+        return services
+                .Configure<JsonOptions>(options => {
+                    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                })
+            ;
+    }
+
+    private static IServiceCollection AddRappiClients(this IServiceCollection services)
+    {
+        string baseUrl = AppEnv.INTEGRATIONS.RAPPI.ENDPOINT.BASE_URL.NotNullEnv();
+        string baseAuthUrl = AppEnv.INTEGRATIONS.RAPPI.ENDPOINT.AUTH.NotNullEnv();
+
+        services.AddHttpClient<RappiAuthClient, RappiAuthClient>(client => {
+            client.BaseAddress = new Uri(baseAuthUrl);
+        });
+
+        services.AddScoped<RappiAuthMessageHandler>();
+
+        services.AddHttpClient<IRappiClient, RappiClient>(client => {
+            client.BaseAddress = new Uri(baseUrl);
+        }).AddHttpMessageHandler<RappiAuthMessageHandler>();
+
+        return services;
+    }
+}

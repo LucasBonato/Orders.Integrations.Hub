@@ -1,5 +1,5 @@
-using Orders.Integrations.Hub.Modules.Core;
-using Orders.Integrations.Hub.Modules.Integrations;
+using Orders.Integrations.Hub.Core;
+using Orders.Integrations.Hub.Integrations;
 
 using DotNetEnv;
 

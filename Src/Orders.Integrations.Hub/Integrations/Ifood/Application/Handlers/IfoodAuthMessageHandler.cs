@@ -1,0 +1,33 @@
+﻿using Orders.Integrations.Hub.Core.Orders.Application.Extensions;
+using Orders.Integrations.Hub.Integrations.Ifood.Application.Clients;
+using Orders.Integrations.Hub.Integrations.Ifood.Domain.ValueObjects.DTOs.Request;
+using Orders.Integrations.Hub.Integrations.Ifood.Domain.ValueObjects.DTOs.Response;
+
+namespace Orders.Integrations.Hub.Integrations.Ifood.Application.Handlers;
+
+public class IfoodAuthMessageHandler(
+    ILogger<IfoodAuthMessageHandler> logger,
+    IfoodAuthClient ifoodAuthClient
+) : DelegatingHandler {
+
+    protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+    {
+        if (request.Headers.Authorization is not null) {
+            return await base.SendAsync(request, cancellationToken);
+        }
+
+        IfoodAuthTokenResponse token = await ifoodAuthClient.RetrieveToken(
+            new IfoodAuthTokenRequest(
+                GrantType: "client_credentials",
+                ClientId: AppEnv.INTEGRATIONS.IFOOD.CLIENT.ID.NotNullEnv(),
+                ClientSecret: AppEnv.INTEGRATIONS.IFOOD.CLIENT.SECRET.NotNullEnv()
+            )
+        );
+
+        logger.LogWarning("[INFO] - IfoodAuthMessageHandler - Generating new Access token");
+
+        request.Headers.Authorization = new("Bearer", token.AccessToken);
+
+        return await base.SendAsync(request, cancellationToken);
+    }
+}
