@@ -42,6 +42,9 @@ public static class IfoodAdapter
             IfoodFullOrderStatus.CONCLUDED or
             IfoodFullOrderStatus.CANCELLED => Accepted( "/", await orderUpdate.ExecuteAsync(request)),
 
+            IfoodFullOrderStatus.HANDSHAKE_DISPUTE => Accepted(),
+            IfoodFullOrderStatus.HANDSHAKE_SETTLEMENT => Accepted(),
+
             _ => BadRequest(new { error = $"not mapped but ok {request.FullCode}" })
         };
     }

@@ -15,6 +15,7 @@ public class IfoodOrderGetCancellationReasonUseCase(
         }
 
         var ifoodCancellationReasons = await iFoodClient.GetCancellationReasons(externalOrderId);
+
         return ifoodCancellationReasons
             .Select(reason => new CancellationReasonsResponse(
                 Code: Convert.ToInt32(reason.CancelCodeId),
