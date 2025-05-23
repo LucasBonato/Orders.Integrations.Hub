@@ -1,5 +1,5 @@
-using BizPik.Orders.Hub.Modules.Core;
-using BizPik.Orders.Hub.Modules.Integrations;
+using BizPik.Orders.Hub.Core;
+using BizPik.Orders.Hub.Integrations;
 
 using DotNetEnv;
 

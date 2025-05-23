@@ -1,0 +1,12 @@
+﻿using System.Text.Json.Serialization;
+
+using BizPik.Orders.Hub.Core.Orders.Domain.ValueObjects.Enums;
+
+namespace BizPik.Orders.Hub.Core.BizPik.Domain.ValueObjects;
+
+public record BizPikSNSProductEvent(
+    [property: JsonPropertyName("CompanyId")] int CompanyId,
+    [property: JsonPropertyName("MerchantId")] string MerchantId,
+    [property: JsonPropertyName("integration")] [property: JsonConverter(typeof(JsonStringEnumConverter))] OrderIntegration Integration,
+    [property: JsonPropertyName("ProductsSkus")] List<string> ProductSkus
+);
