@@ -5,7 +5,7 @@ using FastEndpoints;
 
 namespace Orders.Integrations.Hub.Core.Orders.Application.EventHandlers;
 
-public class UpdateOrderStatusEventHandler(
+public class UpdateOrderEventHandler(
     IServiceScopeFactory serviceScopeFactory
 ) : IEventHandler<UpdateOrderStatusEvent> {
     public async Task HandleAsync(UpdateOrderStatusEvent orderEvent, CancellationToken cancellationToken)

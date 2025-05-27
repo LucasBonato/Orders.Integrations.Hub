@@ -5,6 +5,6 @@ using FastEndpoints;
 namespace Orders.Integrations.Hub.Core.Orders.Domain.ValueObjects.Events;
 
 public record SendNotificationEvent(
-    OrderUpdateStatus Message,
+    OrderUpdate Message,
     string? TopicArn
 ) : IEvent;

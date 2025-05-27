@@ -25,7 +25,7 @@ public static class RappiDependencyInjection
     private static IServiceCollection AddRappiServices(this IServiceCollection services)
     {
         services.AddTransient<IOrderCreateUseCase<RappiOrder>, RappiOrderCreateUseCase>();
-        services.AddTransient<IOrderUpdateStatusUseCase<RappiWebhookEventOrderRequest>, RappiOrderUpdateStatusUseCase>();
+        services.AddTransient<IOrderUpdateUseCase<RappiWebhookEventOrderRequest>, RappiOrderUpdateUseCase>();
 
         services.AddKeyedScoped<IOrderChangeStatusUseCase, RappiOrderChangeStatusUseCase>(OrderIntegration.RAPPI);
         services.AddKeyedScoped<IOrderChangeProductStatusUseCase, RappiOrderChangeProductStatusUseCase>(OrderIntegration.RAPPI);

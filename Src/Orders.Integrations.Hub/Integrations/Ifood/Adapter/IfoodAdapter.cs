@@ -21,7 +21,7 @@ public static class IfoodAdapter
     public static async Task<IResult> Webhook(
         ILogger<IfoodAdapterLog> logger,
         [FromServices] IOrderCreateUseCase<IfoodWebhookRequest> orderCreate,
-        [FromServices] IOrderUpdateStatusUseCase<IfoodWebhookRequest> orderUpdate,
+        [FromServices] IOrderUpdateUseCase<IfoodWebhookRequest> orderUpdate,
         HttpContext context
     ) {
         IfoodWebhookRequest request = await HandleSignature(context, logger);
@@ -32,7 +32,7 @@ public static class IfoodAdapter
         {
             IfoodFullOrderStatus.KEEPALIVE => Accepted(),
 
-            IfoodFullOrderStatus.PLACED => Accepted("/", await orderCreate.ExecuteAsync(request)),
+            IfoodFullOrderStatus.PLACED => Accepted(value: await orderCreate.ExecuteAsync(request)),
 
             IfoodFullOrderStatus.CONFIRMED or
             IfoodFullOrderStatus.SEPARATION_STARTED or
@@ -40,7 +40,7 @@ public static class IfoodAdapter
             IfoodFullOrderStatus.READY_TO_PICKUP or
             IfoodFullOrderStatus.DISPATCHED or
             IfoodFullOrderStatus.CONCLUDED or
-            IfoodFullOrderStatus.CANCELLED => Accepted( "/", await orderUpdate.ExecuteAsync(request)),
+            IfoodFullOrderStatus.CANCELLED => Accepted(value: await orderUpdate.ExecuteAsync(request)),
 
             IfoodFullOrderStatus.HANDSHAKE_DISPUTE => Accepted(),
             IfoodFullOrderStatus.HANDSHAKE_SETTLEMENT => Accepted(),

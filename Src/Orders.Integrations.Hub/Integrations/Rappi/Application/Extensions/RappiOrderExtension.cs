@@ -281,24 +281,26 @@ public static class RappiOrderExtension
         };
     }
 
-    public static OrderUpdateStatus FromRappi(this RappiWebhookEventOrderRequest request)
+    public static OrderUpdate FromRappi(this RappiWebhookEventOrderRequest request)
     {
-        return new OrderUpdateStatus(
+        return new OrderUpdate(
             OrderId: request.OrderId,
-            SourceAppId: "rappi",
+            SourceAppId: nameof(OrderIntegration.RAPPI),
             Type: request.OrderEvent.ToOrderEvent(),
             CreateAt: request.EventTime?? DateTime.UtcNow,
+            Dispute: null,
             FromIntegration: true
         );
     }
 
-    public static OrderUpdateStatus FromRappi(this RappiOrder request, OrderEventType eventType)
+    public static OrderUpdate FromRappi(this RappiOrder request, OrderEventType eventType)
     {
-        return new OrderUpdateStatus(
+        return new OrderUpdate(
             OrderId: request.OrderDetail.OrderId,
-            SourceAppId: "rappi",
+            SourceAppId: nameof(OrderIntegration.RAPPI),
             Type: eventType,
             CreateAt: request.OrderDetail.CreatedAt,
+            Dispute: null,
             FromIntegration: false
         );
     }

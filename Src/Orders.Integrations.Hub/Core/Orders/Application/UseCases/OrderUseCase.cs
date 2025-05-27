@@ -19,7 +19,7 @@ public class OrderUseCase(
 
     public async Task UpdateOrderStatus(UpdateOrderStatusEvent order)
     {
-        logger.LogInformation("[INFO] - UpdateOrderStatusEventHandler - Updating Order From: {salesChannel}", order.SalesChannel);
-        await orderClient.UpdateOrderStatus(order.OrderUpdateStatus);
+        logger.LogInformation("[INFO] - UpdateOrderEventHandler - Updating Order From: {salesChannel}", order.SalesChannel);
+        await orderClient.PatchOrder(order.OrderUpdate);
     }
 }

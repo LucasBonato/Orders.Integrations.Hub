@@ -6,6 +6,6 @@ using FastEndpoints;
 namespace Orders.Integrations.Hub.Core.Orders.Domain.ValueObjects.Events;
 
 public record UpdateOrderStatusEvent(
-    OrderUpdateStatus OrderUpdateStatus,
+    OrderUpdate OrderUpdate,
     OrderSalesChannel SalesChannel = OrderSalesChannel.
 ) : IEvent;
