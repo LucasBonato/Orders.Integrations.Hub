@@ -8,11 +8,11 @@ using FastEndpoints;
 
 namespace BizPik.Orders.Hub.Integrations.Rappi.Application.Ports;
 
-public class RappiOrderUpdateStatusUseCase : IOrderUpdateStatusUseCase<RappiWebhookEventOrderRequest> {
+public class RappiOrderUpdateUseCase : IOrderUpdateUseCase<RappiWebhookEventOrderRequest> {
     public async Task<RappiWebhookEventOrderRequest> ExecuteAsync(RappiWebhookEventOrderRequest requestOrder)
     {
         await new UpdateOrderStatusEvent(
-            OrderUpdateStatus: requestOrder.FromRappi(),
+            OrderUpdate: requestOrder.FromRappi(),
             SalesChannel: OrderSalesChannel.RAPPI
         ).PublishAsync();
 

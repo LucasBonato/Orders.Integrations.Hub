@@ -5,6 +5,6 @@ using FastEndpoints;
 namespace BizPik.Orders.Hub.Core.Orders.Domain.ValueObjects.Events;
 
 public record SendNotificationEvent(
-    OrderUpdateStatus Message,
+    OrderUpdate Message,
     string? TopicArn
 ) : IEvent;

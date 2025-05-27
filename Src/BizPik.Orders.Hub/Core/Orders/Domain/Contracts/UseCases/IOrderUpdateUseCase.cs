@@ -1,6 +1,6 @@
 ﻿namespace BizPik.Orders.Hub.Core.Orders.Domain.Contracts.UseCases;
 
-public interface IOrderUpdateStatusUseCase<TOrder>
+public interface IOrderUpdateUseCase<TOrder>
 {
     Task<TOrder> ExecuteAsync(TOrder integrationOrder);
 }

@@ -22,15 +22,15 @@ public class OrderClient(
         }
     }
 
-    public async Task UpdateOrderStatus(OrderUpdateStatus order)
+    public async Task PatchOrder(OrderUpdate order)
     {
-        logger.LogInformation("[INFO] - UpdateOrderStatusEventHandler - Updating Order From Id: {orderId}", order.OrderId);
+        logger.LogInformation("[INFO] - UpdateOrderEventHandler - Updating Order From Id: {orderId}", order.OrderId);
 
         HttpResponseMessage response = await httpClient.PatchAsJsonAsync("Orders", order);
 
         if (!response.IsSuccessStatusCode)
         {
-            logger.LogError("[ERROR] - UpdateOrderStatusEventHandler - Error updating order({orderId}): {statusCode}, {content}, {reason}", order.OrderId, response.StatusCode, response.Content.ReadAsStringAsync().Result, response.ReasonPhrase);
+            logger.LogError("[ERROR] - UpdateOrderEventHandler - Error updating order({orderId}): {statusCode}, {content}, {reason}", order.OrderId, response.StatusCode, response.Content.ReadAsStringAsync().Result, response.ReasonPhrase);
             throw new Exception();
         }
     }

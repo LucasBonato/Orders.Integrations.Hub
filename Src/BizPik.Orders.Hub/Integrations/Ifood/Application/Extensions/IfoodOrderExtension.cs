@@ -344,13 +344,14 @@ public static class IfoodOrderExtension
         };
     }
 
-    public static OrderUpdateStatus FromIfood(this IfoodWebhookRequest request, OrderEventType? eventType)
+    public static OrderUpdate FromIfood(this IfoodWebhookRequest request, OrderEventType? eventType)
     {
-        return new OrderUpdateStatus(
+        return new OrderUpdate(
             OrderId: request.OrderId,
             SourceAppId: nameof(OrderIntegration.IFOOD),
             Type: eventType?? request.FullCode.ToOrderEvent(),
             CreateAt: request.CreatedAt,
+            Dispute: null,
             FromIntegration: true
         );
     }

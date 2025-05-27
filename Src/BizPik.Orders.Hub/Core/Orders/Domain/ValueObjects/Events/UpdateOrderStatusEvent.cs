@@ -6,6 +6,6 @@ using FastEndpoints;
 namespace BizPik.Orders.Hub.Core.Orders.Domain.ValueObjects.Events;
 
 public record UpdateOrderStatusEvent(
-    OrderUpdateStatus OrderUpdateStatus,
+    OrderUpdate OrderUpdate,
     OrderSalesChannel SalesChannel = OrderSalesChannel.BIZPIK
 ) : IEvent;

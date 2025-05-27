@@ -8,12 +8,12 @@ using FastEndpoints;
 
 namespace BizPik.Orders.Hub.Integrations.Ifood.Application.Ports;
 
-public class IfoodOrderUpdateStatusUseCase : IOrderUpdateStatusUseCase<IfoodWebhookRequest>
+public class IfoodOrderUpdateUseCase : IOrderUpdateUseCase<IfoodWebhookRequest>
 {
     public async Task<IfoodWebhookRequest> ExecuteAsync(IfoodWebhookRequest ifoodOrder)
     {
         await new UpdateOrderStatusEvent(
-            OrderUpdateStatus: ifoodOrder.FromIfood(null),
+            OrderUpdate: ifoodOrder.FromIfood(null),
             SalesChannel: OrderSalesChannel.IFOOD
         ).PublishAsync();
 

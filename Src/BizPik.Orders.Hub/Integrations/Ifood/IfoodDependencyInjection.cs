@@ -25,7 +25,7 @@ public static class IfoodDependencyInjection
     {
         services.AddTransient<IOrderChangeStatusUseCase, IfoodOrderChangeStatusUseCase>();
         services.AddTransient<IOrderCreateUseCase<IfoodWebhookRequest>, IfoodOrderCreateUseCase>();
-        services.AddTransient<IOrderUpdateStatusUseCase<IfoodWebhookRequest>, IfoodOrderUpdateStatusUseCase>();
+        services.AddTransient<IOrderUpdateUseCase<IfoodWebhookRequest>, IfoodOrderUpdateUseCase>();
 
         services.AddKeyedScoped<IOrderChangeStatusUseCase, IfoodOrderChangeStatusUseCase>(OrderIntegration.IFOOD);
         services.AddKeyedScoped<IOrderChangeProductStatusUseCase, IfoodOrderChangeProductStatusUseCase>(OrderIntegration.IFOOD);

@@ -52,7 +52,7 @@ public static class RappiWebhookAdapter {
     }
 
     public static async Task<IResult> CancelOrder(
-        [FromServices] IOrderUpdateStatusUseCase<RappiWebhookEventOrderRequest> orderUpdate,
+        [FromServices] IOrderUpdateUseCase<RappiWebhookEventOrderRequest> orderUpdate,
         ILogger<RappiWebhookAdapterLog> logger,
         HttpContext context
     ) {
@@ -62,7 +62,7 @@ public static class RappiWebhookAdapter {
     }
 
     public static async Task<IResult> PatchOrder(
-        [FromServices] IOrderUpdateStatusUseCase<RappiWebhookEventOrderRequest> orderUpdate,
+        [FromServices] IOrderUpdateUseCase<RappiWebhookEventOrderRequest> orderUpdate,
         ILogger<RappiWebhookAdapterLog> logger,
         HttpContext context
     ) {
