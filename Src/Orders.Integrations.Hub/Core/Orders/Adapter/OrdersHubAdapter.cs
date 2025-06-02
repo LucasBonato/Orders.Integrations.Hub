@@ -52,4 +52,14 @@ public static class OrdersHubAdapter
         await useCase.Disable(body);
         return Ok();
     }
+
+    public static async Task<IResult> PostResponseDisputeIntegration(
+        [FromBody] RespondDisputeIntegrationRequest request,
+        [FromQuery] OrderIntegration integration,
+        [FromServices] IServiceProvider serviceProvider
+    ) {
+        var useCase = serviceProvider.GetRequiredKeyedService<IOrderDisputeRespondUseCase>(integration);
+        await useCase.ExecuteAsync(request);
+        return Ok();
+    }
 }

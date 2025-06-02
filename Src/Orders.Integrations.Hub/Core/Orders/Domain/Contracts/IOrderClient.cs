@@ -7,4 +7,5 @@ public interface IOrderClient
 {
     Task CreateOrder(Order order);
     Task PatchOrder(OrderUpdate order);
+    Task PatchOrderDispute(OrderUpdate order);
 }

@@ -1,6 +1,8 @@
-﻿namespace Orders.Integrations.Hub.Core.Orders.Domain.Contracts.UseCases;
+﻿using Orders.Integrations.Hub.Core.Orders.Domain.ValueObjects.Events;
 
-public interface IOrderDisputeUpdateUseCase<in TCounterProposal>
+namespace Orders.Integrations.Hub.Core.Orders.Domain.Contracts.UseCases;
+
+public interface IOrderDisputeUpdateUseCase
 {
-    Task ExecuteAsync(string orderId, string? counterProposalId, TCounterProposal? request);
+    Task ProcessDispute(ProcessOrderDisputeEvent orderDisputeEvent);
 }

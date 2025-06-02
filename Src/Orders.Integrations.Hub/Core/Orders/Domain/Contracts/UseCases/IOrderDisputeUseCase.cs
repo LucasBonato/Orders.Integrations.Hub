@@ -1,6 +1,6 @@
 ﻿namespace Orders.Integrations.Hub.Core.Orders.Domain.Contracts.UseCases;
 
-public interface IOrderDisputeUseCase<in TOrder>
+public interface IOrderDisputeUseCase<TOrder>
 {
-    Task ExecuteAsync(string orderId, TOrder order);
+    Task<TOrder> ExecuteAsync(TOrder order);
 }

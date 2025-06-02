@@ -24,12 +24,20 @@ public static class OrdersHubEndpoints
                 .WithDescription("Change status of the products in integrations")
             ;
 
+        RouteGroupBuilder routeGroupDispute = routeGroup
+                .MapGroup("/Dispute")
+                .WithTags("Change Order Dispute Status")
+                .WithDescription("Change order dispute in integrations")
+            ;
+
         routeGroup.MapGet("/Cancellation-Reason", OrdersHubAdapter.GetIntegrationCancellationReason);
 
         routeGroupStatus.MapPatch("/", OrdersHubAdapter.ChangeIntegrationStatus);
 
         routeGroupProductStatus.MapPost("/Enable", OrdersHubAdapter.EnableIntegrationProduct);
         routeGroupProductStatus.MapPost("/Disable", OrdersHubAdapter.DisableIntegrationProduct);
+
+        routeGroupDispute.MapPost("/", OrdersHubAdapter.PostResponseDisputeIntegration);
 
         return app;
     }

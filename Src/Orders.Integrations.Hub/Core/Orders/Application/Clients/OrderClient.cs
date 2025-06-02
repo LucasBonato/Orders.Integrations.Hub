@@ -34,4 +34,17 @@ public class OrderClient(
             throw new Exception();
         }
     }
+
+    public async Task PatchOrderDispute(OrderUpdate order)
+    {
+        logger.LogInformation("[INFO] - UpdateOrderDisputeEventHandler - Updating Order Dispute From Id: {orderId}", order.OrderId);
+
+        HttpResponseMessage response = await httpClient.PatchAsJsonAsync("Orders/dispute", order);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            logger.LogError("[ERROR] - UpdateOrderDisputeEventHandler - Error updating dispute of order({orderId}): {statusCode}, {content}, {reason}", order.OrderId, response.StatusCode, response.Content.ReadAsStringAsync().Result, response.ReasonPhrase);
+            throw new Exception();
+        }
+    }
 }
