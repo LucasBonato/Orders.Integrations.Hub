@@ -22,6 +22,7 @@ public static class IfoodAdapter
         ILogger<IfoodAdapterLog> logger,
         [FromServices] IOrderCreateUseCase<IfoodWebhookRequest> orderCreate,
         [FromServices] IOrderUpdateUseCase<IfoodWebhookRequest> orderUpdate,
+        [FromServices] IOrderDisputeUseCase<IfoodWebhookRequest> orderDispute,
         HttpContext context
     ) {
         IfoodWebhookRequest request = await HandleSignature(context, logger);
@@ -42,8 +43,8 @@ public static class IfoodAdapter
             IfoodFullOrderStatus.CONCLUDED or
             IfoodFullOrderStatus.CANCELLED => Accepted(value: await orderUpdate.ExecuteAsync(request)),
 
-            IfoodFullOrderStatus.HANDSHAKE_DISPUTE => Accepted(),
-            IfoodFullOrderStatus.HANDSHAKE_SETTLEMENT => Accepted(),
+            IfoodFullOrderStatus.HANDSHAKE_DISPUTE or
+            IfoodFullOrderStatus.HANDSHAKE_SETTLEMENT => Accepted(value: await orderDispute.ExecuteAsync(request)),
 
             _ => BadRequest(new { error = $"not mapped but ok {request.FullCode}" })
         };

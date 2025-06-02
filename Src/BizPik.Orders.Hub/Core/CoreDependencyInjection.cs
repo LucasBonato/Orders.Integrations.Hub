@@ -46,6 +46,7 @@ public static class CoreDependencyInjection
         services.AddExceptionHandler<ExceptionHandlerMiddleware>();
         services.AddTransient<IAmazonSimpleNotificationService>(_ => SimplesNotificationServiceConfiguration());
         services.AddScoped<IOrderUseCase, OrderUseCase>();
+        services.AddScoped<IOrderDisputeUpdateUseCase, OrderDisputeUpdateUseCase>();
         services.AddFastEndpoints(options => {
             options.DisableAutoDiscovery = false;
         });

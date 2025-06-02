@@ -1,6 +1,8 @@
-﻿namespace BizPik.Orders.Hub.Core.Orders.Domain.Contracts.UseCases;
+﻿using BizPik.Orders.Hub.Core.Orders.Domain.ValueObjects.Events;
 
-public interface IOrderDisputeUpdateUseCase<in TCounterProposal>
+namespace BizPik.Orders.Hub.Core.Orders.Domain.Contracts.UseCases;
+
+public interface IOrderDisputeUpdateUseCase
 {
-    Task ExecuteAsync(string orderId, string? counterProposalId, TCounterProposal? request);
+    Task ProcessDispute(ProcessOrderDisputeEvent orderDisputeEvent);
 }

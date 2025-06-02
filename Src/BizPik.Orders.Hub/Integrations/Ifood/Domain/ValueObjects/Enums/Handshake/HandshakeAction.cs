@@ -1,6 +1,6 @@
 ﻿namespace BizPik.Orders.Hub.Integrations.Ifood.Domain.ValueObjects.Enums.Handshake;
 
-public enum Action {
+public enum HandshakeAction {
     CANCELLATION,
     PARTIAL_CANCELLATION,
     PROPOSED_AMOUNT_REFUND,
