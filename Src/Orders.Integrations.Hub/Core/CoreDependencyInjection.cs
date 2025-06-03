@@ -4,8 +4,6 @@ using Amazon.Runtime.CredentialManagement;
 using Amazon.SimpleNotificationService;
 
 using .AWS.Credentials;
-using Orders.Integrations.Hub.Core..Application;
-using Orders.Integrations.Hub.Core..Domain.Contracts;
 using Orders.Integrations.Hub.Core.Orders;
 using Orders.Integrations.Hub.Core.Orders.Application.Clients;
 using Orders.Integrations.Hub.Core.Orders.Application.Extensions;

@@ -1,4 +1,4 @@
-﻿using Orders.Integrations.Hub.Core..Domain.ValueObjects;
+﻿using Orders.Integrations.Hub.Core.Orders.Domain.ValueObjects.DTOs.;
 using Orders.Integrations.Hub.Integrations.Ifood.Domain.ValueObjects;
 
 namespace Orders.Integrations.Hub.Integrations.Ifood.Application.Extensions;
