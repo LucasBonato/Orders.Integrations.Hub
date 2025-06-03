@@ -2,7 +2,7 @@
 
 using Newtonsoft.Json;
 
-namespace Orders.Integrations.Hub.Core..Domain.ValueObjects;
+namespace Orders.Integrations.Hub.Core.Orders.Domain.ValueObjects.DTOs.;
 
 public record User(
     [property: JsonProperty("id")]

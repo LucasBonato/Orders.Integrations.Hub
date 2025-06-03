@@ -2,7 +2,7 @@
 
 using Orders.Integrations.Hub.Core.Orders.Domain.ValueObjects.Enums;
 
-namespace Orders.Integrations.Hub.Core..Domain.ValueObjects;
+namespace Orders.Integrations.Hub.Core.Orders.Domain.ValueObjects.DTOs.;
 
 public record SNSProductEvent(
     [property: JsonPropertyName("CompanyId")] int CompanyId,
