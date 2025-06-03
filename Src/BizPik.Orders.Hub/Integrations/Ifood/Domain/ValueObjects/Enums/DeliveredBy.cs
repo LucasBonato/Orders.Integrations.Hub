@@ -3,5 +3,7 @@
 public enum DeliveredBy
 {
     IFOOD,
-    MERCHANT
+    MERCHANT,
+    CHAIN,
+    EXTERNAL
 }

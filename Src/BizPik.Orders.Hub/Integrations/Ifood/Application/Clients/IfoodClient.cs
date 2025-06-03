@@ -3,6 +3,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 
+using BizPik.Orders.Hub.Core.Orders.Domain.ValueObjects.DTOs.Request;
 using BizPik.Orders.Hub.Integrations.Ifood.Domain.Contracts;
 using BizPik.Orders.Hub.Integrations.Ifood.Domain.Entity.Order;
 using BizPik.Orders.Hub.Integrations.Ifood.Domain.Entity.Order.MerchantDetails;
@@ -138,22 +139,32 @@ public class IfoodClient(
         return responseContent;
     }
 
-    public async Task PostHandshakeDisputesAccept(string disputeId)
+    public async Task PostHandshakeDisputesAccept(string disputeId, RespondDisputeResponse request)
     {
         string uri = $"order/v1.0/disputes/{disputeId}/accept";
 
-        HttpResponseMessage response = await httpClient.PostAsync(uri, null);
+        HttpRequestMessage requestMessage = new (HttpMethod.Post, uri);
+        var content = new StringContent(JsonSerializer.Serialize(request), Encoding.Default,"application/json");
+        content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+        requestMessage.Content = content;
+
+        HttpResponseMessage response = await httpClient.SendAsync(requestMessage);
         if (!response.IsSuccessStatusCode)
         {
             throw new Exception(response.Content.ReadAsStringAsync().Result);
         }
     }
 
-    public async Task PostHandshakeDisputesReject(string disputeId)
+    public async Task PostHandshakeDisputesReject(string disputeId, RespondDisputeResponse request)
     {
         string uri = $"order/v1.0/disputes/{disputeId}/reject";
 
-        HttpResponseMessage response = await httpClient.PostAsync(uri, null);
+        HttpRequestMessage requestMessage = new (HttpMethod.Post, uri);
+        var content = new StringContent(JsonSerializer.Serialize(request), Encoding.Default,"application/json");
+        content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+        requestMessage.Content = content;
+
+        HttpResponseMessage response = await httpClient.SendAsync(requestMessage);
         if (!response.IsSuccessStatusCode)
         {
             throw new Exception(response.Content.ReadAsStringAsync().Result);

@@ -8,5 +8,5 @@ namespace BizPik.Orders.Hub.Integrations.Ifood.Domain.ValueObjects.DTOs.Request;
 public record HandshakeAlternativeMetadata(
     [property: JsonPropertyName("amount")] Amount? Amount,
     [property: JsonPropertyName("additionalTimeInMinutes")] int? AdditionalTimeInMinutes,
-    [property: JsonPropertyName("additionalTimeReason")] [property: JsonConverter(typeof(JsonStringEnumConverter))] NegotiationReasons? AdditionalTimeReason
+    [property: JsonPropertyName("additionalTimeReason")] string? AdditionalTimeReason
 );

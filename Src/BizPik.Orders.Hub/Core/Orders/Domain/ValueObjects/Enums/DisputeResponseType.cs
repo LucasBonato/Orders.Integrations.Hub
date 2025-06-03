@@ -4,5 +4,5 @@ public enum DisputeResponseType
 {
     ACCEPT,
     REJECT,
-    COUNTERPROPOSAL
+    COUNTER_OFFER
 }
