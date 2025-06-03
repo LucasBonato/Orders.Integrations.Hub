@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace BizPik.Orders.Hub.Core.BizPik.Domain.ValueObjects;
+namespace BizPik.Orders.Hub.Core.Orders.Domain.ValueObjects.DTOs.BizPik;
 
 public record BizPikIntegrationResponse(
     [property: JsonPropertyName("companyId")] int? CompanyId,

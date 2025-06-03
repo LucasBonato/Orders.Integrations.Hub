@@ -2,7 +2,7 @@
 
 using Newtonsoft.Json;
 
-namespace BizPik.Orders.Hub.Core.BizPik.Domain.ValueObjects;
+namespace BizPik.Orders.Hub.Core.Orders.Domain.ValueObjects.DTOs.BizPik;
 
 public record ChangeEndpointRequest(
     [property: JsonProperty("isActive")]

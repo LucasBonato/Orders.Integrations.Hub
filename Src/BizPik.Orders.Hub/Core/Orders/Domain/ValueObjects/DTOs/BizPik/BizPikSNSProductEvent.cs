@@ -2,7 +2,7 @@
 
 using BizPik.Orders.Hub.Core.Orders.Domain.ValueObjects.Enums;
 
-namespace BizPik.Orders.Hub.Core.BizPik.Domain.ValueObjects;
+namespace BizPik.Orders.Hub.Core.Orders.Domain.ValueObjects.DTOs.BizPik;
 
 public record BizPikSNSProductEvent(
     [property: JsonPropertyName("CompanyId")] int CompanyId,

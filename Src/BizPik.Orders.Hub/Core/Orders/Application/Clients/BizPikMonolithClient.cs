@@ -1,10 +1,10 @@
 ﻿using System.Text.Json;
 
-using BizPik.Orders.Hub.Core.BizPik.Domain.Contracts;
-using BizPik.Orders.Hub.Core.BizPik.Domain.ValueObjects;
 using BizPik.Orders.Hub.Core.Orders.Application.Extensions;
+using BizPik.Orders.Hub.Core.Orders.Domain.Contracts;
+using BizPik.Orders.Hub.Core.Orders.Domain.ValueObjects.DTOs.BizPik;
 
-namespace BizPik.Orders.Hub.Core.BizPik.Application;
+namespace BizPik.Orders.Hub.Core.Orders.Application.Clients;
 
 public class BizPikMonolithClient(
     ILogger<BizPikMonolithClient> logger,
