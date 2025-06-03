@@ -1,4 +1,4 @@
-﻿using Orders.Integrations.Hub.Core..Domain.ValueObjects;
+﻿using Orders.Integrations.Hub.Core.Orders.Domain.ValueObjects.DTOs.;
 using Orders.Integrations.Hub.Integrations.Rappi.Domain.ValueObjects.DTOs;
 
 namespace Orders.Integrations.Hub.Integrations.Rappi.Application.Extensions;
