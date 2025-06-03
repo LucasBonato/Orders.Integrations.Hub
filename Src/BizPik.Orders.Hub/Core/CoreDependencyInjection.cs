@@ -4,8 +4,6 @@ using Amazon.Runtime.CredentialManagement;
 using Amazon.SimpleNotificationService;
 
 using BizPik.AWS.Credentials;
-using BizPik.Orders.Hub.Core.BizPik.Application;
-using BizPik.Orders.Hub.Core.BizPik.Domain.Contracts;
 using BizPik.Orders.Hub.Core.Orders;
 using BizPik.Orders.Hub.Core.Orders.Application.Clients;
 using BizPik.Orders.Hub.Core.Orders.Application.Extensions;

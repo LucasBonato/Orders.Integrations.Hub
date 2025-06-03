@@ -1,6 +1,6 @@
-﻿using BizPik.Orders.Hub.Core.BizPik.Domain.ValueObjects;
-using BizPik.Orders.Hub.Core.Orders.Application.Extensions;
+﻿using BizPik.Orders.Hub.Core.Orders.Application.Extensions;
 using BizPik.Orders.Hub.Core.Orders.Domain.Contracts.UseCases;
+using BizPik.Orders.Hub.Core.Orders.Domain.ValueObjects.DTOs.BizPik;
 using BizPik.Orders.Hub.Core.Orders.Domain.ValueObjects.DTOs.Request;
 using BizPik.Orders.Hub.Core.Orders.Domain.ValueObjects.Enums;
 
@@ -55,10 +55,9 @@ public static class OrdersHubAdapter
 
     public static async Task<IResult> PostResponseDisputeIntegration(
         [FromBody] RespondDisputeIntegrationRequest request,
-        [FromQuery] OrderIntegration integration,
         [FromServices] IServiceProvider serviceProvider
     ) {
-        var useCase = serviceProvider.GetRequiredKeyedService<IOrderDisputeRespondUseCase>(integration);
+        var useCase = serviceProvider.GetRequiredKeyedService<IOrderDisputeRespondUseCase>(request.Integration);
         await useCase.ExecuteAsync(request);
         return Ok();
     }
