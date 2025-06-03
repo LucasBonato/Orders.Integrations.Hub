@@ -72,7 +72,7 @@ public static class IfoodOrderExtension
                 Amount: sponsorshipValue.Value.ToBrl(),
                 Name: sponsorshipValue.Name.ToOrder(),
                 Description: sponsorshipValue.Description
-            )).ToList()?? []
+            )).ToList()?? [] // This could be filtered, normally it come with sponsorship with zero value, so if u see this is not important, u can filter by the value.
         )).ToList() ?? [];
         
         List<OrderPaymentMethod> paymentMethods = order.Payments.Methods.Select(method => new OrderPaymentMethod(
@@ -291,9 +291,11 @@ public static class IfoodOrderExtension
     private static OrderDeliveredBy ToOrder(this DeliveredBy deliveredBy)
     {
         return deliveredBy switch {
-            DeliveredBy.IFOOD => OrderDeliveredBy.MERCHANT,
+            DeliveredBy.IFOOD => OrderDeliveredBy.INTEGRATION,
             DeliveredBy.MERCHANT => OrderDeliveredBy.MERCHANT,
-            _ => OrderDeliveredBy.MARKETPLACE
+            DeliveredBy.EXTERNAL => OrderDeliveredBy.MARKETPLACE,
+            DeliveredBy.CHAIN => OrderDeliveredBy.CHAIN,
+            _ => throw new ArgumentOutOfRangeException(nameof(deliveredBy), deliveredBy, null)
         };
     }
 

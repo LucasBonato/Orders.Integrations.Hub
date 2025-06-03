@@ -3,5 +3,7 @@
 public enum OrderDeliveredBy
 {
     MERCHANT,
-    MARKETPLACE
+    MARKETPLACE,
+    CHAIN,
+    INTEGRATION
 }
