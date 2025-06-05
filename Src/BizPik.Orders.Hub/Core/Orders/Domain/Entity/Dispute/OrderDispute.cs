@@ -5,6 +5,8 @@ namespace BizPik.Orders.Hub.Core.Orders.Domain.Entity.Dispute;
 public record OrderDispute(
     [property: JsonPropertyName("disputeId")] string DisputeId,
     [property: JsonPropertyName("message")] string Message,
+    [property: JsonPropertyName("action")] string Action,
+    [property: JsonPropertyName("timeoutAction")] string TimeoutAction,
     [property: JsonPropertyName("createdAt")] DateTime CreatedAt,
     [property: JsonPropertyName("expiresAt")] DateTime ExpiresAt,
     [property: JsonPropertyName("alternatives")] List<DisputeAlternative>? Alternatives,
