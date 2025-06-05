@@ -68,6 +68,8 @@ public static class IfoodOrderDisputeExtension
             Message: ifoodDispute.Message,
             CreatedAt: ifoodDispute.CreatedAt,
             ExpiresAt: ifoodDispute.ExpiresAt,
+            Action: ifoodDispute.Action.ToString(),
+            TimeoutAction: ifoodDispute.TimeoutAction.ToString(),
             Alternatives: alternatives,
             Evidences: evidences,
             Items: items,
