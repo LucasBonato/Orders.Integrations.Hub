@@ -5,7 +5,7 @@ using FastEndpoints;
 
 namespace Orders.Integrations.Hub.Core.Orders.Application.EventHandlers;
 
-public class PatchOrderDisputeEventHandler(
+public class ProcessOrderDisputeEventHandler(
     IServiceScopeFactory serviceScopeFactory
 ) : IEventHandler<ProcessOrderDisputeEvent> {
     public async Task HandleAsync(ProcessOrderDisputeEvent orderDisputeEvent, CancellationToken ct)
