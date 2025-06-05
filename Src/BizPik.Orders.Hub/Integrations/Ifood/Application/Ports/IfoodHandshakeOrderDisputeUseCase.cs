@@ -22,19 +22,42 @@ public class IfoodHandshakeOrderDisputeUseCase : IOrderDisputeUseCase<IfoodWebho
 
         HandshakeDispute? dispute = null;
 
-        if (type == OrderEventType.DISPUTE_STARTED)
-        {
-            string json = JsonSerializer.Serialize(ifoodOrder.Metadata);
+        string json = JsonSerializer.Serialize(ifoodOrder.Metadata);
 
-            dispute = JsonSerializer.Deserialize<HandshakeDispute>(json)
-                                       ?? throw new Exception("Não foi possível converter disputa!");
+        if (type == OrderEventType.DISPUTE_STARTED) {
+            dispute = JsonSerializer.Deserialize<HandshakeDispute>(json);
+        }
+        else {
+            HandshakeSettlement? settlement = JsonSerializer.Deserialize<HandshakeSettlement>(json);
+            if (settlement != null)
+            {
+                dispute = new HandshakeDispute(
+                    Id: settlement.Id,
+                    ParentDisputeId: settlement.DisputeId,
+                    Message: settlement.Reason?? string.Empty,
+                    Alternatives: [new DisputeAlternative(
+                        Id: settlement.SelectedDisputeAlternative.Id,
+                        Type: settlement.SelectedDisputeAlternative.Type,
+                        Metadata: settlement.SelectedDisputeAlternative.Metadata
+                    )],
+                    Action: default,
+                    TimeoutAction: default,
+                    ExpiresAt: default,
+                    CreatedAt: default,
+                    HandshakeType: default,
+                    HandshakeGroup: default,
+                    Metadata: null
+                );
+            }
         }
 
+        if (dispute is null)
+            throw new Exception("Não foi possível converter disputa!");
 
         await new ProcessOrderDisputeEvent(
             ExternalOrderId: ifoodOrder.OrderId,
             Integration: OrderIntegration.IFOOD,
-            OrderDispute: dispute?.ToOrder(),
+            OrderDispute: dispute.ToOrder(),
             Type: type
         ).PublishAsync();
 
