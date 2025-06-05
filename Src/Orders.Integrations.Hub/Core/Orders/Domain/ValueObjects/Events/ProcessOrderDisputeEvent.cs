@@ -1,0 +1,13 @@
+﻿using Orders.Integrations.Hub.Core.Orders.Domain.Entity.Dispute;
+using Orders.Integrations.Hub.Core.Orders.Domain.ValueObjects.Enums;
+
+using FastEndpoints;
+
+namespace Orders.Integrations.Hub.Core.Orders.Domain.ValueObjects.Events;
+
+public record ProcessOrderDisputeEvent(
+    string ExternalOrderId,
+    OrderIntegration Integration,
+    OrderDispute? OrderDispute,
+    OrderEventType Type
+) : IEvent;
