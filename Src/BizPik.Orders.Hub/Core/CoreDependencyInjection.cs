@@ -46,7 +46,7 @@ public static class CoreDependencyInjection
         services.AddScoped<IOrderUseCase, OrderUseCase>();
         services.AddScoped<IOrderDisputeUpdateUseCase, OrderDisputeUpdateUseCase>();
         services.AddFastEndpoints(options => {
-            options.DisableAutoDiscovery = true;
+            options.DisableAutoDiscovery = false;
         });
         return services;
     }
