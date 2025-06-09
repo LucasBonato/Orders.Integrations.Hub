@@ -7,5 +7,5 @@ namespace BizPik.Orders.Hub.Integrations.Ifood.Domain.Entity.Handshake;
 public record DisputeAlternativeMetadata(
     [property: JsonPropertyName("maxAmount")] Amount? Amount,
     [property: JsonPropertyName("allowedsAdditionalTimeInMinutes")] List<int>? AllowedsAdditionalTimeInMinutes,
-    [property: JsonPropertyName("allowedsAdditionalTimeReasons")] List<NegotiationReasons>? AllowedsAdditionalTimeReasons
+    [property: JsonPropertyName("allowedsAdditionalTimeReasons")] [property: JsonConverter(typeof(JsonStringEnumConverter))] List<NegotiationReasons>? AllowedsAdditionalTimeReasons
 );

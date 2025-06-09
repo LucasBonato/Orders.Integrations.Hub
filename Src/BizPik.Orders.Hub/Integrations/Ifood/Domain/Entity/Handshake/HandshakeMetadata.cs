@@ -8,5 +8,5 @@ public record HandshakeMetadata(
     [property: JsonPropertyName("item")] List<Item>? Items,
     [property: JsonPropertyName("garnishItems")] List<GarnishItem>? GarnishItems,
     [property: JsonPropertyName("evidences")] List<Media>? Evidences,
-    [property: JsonPropertyName("acceptCancellationReasons")] List<NegotiationReasons>? AcceptCancellationReasons
+    [property: JsonPropertyName("acceptCancellationReasons")] [property: JsonConverter(typeof(JsonStringEnumConverter))] List<NegotiationReasons>? AcceptCancellationReasons
 );
