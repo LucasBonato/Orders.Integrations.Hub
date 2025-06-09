@@ -32,7 +32,7 @@ public class IfoodHandshakeOrderDisputeUseCase : IOrderDisputeUseCase<IfoodWebho
             if (settlement != null)
             {
                 dispute = new HandshakeDispute(
-                    Id: settlement.Id,
+                    DisputeId: settlement.DisputeId,
                     ParentDisputeId: settlement.DisputeId,
                     Message: settlement.Reason?? string.Empty,
                     Alternatives: [new DisputeAlternative(
