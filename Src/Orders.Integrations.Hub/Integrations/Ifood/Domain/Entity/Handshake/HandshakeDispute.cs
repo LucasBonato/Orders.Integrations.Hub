@@ -5,7 +5,7 @@ using Orders.Integrations.Hub.Integrations.Ifood.Domain.ValueObjects.Enums.Hands
 namespace Orders.Integrations.Hub.Integrations.Ifood.Domain.Entity.Handshake;
 
 public record HandshakeDispute(
-    [property: JsonPropertyName("id")] string Id,
+    [property: JsonPropertyName("id")] string? Id,
     [property: JsonPropertyName("parentDisputeId")] string? ParentDisputeId,
     [property: JsonPropertyName("action")] [property: JsonConverter(typeof(JsonStringEnumConverter))] HandshakeAction Action,
     [property: JsonPropertyName("message")] string Message,
