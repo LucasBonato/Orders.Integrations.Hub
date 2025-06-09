@@ -6,6 +6,6 @@ namespace BizPik.Orders.Hub.Integrations.Ifood.Domain.Entity.Handshake;
 
 public record DisputeAlternative(
     [property: JsonPropertyName("id")] string Id,
-    [property: JsonPropertyName("type")] HandshakeAlternativeType Type,
+    [property: JsonPropertyName("type")] [property: JsonConverter(typeof(JsonStringEnumConverter))] HandshakeAlternativeType Type,
     [property: JsonPropertyName("metadata")] DisputeAlternativeMetadata Metadata
 );
