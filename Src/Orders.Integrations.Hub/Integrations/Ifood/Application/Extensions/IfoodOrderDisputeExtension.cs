@@ -18,13 +18,13 @@ public static class IfoodOrderDisputeExtension
                 new DisputeAlternative(
                    AlternativeId: alternative.Id,
                    Type: alternative.Type,
-                   Price: alternative.Metadata.Amount?.ToPrice(),
-                   AllowedTimesInMinutes: alternative.Metadata.AllowedsAdditionalTimeInMinutes,
-                   AllowedTimesReasons: alternative.Metadata.AllowedsAdditionalTimeReasons?
+                   Price: (alternative.Metadata is null) ? alternative.Amount?.ToPrice() : alternative.Metadata.Amount?.ToPrice(),
+                   AllowedTimesInMinutes: (alternative.Metadata is null) ? alternative.AllowedsAdditionalTimeInMinutes : alternative.Metadata.AllowedsAdditionalTimeInMinutes,
+                   AllowedTimesReasons: (alternative.Metadata is null) ? alternative.AllowedsAdditionalTimeReasons : alternative.Metadata.AllowedsAdditionalTimeReasons?
                        .Select(reason => reason.ToString())
-                       .ToList()
+                       .ToList()?? []
                 )
-            ).ToList();
+            ).ToList()?? [];
 
         List<DisputeEvidence>? evidences = ifoodDispute.Metadata?.Evidences?
             .Select(evidence =>
