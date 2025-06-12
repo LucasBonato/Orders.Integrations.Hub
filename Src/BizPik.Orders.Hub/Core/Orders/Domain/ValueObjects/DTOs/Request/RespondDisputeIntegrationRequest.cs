@@ -6,8 +6,8 @@ namespace BizPik.Orders.Hub.Core.Orders.Domain.ValueObjects.DTOs.Request;
 
 public record RespondDisputeIntegrationRequest(
     [property: JsonPropertyName("disputeId")] string DisputeId,
-    [property: JsonPropertyName("integration")] OrderIntegration Integration,
-    [property: JsonPropertyName("type")] DisputeResponseType Type,
+    [property: JsonPropertyName("integration")] [property: JsonConverter(typeof(JsonStringEnumConverter))] OrderIntegration Integration,
+    [property: JsonPropertyName("type")] [property: JsonConverter(typeof(JsonStringEnumConverter))] DisputeResponseType Type,
     [property: JsonPropertyName("alternativeId")] string? AlternativeId,
     [property: JsonPropertyName("disputeResponse")] RespondDisputeResponse DisputeResponse
 );
