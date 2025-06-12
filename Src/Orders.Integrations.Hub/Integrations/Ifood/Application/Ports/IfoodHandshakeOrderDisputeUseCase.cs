@@ -34,16 +34,18 @@ public class IfoodHandshakeOrderDisputeUseCase : IOrderDisputeUseCase<IfoodWebho
                 dispute = new HandshakeDispute(
                     DisputeId: settlement.DisputeId,
                     ParentDisputeId: settlement.DisputeId,
-                    Message: settlement.Reason?? string.Empty,
+                    Message: settlement.Reason?? settlement.Status.ToString(),
                     Alternatives: settlement.SelectedDisputeAlternative is { } alternative
-                        ? [new DisputeAlternative(
-                            Id: alternative.Id,
-                            Type: alternative.Type,
-                            Metadata: alternative.Metadata,
-                            Amount: alternative.Metadata.Amount,
-                            AllowedsAdditionalTimeInMinutes: alternative.Metadata.AllowedsAdditionalTimeInMinutes,
-                            AllowedsAdditionalTimeReasons: alternative.Metadata.AllowedsAdditionalTimeReasons
-                        )]
+                        ? [
+                            new DisputeAlternative(
+                                Id: alternative.Id,
+                                Type: alternative.Type,
+                                Metadata: alternative.Metadata,
+                                Amount: alternative.Metadata.Amount,
+                                AllowedsAdditionalTimeInMinutes: alternative.Metadata.AllowedsAdditionalTimeInMinutes,
+                                AllowedsAdditionalTimeReasons: alternative.Metadata.AllowedsAdditionalTimeReasons
+                            )
+                        ]
                         : null,
                     Action: default,
                     TimeoutAction: default,
