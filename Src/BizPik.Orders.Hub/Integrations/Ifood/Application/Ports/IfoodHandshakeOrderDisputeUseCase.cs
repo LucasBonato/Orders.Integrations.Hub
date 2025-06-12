@@ -38,7 +38,10 @@ public class IfoodHandshakeOrderDisputeUseCase : IOrderDisputeUseCase<IfoodWebho
                     Alternatives: [new DisputeAlternative(
                         Id: settlement.SelectedDisputeAlternative.Id,
                         Type: settlement.SelectedDisputeAlternative.Type,
-                        Metadata: settlement.SelectedDisputeAlternative.Metadata
+                        Metadata: settlement.SelectedDisputeAlternative.Metadata,
+                        Amount: settlement.SelectedDisputeAlternative.Metadata.Amount,
+                        AllowedsAdditionalTimeInMinutes: settlement.SelectedDisputeAlternative.Metadata.AllowedsAdditionalTimeInMinutes,
+                        AllowedsAdditionalTimeReasons: settlement.SelectedDisputeAlternative.Metadata.AllowedsAdditionalTimeReasons
                     )],
                     Action: default,
                     TimeoutAction: default,
