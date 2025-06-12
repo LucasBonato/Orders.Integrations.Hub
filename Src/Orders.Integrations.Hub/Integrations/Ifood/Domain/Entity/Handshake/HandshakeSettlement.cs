@@ -8,5 +8,6 @@ public record HandshakeSettlement(
     [property: JsonPropertyName("disputeId")] string DisputeId,
     [property: JsonPropertyName("status")] [property: JsonConverter(typeof(JsonStringEnumConverter))] Status Status,
     [property: JsonPropertyName("reason")] string? Reason,
-    [property: JsonPropertyName("selectedDisputeAlternative")] SelectedDisputeAlternative SelectedDisputeAlternative
+    [property: JsonPropertyName("selectedDisputeAlternative")] SelectedDisputeAlternative SelectedDisputeAlternative,
+    [property: JsonPropertyName("createdAt")] DateTime CreatedAt
 );
