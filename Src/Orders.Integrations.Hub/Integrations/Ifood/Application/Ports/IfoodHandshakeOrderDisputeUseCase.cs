@@ -34,19 +34,23 @@ public class IfoodHandshakeOrderDisputeUseCase : IOrderDisputeUseCase<IfoodWebho
                 dispute = new HandshakeDispute(
                     DisputeId: settlement.DisputeId,
                     ParentDisputeId: settlement.DisputeId,
-                    Message: settlement.Reason?? string.Empty,
-                    Alternatives: [new DisputeAlternative(
-                        Id: settlement.SelectedDisputeAlternative.Id,
-                        Type: settlement.SelectedDisputeAlternative.Type,
-                        Metadata: settlement.SelectedDisputeAlternative.Metadata,
-                        Amount: settlement.SelectedDisputeAlternative.Metadata.Amount,
-                        AllowedsAdditionalTimeInMinutes: settlement.SelectedDisputeAlternative.Metadata.AllowedsAdditionalTimeInMinutes,
-                        AllowedsAdditionalTimeReasons: settlement.SelectedDisputeAlternative.Metadata.AllowedsAdditionalTimeReasons
-                    )],
+                    Message: settlement.Reason?? settlement.Status.ToString(),
+                    Alternatives: settlement.SelectedDisputeAlternative is { } alternative
+                        ? [
+                            new DisputeAlternative(
+                                Id: alternative.Id,
+                                Type: alternative.Type,
+                                Metadata: alternative.Metadata,
+                                Amount: alternative.Metadata.Amount,
+                                AllowedsAdditionalTimeInMinutes: alternative.Metadata.AllowedsAdditionalTimeInMinutes,
+                                AllowedsAdditionalTimeReasons: alternative.Metadata.AllowedsAdditionalTimeReasons
+                            )
+                        ]
+                        : null,
                     Action: default,
                     TimeoutAction: default,
                     ExpiresAt: default,
-                    CreatedAt: default,
+                    CreatedAt: settlement.CreatedAt,
                     HandshakeType: default,
                     HandshakeGroup: default,
                     Metadata: null
