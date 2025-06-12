@@ -27,9 +27,11 @@ public class IfoodHandshakeOrderDisputeRespondUseCase(
                 );
                 break;
             case DisputeResponseType.COUNTER_OFFER:
+                if (respondRequest.AlternativeId is null)
+                    throw new ArgumentNullException(respondRequest.AlternativeId);
                 await ifoodClient.PostHandshakeDisputesAlternatives(
                     disputeId: respondRequest.DisputeId,
-                    alternativeId: respondRequest.AlternativeId!,
+                    alternativeId: respondRequest.AlternativeId,
                     request: new HandshakeAlternativeRequest(
                         Metadata: new HandshakeAlternativeMetadata(
                             Amount: respondRequest.DisputeResponse.Price?.ToAmount(),
