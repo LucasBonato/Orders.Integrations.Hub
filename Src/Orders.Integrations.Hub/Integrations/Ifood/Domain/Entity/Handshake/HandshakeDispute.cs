@@ -8,7 +8,7 @@ public record HandshakeDispute(
     [property: JsonPropertyName("disputeId")] string DisputeId,
     [property: JsonPropertyName("parentDisputeId")] string? ParentDisputeId,
     [property: JsonPropertyName("action")] [property: JsonConverter(typeof(JsonStringEnumConverter))] HandshakeAction Action,
-    [property: JsonPropertyName("message")] string Message,
+    [property: JsonPropertyName("message")] string? Message,
     [property: JsonPropertyName("alternatives")] List<DisputeAlternative>? Alternatives,
     [property: JsonPropertyName("expiresAt")] DateTime ExpiresAt,
     [property: JsonPropertyName("createdAt")] DateTime CreatedAt,

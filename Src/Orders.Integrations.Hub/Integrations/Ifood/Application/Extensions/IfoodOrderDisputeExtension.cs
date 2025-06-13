@@ -65,7 +65,7 @@ public static class IfoodOrderDisputeExtension
 
         return new OrderDispute(
             DisputeId: ifoodDispute.DisputeId,
-            Message: ifoodDispute.Message,
+            Message: ifoodDispute.Message?? string.Empty,
             CreatedAt: ifoodDispute.CreatedAt,
             ExpiresAt: ifoodDispute.ExpiresAt,
             Action: ifoodDispute.Action.ToString(),
