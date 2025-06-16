@@ -35,9 +35,9 @@ public static class RappiDependencyInjection
 
         services.AddSingleton<ICustomJsonSerializer, RappiJsonSerializer>();
         services.Configure<JsonOptions>(options => {
-            options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower;
-            options.JsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.SnakeCaseLower;
-            options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+            options.JsonSerializerOptions.PropertyNamingPolicy = RappiJsonSerializer.Options.PropertyNamingPolicy;
+            options.JsonSerializerOptions.DictionaryKeyPolicy = RappiJsonSerializer.Options.DictionaryKeyPolicy;
+            options.JsonSerializerOptions.PropertyNameCaseInsensitive = RappiJsonSerializer.Options.PropertyNameCaseInsensitive;
             options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.SnakeCaseUpper));
         });
 
