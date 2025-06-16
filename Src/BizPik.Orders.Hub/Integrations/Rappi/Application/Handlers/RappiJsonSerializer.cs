@@ -7,11 +7,11 @@ namespace BizPik.Orders.Hub.Integrations.Rappi.Application.Handlers;
 
 public class RappiJsonSerializer : ICustomJsonSerializer
 {
-    private static readonly JsonSerializerOptions Options = new() {
+    public static readonly JsonSerializerOptions Options = new() {
         PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower,
         DictionaryKeyPolicy = JsonNamingPolicy.SnakeCaseLower,
         PropertyNameCaseInsensitive = true,
-        Converters = { new JsonStringEnumConverter() }
+        Converters = { new JsonStringEnumConverter(JsonNamingPolicy.SnakeCaseUpper) }
     };
 
     public string Serialize<T>(T value) => JsonSerializer.Serialize(value, Options);

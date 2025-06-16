@@ -1,5 +1,4 @@
-﻿using System.Text.Json;
-
+﻿using BizPik.Orders.Hub.Core.Domain.Contracts;
 using BizPik.Orders.Hub.Integrations.Common.Contracts;
 using BizPik.Orders.Hub.Integrations.Ifood.Domain.ValueObjects.DTOs.Request;
 using BizPik.Orders.Hub.Integrations.Ifood.Domain.ValueObjects.DTOs.Response;
@@ -8,7 +7,8 @@ namespace BizPik.Orders.Hub.Integrations.Ifood.Application.Clients;
 
 public class IfoodAuthClient(
     ILogger<IfoodAuthClient> logger,
-    HttpClient httpClient
+    HttpClient httpClient,
+    ICustomJsonSerializer serializer
 ) : IIntegrationAuthClient<IfoodAuthTokenRequest, IfoodAuthTokenResponse> {
     public async Task<IfoodAuthTokenResponse> RetrieveToken(IfoodAuthTokenRequest request)
     {
@@ -27,6 +27,6 @@ public class IfoodAuthClient(
         HttpResponseMessage response = await httpClient.SendAsync(requestMessage);
 
         string responseContent = await response.Content.ReadAsStringAsync();
-        return JsonSerializer.Deserialize<IfoodAuthTokenResponse>(responseContent)!;
+        return serializer.Deserialize<IfoodAuthTokenResponse>(responseContent)!;
     }
 }

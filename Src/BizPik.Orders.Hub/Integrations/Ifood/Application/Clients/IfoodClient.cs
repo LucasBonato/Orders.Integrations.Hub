@@ -1,8 +1,8 @@
 ﻿using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
-using System.Text.Json;
 
+using BizPik.Orders.Hub.Core.Domain.Contracts;
 using BizPik.Orders.Hub.Core.Domain.ValueObjects.DTOs.Request;
 using BizPik.Orders.Hub.Integrations.Ifood.Domain.Contracts;
 using BizPik.Orders.Hub.Integrations.Ifood.Domain.Entity.Order;
@@ -14,7 +14,8 @@ namespace BizPik.Orders.Hub.Integrations.Ifood.Application.Clients;
 
 public class IfoodClient(
     ILogger<IfoodClient> logger,
-    HttpClient httpClient
+    HttpClient httpClient,
+    ICustomJsonSerializer serializer
 ) : IIFoodClient {
     public async Task<IfoodOrder> GetOrderDetails(string orderId)
     {
@@ -94,7 +95,7 @@ public class IfoodClient(
         string uri = $"order/v1.0/orders/{orderId}/requestCancellation";
 
         HttpRequestMessage requestMessage = new (HttpMethod.Post, uri);
-        var content = new StringContent(JsonSerializer.Serialize(request), Encoding.Default,"application/json");
+        var content = new StringContent(serializer.Serialize(request), Encoding.Default,"application/json");
         content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
         requestMessage.Content = content;
 
@@ -111,7 +112,7 @@ public class IfoodClient(
     {
         string uri = $"catalog/v2.0/merchants/{merchantId}/items";
         
-        HttpResponseMessage response = await httpClient.PatchAsync(uri, new StringContent(JsonSerializer.Serialize(request)));
+        HttpResponseMessage response = await httpClient.PatchAsync(uri, new StringContent(serializer.Serialize(request)));
         if (!response.IsSuccessStatusCode)
         {
             throw new Exception(response.Content.ReadAsStringAsync().Result);
@@ -144,7 +145,7 @@ public class IfoodClient(
         string uri = $"order/v1.0/disputes/{disputeId}/accept";
 
         HttpRequestMessage requestMessage = new (HttpMethod.Post, uri);
-        var content = new StringContent(JsonSerializer.Serialize(request), Encoding.Default,"application/json");
+        var content = new StringContent(serializer.Serialize(request), Encoding.Default,"application/json");
         content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
         requestMessage.Content = content;
 
@@ -160,7 +161,7 @@ public class IfoodClient(
         string uri = $"order/v1.0/disputes/{disputeId}/reject";
 
         HttpRequestMessage requestMessage = new (HttpMethod.Post, uri);
-        var content = new StringContent(JsonSerializer.Serialize(request), Encoding.Default,"application/json");
+        var content = new StringContent(serializer.Serialize(request), Encoding.Default,"application/json");
         content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
         requestMessage.Content = content;
 
@@ -176,7 +177,7 @@ public class IfoodClient(
         string uri = $"order/v1.0/disputes/{disputeId}/alternatives/{alternativeId}";
 
         HttpRequestMessage requestMessage = new (HttpMethod.Post, uri);
-        var content = new StringContent(JsonSerializer.Serialize(request), Encoding.Default,"application/json");
+        var content = new StringContent(serializer.Serialize(request), Encoding.Default,"application/json");
         content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
         requestMessage.Content = content;
 

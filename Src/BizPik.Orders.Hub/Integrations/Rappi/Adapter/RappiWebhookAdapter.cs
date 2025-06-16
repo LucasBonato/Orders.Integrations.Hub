@@ -1,7 +1,7 @@
 ﻿using System.Text;
-using System.Text.Json;
 
 using BizPik.Orders.Hub.Core.Application.Extensions;
+using BizPik.Orders.Hub.Core.Domain.Contracts;
 using BizPik.Orders.Hub.Core.Domain.Contracts.UseCases;
 using BizPik.Orders.Hub.Core.Domain.ValueObjects.Enums;
 using BizPik.Orders.Hub.Core.Domain.ValueObjects.Events;
@@ -23,11 +23,12 @@ public abstract class RappiWebhookAdapterLog;
 
 public static class RappiWebhookAdapter {
     public static async Task<IResult> CreateOrder(
+        [FromServices] ICustomJsonSerializer serializer,
         [FromServices] IOrderCreateUseCase<RappiOrder> orderCreate,
         ILogger<RappiWebhookAdapterLog> logger,
         HttpContext context
     ) {
-        RappiOrder request = await HandleSignature<RappiOrder>(context, logger);
+        RappiOrder request = await HandleSignature<RappiOrder>(context, logger, serializer);
         
         await orderCreate.ExecuteAsync(request);
 
@@ -35,11 +36,12 @@ public static class RappiWebhookAdapter {
     }
 
     public static async Task<IResult> AutoAcceptOrder(
+        [FromServices] ICustomJsonSerializer serializer,
         [FromServices] IOrderCreateUseCase<RappiOrder> orderCreate,
         ILogger<RappiWebhookAdapterLog> logger,
         HttpContext context
     ) {
-        RappiOrder request = await HandleSignature<RappiOrder>(context, logger);
+        RappiOrder request = await HandleSignature<RappiOrder>(context, logger, serializer);
         
         await orderCreate.ExecuteAsync(request);
         
@@ -52,30 +54,33 @@ public static class RappiWebhookAdapter {
     }
 
     public static async Task<IResult> CancelOrder(
+        [FromServices] ICustomJsonSerializer serializer,
         [FromServices] IOrderUpdateUseCase<RappiWebhookEventOrderRequest> orderUpdate,
         ILogger<RappiWebhookAdapterLog> logger,
         HttpContext context
     ) {
-        RappiWebhookEventOrderRequest request = await HandleSignature<RappiWebhookEventOrderRequest>(context, logger);
+        RappiWebhookEventOrderRequest request = await HandleSignature<RappiWebhookEventOrderRequest>(context, logger, serializer);
         await orderUpdate.ExecuteAsync(request);
         return Accepted();
     }
 
     public static async Task<IResult> PatchOrder(
+        [FromServices] ICustomJsonSerializer serializer,
         [FromServices] IOrderUpdateUseCase<RappiWebhookEventOrderRequest> orderUpdate,
         ILogger<RappiWebhookAdapterLog> logger,
         HttpContext context
     ) {
-        RappiWebhookEventOrderRequest request = await HandleSignature<RappiWebhookEventOrderRequest>(context, logger);
+        RappiWebhookEventOrderRequest request = await HandleSignature<RappiWebhookEventOrderRequest>(context, logger, serializer);
         await orderUpdate.ExecuteAsync(request);
         return Accepted();
     }
 
     public static async Task<IResult> PingStore(
+        [FromServices] ICustomJsonSerializer serializer,
         ILogger<RappiWebhookAdapterLog> logger,
         HttpContext context
     ) {
-        RappiWebhookPingRequest request = await HandleSignature<RappiWebhookPingRequest>(context, logger);
+        RappiWebhookPingRequest request = await HandleSignature<RappiWebhookPingRequest>(context, logger, serializer);
 
         // TODO - Manage better this response finding somewhere if the store is on
 
@@ -91,7 +96,11 @@ public static class RappiWebhookAdapter {
     /// <param name="context">The HttpContext of the request</param>
     /// <param name="logger">A logger</param>
     /// <returns>The Body of the request formatted as a RappiOrder</returns>
-    private static async Task<TRequest> HandleSignature<TRequest>(HttpContext context, ILogger<RappiWebhookAdapterLog> logger) {
+    private static async Task<TRequest> HandleSignature<TRequest>(
+        HttpContext context,
+        ILogger<RappiWebhookAdapterLog> logger,
+        ICustomJsonSerializer serializer
+    ) {
         var request = context.Request;
 
         if (!request.Headers.TryGetValue("Rappi-Signature", out var signatureHeader)) {
@@ -112,8 +121,8 @@ public static class RappiWebhookAdapter {
 
         request.Body = new MemoryStream(Encoding.UTF8.GetBytes(body));
 
-        var bodyDeserialized = JsonSerializer.Deserialize<object>(body);
-        body = JsonSerializer.Serialize(bodyDeserialized);
+        var bodyDeserialized = serializer.Deserialize<object>(body);
+        body = serializer.Serialize(bodyDeserialized);
 
         body = $"{timestampAndSign["t"]}.{body}";
 
@@ -127,7 +136,7 @@ public static class RappiWebhookAdapter {
             await context.Response.WriteAsJsonAsync("Invalid Signature");
         }
 
-        return JsonSerializer.Deserialize<TRequest>(body)!;
+        return serializer.Deserialize<TRequest>(body)!;
     }
 
     /// <summary>

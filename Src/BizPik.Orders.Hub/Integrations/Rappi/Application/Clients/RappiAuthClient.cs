@@ -1,5 +1,4 @@
-﻿using System.Text.Json;
-
+﻿using BizPik.Orders.Hub.Core.Domain.Contracts;
 using BizPik.Orders.Hub.Integrations.Common.Contracts;
 using BizPik.Orders.Hub.Integrations.Rappi.Domain.ValueObjects.DTOs.Request;
 using BizPik.Orders.Hub.Integrations.Rappi.Domain.ValueObjects.DTOs.Response;
@@ -8,7 +7,8 @@ namespace BizPik.Orders.Hub.Integrations.Rappi.Application.Clients;
 
 public class RappiAuthClient(
     ILogger<RappiAuthClient> logger,
-    HttpClient httpClient
+    HttpClient httpClient,
+    ICustomJsonSerializer jsonSerializer
 ) : IIntegrationAuthClient<RappiAuthTokenRequest, RappiAuthTokenResponse> {
     public async Task<RappiAuthTokenResponse> RetrieveToken(RappiAuthTokenRequest request)
     {
@@ -16,9 +16,9 @@ public class RappiAuthClient(
 
         logger.LogInformation("[INFO] - IfoodAuthClient - Uri: {uri}", uri);
 
-        HttpResponseMessage response = await httpClient.PostAsync(uri, new StringContent(JsonSerializer.Serialize(request)));
+        HttpResponseMessage response = await httpClient.PostAsync(uri, new StringContent(jsonSerializer.Serialize(request)));
 
         string responseContent = await response.Content.ReadAsStringAsync();
-        return JsonSerializer.Deserialize<RappiAuthTokenResponse>(responseContent)!;
+        return jsonSerializer.Deserialize<RappiAuthTokenResponse>(responseContent)!;
     }
 }

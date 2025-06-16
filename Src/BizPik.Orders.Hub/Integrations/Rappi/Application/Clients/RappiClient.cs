@@ -1,5 +1,4 @@
-﻿using System.Text.Json;
-
+﻿using BizPik.Orders.Hub.Core.Domain.Contracts;
 using BizPik.Orders.Hub.Integrations.Rappi.Domain.Contracts;
 using BizPik.Orders.Hub.Integrations.Rappi.Domain.ValueObjects.DTOs.Request;
 using BizPik.Orders.Hub.Integrations.Rappi.Domain.ValueObjects.DTOs.Response;
@@ -7,7 +6,8 @@ using BizPik.Orders.Hub.Integrations.Rappi.Domain.ValueObjects.DTOs.Response;
 namespace BizPik.Orders.Hub.Integrations.Rappi.Application.Clients;
 
 public class RappiClient(
-    HttpClient httpClient
+    HttpClient httpClient,
+    ICustomJsonSerializer jsonSerializer
 ) : IRappiClient {
     public Task<List<RappiWebhookEventsResponse>> GetWebhooks()
     {
@@ -38,7 +38,7 @@ public class RappiClient(
     {
         const string uri = "availability/stores/items";
 
-        HttpResponseMessage response = await httpClient.PutAsync(uri, new StringContent(JsonSerializer.Serialize(request)));
+        HttpResponseMessage response = await httpClient.PutAsync(uri, new StringContent(jsonSerializer.Serialize(request)));
         if (!response.IsSuccessStatusCode)
         {
             throw new Exception(response.Content.ReadAsStringAsync().Result);
@@ -49,7 +49,7 @@ public class RappiClient(
     {
         const string uri = "/api/v2/restaurants-integrations-public-api/availability/items/status";
 
-        HttpResponseMessage response = await httpClient.PostAsync(uri, new StringContent(JsonSerializer.Serialize(request)));
+        HttpResponseMessage response = await httpClient.PostAsync(uri, new StringContent(jsonSerializer.Serialize(request)));
         if (!response.IsSuccessStatusCode)
         {
             throw new Exception(response.Content.ReadAsStringAsync().Result);
