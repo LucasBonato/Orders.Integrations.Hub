@@ -1,8 +1,8 @@
-﻿using Orders.Integrations.Hub.Core.Orders.Domain.Entity;
-using Orders.Integrations.Hub.Core.Orders.Domain.Entity.Dispute;
+﻿using Orders.Integrations.Hub.Core.Domain.Entity;
+using Orders.Integrations.Hub.Core.Domain.Entity.Dispute;
 using Orders.Integrations.Hub.Integrations.Ifood.Domain.Entity.Handshake;
 
-using DisputeAlternative = Orders.Integrations.Hub.Core.Orders.Domain.Entity.Dispute.DisputeAlternative;
+using DisputeAlternative = Orders.Integrations.Hub.Core.Domain.Entity.Dispute.DisputeAlternative;
 
 namespace Orders.Integrations.Hub.Integrations.Ifood.Application.Extensions;
 

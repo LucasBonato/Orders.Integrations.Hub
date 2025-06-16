@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Orders.Integrations.Hub.Core.Orders.Domain.Entity.Dispute;
+namespace Orders.Integrations.Hub.Core.Domain.Entity.Dispute;
 
 public record DisputeItem(
     [property: JsonPropertyName("externalId")] string ExternalId,

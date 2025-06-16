@@ -1,10 +1,10 @@
-﻿using Orders.Integrations.Hub.Core.Orders.Domain.ValueObjects.Enums;
+﻿using Orders.Integrations.Hub.Core.Domain.ValueObjects.Enums;
 
 using FastEndpoints;
 
-using Order = Orders.Integrations.Hub.Core.Orders.Domain.Entity.Order;
+using Order = Orders.Integrations.Hub.Core.Domain.Entity.Order;
 
-namespace Orders.Integrations.Hub.Core.Orders.Domain.ValueObjects.Events;
+namespace Orders.Integrations.Hub.Core.Domain.ValueObjects.Events;
 
 public record CreateOrderEvent(
     Order Order,

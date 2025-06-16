@@ -1,6 +1,6 @@
-﻿using Orders.Integrations.Hub.Core.Orders.Domain.ValueObjects.DTOs.;
+﻿using Orders.Integrations.Hub.Core.Domain.ValueObjects.DTOs.;
 
-namespace Orders.Integrations.Hub.Core.Orders.Domain.Contracts;
+namespace Orders.Integrations.Hub.Core.Domain.Contracts;
 
 public interface IInternalClient
 {

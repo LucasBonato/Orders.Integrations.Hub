@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using System.Text.Json;
 
-namespace Orders.Integrations.Hub.Core.Orders.Application.Extensions;
+namespace Orders.Integrations.Hub.Core.Application.Extensions;
 
 public static class SimpleNotificationServiceExtensions
 {

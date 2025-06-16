@@ -2,12 +2,12 @@
 
 using Amazon.SimpleNotificationService;
 
-using Orders.Integrations.Hub.Core.Orders.Application.Extensions;
-using Orders.Integrations.Hub.Core.Orders.Domain.ValueObjects.Events;
+using Orders.Integrations.Hub.Core.Application.Extensions;
+using Orders.Integrations.Hub.Core.Domain.ValueObjects.Events;
 
 using FastEndpoints;
 
-namespace Orders.Integrations.Hub.Core.Orders.Application.EventHandlers;
+namespace Orders.Integrations.Hub.Core.Application.EventHandlers;
 
 public class PubSubEventHandler(
     ILogger<PubSubEventHandler> logger,

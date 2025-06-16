@@ -1,6 +1,6 @@
-﻿using Orders.Integrations.Hub.Core.Orders.Domain.Contracts.UseCases;
-using Orders.Integrations.Hub.Core.Orders.Domain.ValueObjects.DTOs.Request;
-using Orders.Integrations.Hub.Core.Orders.Domain.ValueObjects.Enums;
+﻿using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases;
+using Orders.Integrations.Hub.Core.Domain.ValueObjects.DTOs.Request;
+using Orders.Integrations.Hub.Core.Domain.ValueObjects.Enums;
 using Orders.Integrations.Hub.Integrations.Ifood.Domain.Contracts;
 using Orders.Integrations.Hub.Integrations.Ifood.Domain.ValueObjects.DTOs.Request;
 

@@ -1,6 +1,4 @@
-﻿using Orders.Integrations.Hub.Core.Orders.Adapter;
-
-namespace Orders.Integrations.Hub.Core.Orders;
+﻿namespace Orders.Integrations.Hub.Core.Adapter;
 
 public static class OrdersHubEndpoints
 {

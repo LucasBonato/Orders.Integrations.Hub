@@ -1,6 +1,6 @@
 ﻿using FastEndpoints;
 
-namespace Orders.Integrations.Hub.Core.Orders.Adapter;
+namespace Orders.Integrations.Hub.Core.Adapter;
 
 public class OrdersHubHealthEndpoint : Endpoint<EmptyRequest, string>
 {

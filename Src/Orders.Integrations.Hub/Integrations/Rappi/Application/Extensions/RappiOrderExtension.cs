@@ -1,17 +1,17 @@
-﻿using Orders.Integrations.Hub.Core.Orders.Domain.Entity;
-using Orders.Integrations.Hub.Core.Orders.Domain.Entity.Address;
-using Orders.Integrations.Hub.Core.Orders.Domain.Entity.Discount;
-using Orders.Integrations.Hub.Core.Orders.Domain.Entity.Item;
-using Orders.Integrations.Hub.Core.Orders.Domain.Entity.Merchant;
-using Orders.Integrations.Hub.Core.Orders.Domain.Entity.Payment;
-using Orders.Integrations.Hub.Core.Orders.Domain.ValueObjects.DTOs;
-using Orders.Integrations.Hub.Core.Orders.Domain.ValueObjects.Enums;
+﻿using Orders.Integrations.Hub.Core.Domain.Entity;
+using Orders.Integrations.Hub.Core.Domain.Entity.Address;
+using Orders.Integrations.Hub.Core.Domain.Entity.Discount;
+using Orders.Integrations.Hub.Core.Domain.Entity.Item;
+using Orders.Integrations.Hub.Core.Domain.Entity.Merchant;
+using Orders.Integrations.Hub.Core.Domain.Entity.Payment;
+using Orders.Integrations.Hub.Core.Domain.ValueObjects.DTOs;
+using Orders.Integrations.Hub.Core.Domain.ValueObjects.Enums;
 using Orders.Integrations.Hub.Integrations.Rappi.Domain.Entity;
 using Orders.Integrations.Hub.Integrations.Rappi.Domain.ValueObjects.DTOs.Request;
 using Orders.Integrations.Hub.Integrations.Rappi.Domain.ValueObjects.Enums;
 
-using OrderPayment = Orders.Integrations.Hub.Core.Orders.Domain.Entity.Payment.OrderPayment;
-using OrderTotal = Orders.Integrations.Hub.Core.Orders.Domain.Entity.OrderTotal;
+using OrderPayment = Orders.Integrations.Hub.Core.Domain.Entity.Payment.OrderPayment;
+using OrderTotal = Orders.Integrations.Hub.Core.Domain.Entity.OrderTotal;
 
 namespace Orders.Integrations.Hub.Integrations.Rappi.Application.Extensions;
 

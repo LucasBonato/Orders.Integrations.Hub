@@ -1,4 +1,4 @@
-﻿namespace Orders.Integrations.Hub.Core.Orders.Domain.ValueObjects.Enums;
+﻿namespace Orders.Integrations.Hub.Core.Domain.ValueObjects.Enums;
 
 public enum FeeType
 {

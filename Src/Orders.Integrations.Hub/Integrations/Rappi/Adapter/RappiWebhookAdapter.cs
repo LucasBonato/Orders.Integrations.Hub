@@ -1,10 +1,10 @@
 ﻿using System.Text;
 using System.Text.Json;
 
-using Orders.Integrations.Hub.Core.Orders.Application.Extensions;
-using Orders.Integrations.Hub.Core.Orders.Domain.Contracts.UseCases;
-using Orders.Integrations.Hub.Core.Orders.Domain.ValueObjects.Enums;
-using Orders.Integrations.Hub.Core.Orders.Domain.ValueObjects.Events;
+using Orders.Integrations.Hub.Core.Application.Extensions;
+using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases;
+using Orders.Integrations.Hub.Core.Domain.ValueObjects.Enums;
+using Orders.Integrations.Hub.Core.Domain.ValueObjects.Events;
 using Orders.Integrations.Hub.Integrations.Common.Validators;
 using Orders.Integrations.Hub.Integrations.Rappi.Application.Extensions;
 using Orders.Integrations.Hub.Integrations.Rappi.Domain.Entity;

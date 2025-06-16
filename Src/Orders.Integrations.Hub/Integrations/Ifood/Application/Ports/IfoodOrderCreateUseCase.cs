@@ -1,8 +1,8 @@
-﻿using Orders.Integrations.Hub.Core.Orders.Domain.Contracts;
-using Orders.Integrations.Hub.Core.Orders.Domain.Contracts.UseCases;
-using Orders.Integrations.Hub.Core.Orders.Domain.ValueObjects.DTOs.;
-using Orders.Integrations.Hub.Core.Orders.Domain.ValueObjects.Enums;
-using Orders.Integrations.Hub.Core.Orders.Domain.ValueObjects.Events;
+﻿using Orders.Integrations.Hub.Core.Domain.Contracts;
+using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases;
+using Orders.Integrations.Hub.Core.Domain.ValueObjects.DTOs.;
+using Orders.Integrations.Hub.Core.Domain.ValueObjects.Enums;
+using Orders.Integrations.Hub.Core.Domain.ValueObjects.Events;
 using Orders.Integrations.Hub.Integrations.Ifood.Application.Extensions;
 using Orders.Integrations.Hub.Integrations.Ifood.Domain.Contracts;
 using Orders.Integrations.Hub.Integrations.Ifood.Domain.Entity.Order;

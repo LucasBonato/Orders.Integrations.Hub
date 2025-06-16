@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Orders.Integrations.Hub.Core.Orders.Domain.Entity;
+namespace Orders.Integrations.Hub.Core.Domain.Entity;
 
 public record OrderTotal(
     [property: JsonPropertyName("itemsPrice")] Price ItemsPrice,

@@ -1,3 +1,3 @@
-﻿namespace Orders.Integrations.Hub.Core.Orders.Domain.Contracts;
+﻿namespace Orders.Integrations.Hub.Core.Domain.Contracts;
 
 public interface IOrderHttp;

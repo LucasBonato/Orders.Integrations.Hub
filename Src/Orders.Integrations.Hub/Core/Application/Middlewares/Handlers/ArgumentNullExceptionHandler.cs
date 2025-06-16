@@ -2,7 +2,7 @@
 
 using Microsoft.AspNetCore.Mvc;
 
-namespace Orders.Integrations.Hub.Core.Orders.Application.Middlewares.Handlers;
+namespace Orders.Integrations.Hub.Core.Application.Middlewares.Handlers;
 
 public static class ArgumentNullExceptionHandler
 {

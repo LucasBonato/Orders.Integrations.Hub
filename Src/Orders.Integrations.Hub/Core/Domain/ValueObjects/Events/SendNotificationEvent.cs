@@ -1,8 +1,8 @@
-﻿using Orders.Integrations.Hub.Core.Orders.Domain.ValueObjects.DTOs;
+﻿using Orders.Integrations.Hub.Core.Domain.ValueObjects.DTOs;
 
 using FastEndpoints;
 
-namespace Orders.Integrations.Hub.Core.Orders.Domain.ValueObjects.Events;
+namespace Orders.Integrations.Hub.Core.Domain.ValueObjects.Events;
 
 public record SendNotificationEvent(
     OrderUpdate Message,

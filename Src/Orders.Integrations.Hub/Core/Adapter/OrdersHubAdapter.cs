@@ -1,14 +1,14 @@
-﻿using Orders.Integrations.Hub.Core.Orders.Application.Extensions;
-using Orders.Integrations.Hub.Core.Orders.Domain.Contracts.UseCases;
-using Orders.Integrations.Hub.Core.Orders.Domain.ValueObjects.DTOs.;
-using Orders.Integrations.Hub.Core.Orders.Domain.ValueObjects.DTOs.Request;
-using Orders.Integrations.Hub.Core.Orders.Domain.ValueObjects.Enums;
+﻿using Orders.Integrations.Hub.Core.Application.Extensions;
+using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases;
+using Orders.Integrations.Hub.Core.Domain.ValueObjects.DTOs.;
+using Orders.Integrations.Hub.Core.Domain.ValueObjects.DTOs.Request;
+using Orders.Integrations.Hub.Core.Domain.ValueObjects.Enums;
 
 using Microsoft.AspNetCore.Mvc;
 
 using static Microsoft.AspNetCore.Http.Results;
 
-namespace Orders.Integrations.Hub.Core.Orders.Adapter;
+namespace Orders.Integrations.Hub.Core.Adapter;
 
 public abstract class OrdersHubAdapterLog;
 

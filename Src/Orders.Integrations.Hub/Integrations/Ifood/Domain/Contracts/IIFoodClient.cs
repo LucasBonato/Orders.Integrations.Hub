@@ -1,4 +1,4 @@
-﻿using Orders.Integrations.Hub.Core.Orders.Domain.ValueObjects.DTOs.Request;
+﻿using Orders.Integrations.Hub.Core.Domain.ValueObjects.DTOs.Request;
 using Orders.Integrations.Hub.Integrations.Common.Contracts;
 using Orders.Integrations.Hub.Integrations.Ifood.Domain.Entity.Order;
 using Orders.Integrations.Hub.Integrations.Ifood.Domain.Entity.Order.MerchantDetails;

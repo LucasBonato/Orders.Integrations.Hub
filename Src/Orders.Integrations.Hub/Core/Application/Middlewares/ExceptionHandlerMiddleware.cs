@@ -1,14 +1,14 @@
 ﻿using System.Diagnostics;
 using System.Net;
 
-using Orders.Integrations.Hub.Core.Orders.Application.Exceptions;
-using Orders.Integrations.Hub.Core.Orders.Application.Extensions;
-using Orders.Integrations.Hub.Core.Orders.Application.Middlewares.Handlers;
+using Orders.Integrations.Hub.Core.Application.Exceptions;
+using Orders.Integrations.Hub.Core.Application.Extensions;
+using Orders.Integrations.Hub.Core.Application.Middlewares.Handlers;
 
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Orders.Integrations.Hub.Core.Orders.Application.Middlewares;
+namespace Orders.Integrations.Hub.Core.Application.Middlewares;
 
 public class ExceptionHandlerMiddleware(
     ILogger<ExceptionHandlerMiddleware> logger

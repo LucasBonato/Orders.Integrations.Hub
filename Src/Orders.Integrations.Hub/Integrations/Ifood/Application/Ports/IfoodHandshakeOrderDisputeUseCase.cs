@@ -1,8 +1,8 @@
 ﻿using System.Text.Json;
 
-using Orders.Integrations.Hub.Core.Orders.Domain.Contracts.UseCases;
-using Orders.Integrations.Hub.Core.Orders.Domain.ValueObjects.Enums;
-using Orders.Integrations.Hub.Core.Orders.Domain.ValueObjects.Events;
+using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases;
+using Orders.Integrations.Hub.Core.Domain.ValueObjects.Enums;
+using Orders.Integrations.Hub.Core.Domain.ValueObjects.Events;
 using Orders.Integrations.Hub.Integrations.Ifood.Application.Extensions;
 using Orders.Integrations.Hub.Integrations.Ifood.Domain.Entity.Handshake;
 using Orders.Integrations.Hub.Integrations.Ifood.Domain.ValueObjects.DTOs.Request;

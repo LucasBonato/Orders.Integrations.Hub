@@ -1,4 +1,4 @@
-﻿using Orders.Integrations.Hub.Core.Orders.Application.Extensions;
+﻿using Orders.Integrations.Hub.Core.Application.Extensions;
 using Orders.Integrations.Hub.Integrations.Rappi.Application.Clients;
 using Orders.Integrations.Hub.Integrations.Rappi.Domain.ValueObjects.DTOs.Request;
 using Orders.Integrations.Hub.Integrations.Rappi.Domain.ValueObjects.DTOs.Response;

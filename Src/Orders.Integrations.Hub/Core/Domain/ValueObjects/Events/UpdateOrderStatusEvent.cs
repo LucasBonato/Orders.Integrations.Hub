@@ -1,9 +1,9 @@
-﻿using Orders.Integrations.Hub.Core.Orders.Domain.ValueObjects.DTOs;
-using Orders.Integrations.Hub.Core.Orders.Domain.ValueObjects.Enums;
+﻿using Orders.Integrations.Hub.Core.Domain.ValueObjects.DTOs;
+using Orders.Integrations.Hub.Core.Domain.ValueObjects.Enums;
 
 using FastEndpoints;
 
-namespace Orders.Integrations.Hub.Core.Orders.Domain.ValueObjects.Events;
+namespace Orders.Integrations.Hub.Core.Domain.ValueObjects.Events;
 
 public record UpdateOrderStatusEvent(
     OrderUpdate OrderUpdate,

@@ -1,16 +1,18 @@
-﻿using Amazon;
+﻿using System.Text.Json;
+
+using Amazon;
 using Amazon.Runtime;
 using Amazon.Runtime.CredentialManagement;
 using Amazon.SimpleNotificationService;
 
 using .AWS.Credentials;
-using Orders.Integrations.Hub.Core.Orders;
-using Orders.Integrations.Hub.Core.Orders.Application.Clients;
-using Orders.Integrations.Hub.Core.Orders.Application.Extensions;
-using Orders.Integrations.Hub.Core.Orders.Application.Middlewares;
-using Orders.Integrations.Hub.Core.Orders.Application.UseCases;
-using Orders.Integrations.Hub.Core.Orders.Domain.Contracts;
-using Orders.Integrations.Hub.Core.Orders.Domain.Contracts.UseCases;
+using Orders.Integrations.Hub.Core.Adapter;
+using Orders.Integrations.Hub.Core.Application.Clients;
+using Orders.Integrations.Hub.Core.Application.Extensions;
+using Orders.Integrations.Hub.Core.Application.Middlewares;
+using Orders.Integrations.Hub.Core.Application.UseCases;
+using Orders.Integrations.Hub.Core.Domain.Contracts;
+using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases;
 
 using FastEndpoints;
 
@@ -90,9 +92,6 @@ public static class CoreDependencyInjection
 
         services.AddLogging(options => {
             options
-                // .SetMinimumLevel(LogLevel.Information)
-                // .AddFilter("System.Net.Http.HttpClient.OtlpTraceExporter", LogLevel.None)
-                // .AddFilter("System.Net.Http.HttpClient.OtlpMetricExporter", LogLevel.None)
                 .AddOpenTelemetry(logger => {
                     logger.IncludeScopes = true;
                     logger.ParseStateValues = true;

@@ -1,6 +1,6 @@
-﻿using Orders.Integrations.Hub.Core.Orders.Domain.ValueObjects.DTOs.Request;
+﻿using Orders.Integrations.Hub.Core.Domain.ValueObjects.DTOs.Request;
 
-namespace Orders.Integrations.Hub.Core.Orders.Domain.Contracts.UseCases;
+namespace Orders.Integrations.Hub.Core.Domain.Contracts.UseCases;
 
 public interface IOrderChangeStatusUseCase
 {

@@ -1,8 +1,8 @@
 ﻿using System.Text.Json.Serialization;
 
-using Orders.Integrations.Hub.Core.Orders.Domain.ValueObjects.Enums;
+using Orders.Integrations.Hub.Core.Domain.ValueObjects.Enums;
 
-namespace Orders.Integrations.Hub.Core.Orders.Domain.Entity.Payment;
+namespace Orders.Integrations.Hub.Core.Domain.Entity.Payment;
 
 public record OrderPaymentMethod(
     [property: JsonPropertyName("value")] decimal Value,

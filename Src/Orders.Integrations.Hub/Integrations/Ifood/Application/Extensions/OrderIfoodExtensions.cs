@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 
-using Orders.Integrations.Hub.Core.Orders.Domain.Entity;
+using Orders.Integrations.Hub.Core.Domain.Entity;
 using Orders.Integrations.Hub.Integrations.Ifood.Domain.Entity.Handshake;
 
 namespace Orders.Integrations.Hub.Integrations.Ifood.Application.Extensions;

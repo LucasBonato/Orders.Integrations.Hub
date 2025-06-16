@@ -1,10 +1,10 @@
 ﻿using System.Text.Json;
 
-using Orders.Integrations.Hub.Core.Orders.Application.Extensions;
-using Orders.Integrations.Hub.Core.Orders.Domain.Contracts;
-using Orders.Integrations.Hub.Core.Orders.Domain.ValueObjects.DTOs.;
+using Orders.Integrations.Hub.Core.Application.Extensions;
+using Orders.Integrations.Hub.Core.Domain.Contracts;
+using Orders.Integrations.Hub.Core.Domain.ValueObjects.DTOs.;
 
-namespace Orders.Integrations.Hub.Core.Orders.Application.Clients;
+namespace Orders.Integrations.Hub.Core.Application.Clients;
 
 public class InternalClient(
     ILogger<InternalClient> logger,

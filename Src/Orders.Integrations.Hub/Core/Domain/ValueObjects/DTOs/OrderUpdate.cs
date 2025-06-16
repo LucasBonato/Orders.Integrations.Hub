@@ -1,9 +1,9 @@
 ﻿using System.Text.Json.Serialization;
 
-using Orders.Integrations.Hub.Core.Orders.Domain.Entity.Dispute;
-using Orders.Integrations.Hub.Core.Orders.Domain.ValueObjects.Enums;
+using Orders.Integrations.Hub.Core.Domain.Entity.Dispute;
+using Orders.Integrations.Hub.Core.Domain.ValueObjects.Enums;
 
-namespace Orders.Integrations.Hub.Core.Orders.Domain.ValueObjects.DTOs;
+namespace Orders.Integrations.Hub.Core.Domain.ValueObjects.DTOs;
 
 public record OrderUpdate(
     [property: JsonPropertyName("orderId")] string OrderId,

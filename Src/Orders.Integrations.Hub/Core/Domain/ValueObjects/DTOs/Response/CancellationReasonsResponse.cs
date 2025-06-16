@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Orders.Integrations.Hub.Core.Orders.Domain.ValueObjects.DTOs.Response;
+namespace Orders.Integrations.Hub.Core.Domain.ValueObjects.DTOs.Response;
 
 public record CancellationReasonsResponse(
     [property: JsonPropertyName("code")] int Code,

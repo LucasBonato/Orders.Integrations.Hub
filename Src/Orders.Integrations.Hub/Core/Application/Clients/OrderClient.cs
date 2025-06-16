@@ -1,8 +1,8 @@
-﻿using Orders.Integrations.Hub.Core.Orders.Domain.Contracts;
-using Orders.Integrations.Hub.Core.Orders.Domain.Entity;
-using Orders.Integrations.Hub.Core.Orders.Domain.ValueObjects.DTOs;
+﻿using Orders.Integrations.Hub.Core.Domain.Contracts;
+using Orders.Integrations.Hub.Core.Domain.Entity;
+using Orders.Integrations.Hub.Core.Domain.ValueObjects.DTOs;
 
-namespace Orders.Integrations.Hub.Core.Orders.Application.Clients;
+namespace Orders.Integrations.Hub.Core.Application.Clients;
 
 public class OrderClient(
     ILogger<OrderClient> logger,

@@ -1,9 +1,9 @@
-﻿using Orders.Integrations.Hub.Core.Orders.Domain.Entity.Dispute;
-using Orders.Integrations.Hub.Core.Orders.Domain.ValueObjects.Enums;
+﻿using Orders.Integrations.Hub.Core.Domain.Entity.Dispute;
+using Orders.Integrations.Hub.Core.Domain.ValueObjects.Enums;
 
 using FastEndpoints;
 
-namespace Orders.Integrations.Hub.Core.Orders.Domain.ValueObjects.Events;
+namespace Orders.Integrations.Hub.Core.Domain.ValueObjects.Events;
 
 public record ProcessOrderDisputeEvent(
     string ExternalOrderId,

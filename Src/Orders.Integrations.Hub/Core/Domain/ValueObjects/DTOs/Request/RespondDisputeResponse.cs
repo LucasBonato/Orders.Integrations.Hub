@@ -1,8 +1,8 @@
 ﻿using System.Text.Json.Serialization;
 
-using Orders.Integrations.Hub.Core.Orders.Domain.Entity;
+using Orders.Integrations.Hub.Core.Domain.Entity;
 
-namespace Orders.Integrations.Hub.Core.Orders.Domain.ValueObjects.DTOs.Request;
+namespace Orders.Integrations.Hub.Core.Domain.ValueObjects.DTOs.Request;
 
 // The name ends with response because it's the response to the dispute
 public record RespondDisputeResponse(

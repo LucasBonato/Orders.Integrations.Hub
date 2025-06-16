@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Orders.Integrations.Hub.Core.Orders.Domain.Entity;
+namespace Orders.Integrations.Hub.Core.Domain.Entity;
 
 public record OrderSchedule(
     [property: JsonPropertyName("scheduledDateTimeStart")] DateTime ScheduledDateTimeStart,

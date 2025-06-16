@@ -1,8 +1,8 @@
 ﻿using Anv;
 
-using Orders.Integrations.Hub.Core.Orders.Application.Exceptions;
+using Orders.Integrations.Hub.Core.Application.Exceptions;
 
-namespace Orders.Integrations.Hub.Core.Orders.Application.Extensions;
+namespace Orders.Integrations.Hub.Core.Application.Extensions;
 
 public static class ExceptionsExtensions {
     public static string NotNullEnv(this AnvEnv env) {

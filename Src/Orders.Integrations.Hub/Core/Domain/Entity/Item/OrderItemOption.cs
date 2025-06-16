@@ -1,8 +1,8 @@
 ﻿using System.Text.Json.Serialization;
 
-using Orders.Integrations.Hub.Core.Orders.Domain.ValueObjects.Enums;
+using Orders.Integrations.Hub.Core.Domain.ValueObjects.Enums;
 
-namespace Orders.Integrations.Hub.Core.Orders.Domain.Entity.Item;
+namespace Orders.Integrations.Hub.Core.Domain.Entity.Item;
 
 public record OrderItemOption(
     [property: JsonPropertyName("id")] string Id,
