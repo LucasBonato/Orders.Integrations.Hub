@@ -47,7 +47,10 @@ public static class CoreDependencyInjection
     private static IServiceCollection AddServices(this IServiceCollection services)
     {
         services.AddExceptionHandler<ExceptionHandlerMiddleware>();
+
         services.AddTransient<IAmazonSimpleNotificationService>(_ => SimplesNotificationServiceConfiguration());
+        services.AddTransient<IObjectStorageClient, SimpleStorageServiceClient>();
+
         services.AddScoped<IOrderUseCase, OrderUseCase>();
         services.AddScoped<IOrderDisputeUpdateUseCase, OrderDisputeUpdateUseCase>();
 

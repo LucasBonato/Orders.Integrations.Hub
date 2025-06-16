@@ -1,0 +1,6 @@
+﻿namespace Orders.Integrations.Hub.Core.Domain.Contracts;
+
+public interface IObjectStorageClient {
+    Task<string> UploadFile(IFormFile file, string key);
+    Task DeleteFile(string key);
+}
