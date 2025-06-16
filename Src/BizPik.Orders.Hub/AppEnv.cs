@@ -71,6 +71,14 @@ public static class AppEnv
         }
     }
 
+    public static class OBJECT_STORAGE
+    {
+        public static class BUCKET
+        {
+            public static readonly AnvEnv NAME = new("OBJECT_STORAGE__BUCKET__NAME");
+        }
+    }
+
     // public static readonly AnvEnv AWS_API_GATEWAY_PROXY = new("AWS_API_GATEWAY_PROXY");
     public static readonly AnvEnv AWS_PROFILE = new("AWS_PROFILE");
     public static readonly AnvEnv OTEL_SERVICE_NAME = new("OTEL_SERVICE_NAME");
