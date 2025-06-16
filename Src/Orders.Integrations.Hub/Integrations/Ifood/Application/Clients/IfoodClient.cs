@@ -4,6 +4,7 @@ using System.Text;
 
 using Orders.Integrations.Hub.Core.Domain.Contracts;
 using Orders.Integrations.Hub.Core.Domain.ValueObjects.DTOs.Request;
+using Orders.Integrations.Hub.Integrations.Common;
 using Orders.Integrations.Hub.Integrations.Ifood.Domain.Contracts;
 using Orders.Integrations.Hub.Integrations.Ifood.Domain.Entity.Order;
 using Orders.Integrations.Hub.Integrations.Ifood.Domain.Entity.Order.MerchantDetails;
@@ -17,6 +18,23 @@ public class IfoodClient(
     HttpClient httpClient,
     ICustomJsonSerializer serializer
 ) : IIFoodClient {
+    public async Task<DownloadFile> GetDisputeImage(string uri)
+    {
+        HttpResponseMessage response = await httpClient.GetAsync(uri);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new ApplicationException(await response.Content.ReadAsStringAsync());
+        }
+
+        byte[] fileBytes = await response.Content.ReadAsByteArrayAsync();
+
+        return new DownloadFile(
+            Bytes: fileBytes,
+            ContentType: response.Content.Headers.ContentType?.MediaType?? "application/octet-stream"
+        );
+    }
+
     public async Task<IfoodOrder> GetOrderDetails(string orderId)
     {
         string uri = $"order/v1.0/orders/{orderId}";

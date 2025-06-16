@@ -1,4 +1,5 @@
 ﻿using Orders.Integrations.Hub.Core.Domain.ValueObjects.DTOs.Request;
+using Orders.Integrations.Hub.Integrations.Common;
 using Orders.Integrations.Hub.Integrations.Common.Contracts;
 using Orders.Integrations.Hub.Integrations.Ifood.Domain.Entity.Order;
 using Orders.Integrations.Hub.Integrations.Ifood.Domain.Entity.Order.MerchantDetails;
@@ -9,6 +10,7 @@ namespace Orders.Integrations.Hub.Integrations.Ifood.Domain.Contracts;
 
 public interface IIFoodClient : IIntegrationClient
 {
+    Task<DownloadFile> GetDisputeImage(string uri);
     Task<IfoodOrder> GetOrderDetails(string orderId);
     Task<IfoodMerchant> GetMerchantDetails(string merchantId);
     Task<IReadOnlyList<IfoodCancellationReasonResponse>> GetCancellationReasons(string orderId);
