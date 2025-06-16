@@ -3,7 +3,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 
-using Orders.Integrations.Hub.Core.Orders.Domain.ValueObjects.DTOs.Request;
+using Orders.Integrations.Hub.Core.Domain.ValueObjects.DTOs.Request;
 using Orders.Integrations.Hub.Integrations.Ifood.Domain.Contracts;
 using Orders.Integrations.Hub.Integrations.Ifood.Domain.Entity.Order;
 using Orders.Integrations.Hub.Integrations.Ifood.Domain.Entity.Order.MerchantDetails;

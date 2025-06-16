@@ -1,8 +1,12 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
 
-using Orders.Integrations.Hub.Core.Orders.Application.Extensions;
-using Orders.Integrations.Hub.Core.Orders.Domain.Contracts.UseCases;
-using Orders.Integrations.Hub.Core.Orders.Domain.ValueObjects.Enums;
+using Orders.Integrations.Hub.Core.Application.Extensions;
+using Orders.Integrations.Hub.Core.Application.Middlewares;
+using Orders.Integrations.Hub.Core.Domain.Contracts;
+using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases;
+using Orders.Integrations.Hub.Core.Domain.ValueObjects.Enums;
+using Orders.Integrations.Hub.Integrations.Common;
 using Orders.Integrations.Hub.Integrations.Ifood.Application.Clients;
 using Orders.Integrations.Hub.Integrations.Ifood.Application.Handlers;
 using Orders.Integrations.Hub.Integrations.Ifood.Application.Ports;
@@ -33,11 +37,15 @@ public static class IfoodDependencyInjection
         services.AddKeyedScoped<IOrderChangeProductStatusUseCase, IfoodOrderChangeProductStatusUseCase>(OrderIntegration.IFOOD);
         services.AddKeyedScoped<IOrderGetCancellationReasonUseCase, IfoodOrderGetCancellationReasonUseCase>(OrderIntegration.IFOOD);
 
-        return services
-                .Configure<JsonOptions>(options => {
-                    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-                })
-            ;
+        services.AddSingleton<ICustomJsonSerializer, CommonJsonSerializer>();
+        services.Configure<JsonOptions>(options => {
+            options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+            options.JsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
+            options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+            options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.SnakeCaseUpper));
+        });
+
+        return services;
     }
 
     private static IServiceCollection AddIfoodClients(this IServiceCollection services)

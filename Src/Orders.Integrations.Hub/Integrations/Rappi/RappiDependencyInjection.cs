@@ -33,11 +33,15 @@ public static class RappiDependencyInjection
         services.AddKeyedScoped<IOrderChangeProductStatusUseCase, RappiOrderChangeProductStatusUseCase>(OrderIntegration.RAPPI);
         services.AddKeyedScoped<IOrderGetCancellationReasonUseCase, RappiOrderGetCancellationReasonUseCase>(OrderIntegration.RAPPI);
 
-        return services
-                .Configure<JsonOptions>(options => {
-                    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-                })
-            ;
+        services.AddSingleton<ICustomJsonSerializer, RappiJsonSerializer>();
+        services.Configure<JsonOptions>(options => {
+            options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower;
+            options.JsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.SnakeCaseLower;
+            options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+            options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.SnakeCaseUpper));
+        });
+
+        return services;
     }
 
     private static IServiceCollection AddRappiClients(this IServiceCollection services)
