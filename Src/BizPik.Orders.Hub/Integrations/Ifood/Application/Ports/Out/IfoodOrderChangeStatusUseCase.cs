@@ -4,7 +4,7 @@ using BizPik.Orders.Hub.Core.Domain.ValueObjects.Enums;
 using BizPik.Orders.Hub.Integrations.Ifood.Domain.Contracts;
 using BizPik.Orders.Hub.Integrations.Ifood.Domain.ValueObjects.DTOs.Request;
 
-namespace BizPik.Orders.Hub.Integrations.Ifood.Application.Ports;
+namespace BizPik.Orders.Hub.Integrations.Ifood.Application.Ports.Out;
 
 public class IfoodOrderChangeStatusUseCase(
     ILogger<IfoodOrderChangeStatusUseCase> logger,

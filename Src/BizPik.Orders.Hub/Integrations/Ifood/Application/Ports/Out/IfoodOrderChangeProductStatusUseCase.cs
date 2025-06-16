@@ -3,7 +3,7 @@ using BizPik.Orders.Hub.Core.Domain.ValueObjects.DTOs.BizPik;
 using BizPik.Orders.Hub.Integrations.Ifood.Domain.Contracts;
 using BizPik.Orders.Hub.Integrations.Ifood.Domain.ValueObjects.DTOs.Request;
 
-namespace BizPik.Orders.Hub.Integrations.Ifood.Application.Ports;
+namespace BizPik.Orders.Hub.Integrations.Ifood.Application.Ports.Out;
 
 public class IfoodOrderChangeProductStatusUseCase(
     IIFoodClient ifoodClient

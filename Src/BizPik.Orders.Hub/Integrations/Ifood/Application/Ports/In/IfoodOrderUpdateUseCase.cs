@@ -6,7 +6,7 @@ using BizPik.Orders.Hub.Integrations.Ifood.Domain.ValueObjects.DTOs.Request;
 
 using FastEndpoints;
 
-namespace BizPik.Orders.Hub.Integrations.Ifood.Application.Ports;
+namespace BizPik.Orders.Hub.Integrations.Ifood.Application.Ports.In;
 
 public class IfoodOrderUpdateUseCase : IOrderUpdateUseCase<IfoodWebhookRequest>
 {

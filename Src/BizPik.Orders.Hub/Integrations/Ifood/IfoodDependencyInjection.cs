@@ -2,14 +2,14 @@
 using System.Text.Json.Serialization;
 
 using BizPik.Orders.Hub.Core.Application.Extensions;
-using BizPik.Orders.Hub.Core.Application.Middlewares;
 using BizPik.Orders.Hub.Core.Domain.Contracts;
 using BizPik.Orders.Hub.Core.Domain.Contracts.UseCases;
 using BizPik.Orders.Hub.Core.Domain.ValueObjects.Enums;
 using BizPik.Orders.Hub.Integrations.Common;
 using BizPik.Orders.Hub.Integrations.Ifood.Application.Clients;
 using BizPik.Orders.Hub.Integrations.Ifood.Application.Handlers;
-using BizPik.Orders.Hub.Integrations.Ifood.Application.Ports;
+using BizPik.Orders.Hub.Integrations.Ifood.Application.Ports.In;
+using BizPik.Orders.Hub.Integrations.Ifood.Application.Ports.Out;
 using BizPik.Orders.Hub.Integrations.Ifood.Domain.Contracts;
 using BizPik.Orders.Hub.Integrations.Ifood.Domain.ValueObjects.DTOs.Request;
 

@@ -6,7 +6,7 @@ using BizPik.Orders.Hub.Integrations.Ifood.Domain.Contracts;
 using BizPik.Orders.Hub.Integrations.Ifood.Domain.ValueObjects.DTOs.Request;
 using BizPik.Orders.Hub.Integrations.Ifood.Domain.ValueObjects.Enums.Handshake;
 
-namespace BizPik.Orders.Hub.Integrations.Ifood.Application.Ports;
+namespace BizPik.Orders.Hub.Integrations.Ifood.Application.Ports.Out;
 
 public class IfoodHandshakeOrderDisputeRespondUseCase(
     IIFoodClient ifoodClient
