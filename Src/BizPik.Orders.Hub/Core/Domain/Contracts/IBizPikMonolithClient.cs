@@ -1,6 +1,6 @@
-﻿using BizPik.Orders.Hub.Core.Orders.Domain.ValueObjects.DTOs.BizPik;
+﻿using BizPik.Orders.Hub.Core.Domain.ValueObjects.DTOs.BizPik;
 
-namespace BizPik.Orders.Hub.Core.Orders.Domain.Contracts;
+namespace BizPik.Orders.Hub.Core.Domain.Contracts;
 
 public interface IBizPikMonolithClient
 {

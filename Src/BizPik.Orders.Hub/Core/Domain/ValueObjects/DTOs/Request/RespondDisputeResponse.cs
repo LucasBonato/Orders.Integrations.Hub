@@ -1,8 +1,8 @@
 ﻿using System.Text.Json.Serialization;
 
-using BizPik.Orders.Hub.Core.Orders.Domain.Entity;
+using BizPik.Orders.Hub.Core.Domain.Entity;
 
-namespace BizPik.Orders.Hub.Core.Orders.Domain.ValueObjects.DTOs.Request;
+namespace BizPik.Orders.Hub.Core.Domain.ValueObjects.DTOs.Request;
 
 // The name ends with response because it's the response to the dispute
 public record RespondDisputeResponse(

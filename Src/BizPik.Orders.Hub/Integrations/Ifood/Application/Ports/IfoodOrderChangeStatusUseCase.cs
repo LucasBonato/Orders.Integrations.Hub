@@ -1,6 +1,6 @@
-﻿using BizPik.Orders.Hub.Core.Orders.Domain.Contracts.UseCases;
-using BizPik.Orders.Hub.Core.Orders.Domain.ValueObjects.DTOs.Request;
-using BizPik.Orders.Hub.Core.Orders.Domain.ValueObjects.Enums;
+﻿using BizPik.Orders.Hub.Core.Domain.Contracts.UseCases;
+using BizPik.Orders.Hub.Core.Domain.ValueObjects.DTOs.Request;
+using BizPik.Orders.Hub.Core.Domain.ValueObjects.Enums;
 using BizPik.Orders.Hub.Integrations.Ifood.Domain.Contracts;
 using BizPik.Orders.Hub.Integrations.Ifood.Domain.ValueObjects.DTOs.Request;
 

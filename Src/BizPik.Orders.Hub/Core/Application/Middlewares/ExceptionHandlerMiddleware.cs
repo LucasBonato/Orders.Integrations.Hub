@@ -1,14 +1,14 @@
 ﻿using System.Diagnostics;
 using System.Net;
 
-using BizPik.Orders.Hub.Core.Orders.Application.Exceptions;
-using BizPik.Orders.Hub.Core.Orders.Application.Extensions;
-using BizPik.Orders.Hub.Core.Orders.Application.Middlewares.Handlers;
+using BizPik.Orders.Hub.Core.Application.Exceptions;
+using BizPik.Orders.Hub.Core.Application.Extensions;
+using BizPik.Orders.Hub.Core.Application.Middlewares.Handlers;
 
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BizPik.Orders.Hub.Core.Orders.Application.Middlewares;
+namespace BizPik.Orders.Hub.Core.Application.Middlewares;
 
 public class ExceptionHandlerMiddleware(
     ILogger<ExceptionHandlerMiddleware> logger

@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace BizPik.Orders.Hub.Core.Orders.Domain.ValueObjects.DTOs.Response;
+namespace BizPik.Orders.Hub.Core.Domain.ValueObjects.DTOs.Response;
 
 public record CancellationReasonsResponse(
     [property: JsonPropertyName("code")] int Code,

@@ -1,6 +1,4 @@
-﻿using BizPik.Orders.Hub.Core.Orders.Adapter;
-
-namespace BizPik.Orders.Hub.Core.Orders;
+﻿namespace BizPik.Orders.Hub.Core.Adapter;
 
 public static class OrdersHubEndpoints
 {

@@ -1,4 +1,4 @@
-﻿using BizPik.Orders.Hub.Core.Orders.Domain.ValueObjects.DTOs.BizPik;
+﻿using BizPik.Orders.Hub.Core.Domain.ValueObjects.DTOs.BizPik;
 using BizPik.Orders.Hub.Integrations.Ifood.Domain.ValueObjects;
 
 namespace BizPik.Orders.Hub.Integrations.Ifood.Application.Extensions;

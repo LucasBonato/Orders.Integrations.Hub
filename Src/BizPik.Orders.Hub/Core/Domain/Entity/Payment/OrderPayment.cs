@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace BizPik.Orders.Hub.Core.Orders.Domain.Entity.Payment;
+namespace BizPik.Orders.Hub.Core.Domain.Entity.Payment;
 
 public record OrderPayment(
     [property: JsonPropertyName("prepaid")] int Prepaid,

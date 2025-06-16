@@ -1,6 +1,6 @@
 ﻿using FastEndpoints;
 
-namespace BizPik.Orders.Hub.Core.Orders.Adapter;
+namespace BizPik.Orders.Hub.Core.Adapter;
 
 public class OrdersHubHealthEndpoint : Endpoint<EmptyRequest, string>
 {

@@ -1,9 +1,9 @@
-﻿using BizPik.Orders.Hub.Core.Orders.Domain.Entity.Dispute;
-using BizPik.Orders.Hub.Core.Orders.Domain.ValueObjects.Enums;
+﻿using BizPik.Orders.Hub.Core.Domain.Entity.Dispute;
+using BizPik.Orders.Hub.Core.Domain.ValueObjects.Enums;
 
 using FastEndpoints;
 
-namespace BizPik.Orders.Hub.Core.Orders.Domain.ValueObjects.Events;
+namespace BizPik.Orders.Hub.Core.Domain.ValueObjects.Events;
 
 public record ProcessOrderDisputeEvent(
     string ExternalOrderId,

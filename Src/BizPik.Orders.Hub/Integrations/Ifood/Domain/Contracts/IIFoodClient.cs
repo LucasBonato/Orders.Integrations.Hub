@@ -1,4 +1,4 @@
-﻿using BizPik.Orders.Hub.Core.Orders.Domain.ValueObjects.DTOs.Request;
+﻿using BizPik.Orders.Hub.Core.Domain.ValueObjects.DTOs.Request;
 using BizPik.Orders.Hub.Integrations.Common.Contracts;
 using BizPik.Orders.Hub.Integrations.Ifood.Domain.Entity.Order;
 using BizPik.Orders.Hub.Integrations.Ifood.Domain.Entity.Order.MerchantDetails;

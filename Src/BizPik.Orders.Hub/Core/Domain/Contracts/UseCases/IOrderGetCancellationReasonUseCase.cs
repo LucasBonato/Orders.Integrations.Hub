@@ -1,6 +1,6 @@
-﻿using BizPik.Orders.Hub.Core.Orders.Domain.ValueObjects.DTOs.Response;
+﻿using BizPik.Orders.Hub.Core.Domain.ValueObjects.DTOs.Response;
 
-namespace BizPik.Orders.Hub.Core.Orders.Domain.Contracts.UseCases;
+namespace BizPik.Orders.Hub.Core.Domain.Contracts.UseCases;
 
 public interface IOrderGetCancellationReasonUseCase
 {

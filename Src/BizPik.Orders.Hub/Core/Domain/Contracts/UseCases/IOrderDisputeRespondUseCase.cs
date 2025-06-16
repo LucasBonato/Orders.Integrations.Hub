@@ -1,6 +1,6 @@
-﻿using BizPik.Orders.Hub.Core.Orders.Domain.ValueObjects.DTOs.Request;
+﻿using BizPik.Orders.Hub.Core.Domain.ValueObjects.DTOs.Request;
 
-namespace BizPik.Orders.Hub.Core.Orders.Domain.Contracts.UseCases;
+namespace BizPik.Orders.Hub.Core.Domain.Contracts.UseCases;
 
 public interface IOrderDisputeRespondUseCase
 {

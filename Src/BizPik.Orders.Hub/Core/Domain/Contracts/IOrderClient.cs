@@ -1,7 +1,7 @@
-﻿using BizPik.Orders.Hub.Core.Orders.Domain.Entity;
-using BizPik.Orders.Hub.Core.Orders.Domain.ValueObjects.DTOs;
+﻿using BizPik.Orders.Hub.Core.Domain.Entity;
+using BizPik.Orders.Hub.Core.Domain.ValueObjects.DTOs;
 
-namespace BizPik.Orders.Hub.Core.Orders.Domain.Contracts;
+namespace BizPik.Orders.Hub.Core.Domain.Contracts;
 
 public interface IOrderClient
 {

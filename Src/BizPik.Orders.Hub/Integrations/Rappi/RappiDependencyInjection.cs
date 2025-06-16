@@ -1,8 +1,10 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
 
-using BizPik.Orders.Hub.Core.Orders.Application.Extensions;
-using BizPik.Orders.Hub.Core.Orders.Domain.Contracts.UseCases;
-using BizPik.Orders.Hub.Core.Orders.Domain.ValueObjects.Enums;
+using BizPik.Orders.Hub.Core.Application.Extensions;
+using BizPik.Orders.Hub.Core.Domain.Contracts;
+using BizPik.Orders.Hub.Core.Domain.Contracts.UseCases;
+using BizPik.Orders.Hub.Core.Domain.ValueObjects.Enums;
 using BizPik.Orders.Hub.Integrations.Rappi.Application.Clients;
 using BizPik.Orders.Hub.Integrations.Rappi.Application.Handlers;
 using BizPik.Orders.Hub.Integrations.Rappi.Application.Ports;

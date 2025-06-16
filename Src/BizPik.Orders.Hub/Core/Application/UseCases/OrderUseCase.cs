@@ -1,10 +1,10 @@
 ﻿using System.Text.Json;
 
-using BizPik.Orders.Hub.Core.Orders.Domain.Contracts;
-using BizPik.Orders.Hub.Core.Orders.Domain.Contracts.UseCases;
-using BizPik.Orders.Hub.Core.Orders.Domain.ValueObjects.Events;
+using BizPik.Orders.Hub.Core.Domain.Contracts;
+using BizPik.Orders.Hub.Core.Domain.Contracts.UseCases;
+using BizPik.Orders.Hub.Core.Domain.ValueObjects.Events;
 
-namespace BizPik.Orders.Hub.Core.Orders.Application.UseCases;
+namespace BizPik.Orders.Hub.Core.Application.UseCases;
 
 public class OrderUseCase(
     ILogger<OrderUseCase> logger,

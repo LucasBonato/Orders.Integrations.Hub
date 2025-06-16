@@ -1,17 +1,17 @@
-﻿using BizPik.Orders.Hub.Core.Orders.Domain.Entity;
-using BizPik.Orders.Hub.Core.Orders.Domain.Entity.Address;
-using BizPik.Orders.Hub.Core.Orders.Domain.Entity.Discount;
-using BizPik.Orders.Hub.Core.Orders.Domain.Entity.Item;
-using BizPik.Orders.Hub.Core.Orders.Domain.Entity.Merchant;
-using BizPik.Orders.Hub.Core.Orders.Domain.Entity.Payment;
-using BizPik.Orders.Hub.Core.Orders.Domain.ValueObjects.DTOs;
-using BizPik.Orders.Hub.Core.Orders.Domain.ValueObjects.Enums;
+﻿using BizPik.Orders.Hub.Core.Domain.Entity;
+using BizPik.Orders.Hub.Core.Domain.Entity.Address;
+using BizPik.Orders.Hub.Core.Domain.Entity.Discount;
+using BizPik.Orders.Hub.Core.Domain.Entity.Item;
+using BizPik.Orders.Hub.Core.Domain.Entity.Merchant;
+using BizPik.Orders.Hub.Core.Domain.Entity.Payment;
+using BizPik.Orders.Hub.Core.Domain.ValueObjects.DTOs;
+using BizPik.Orders.Hub.Core.Domain.ValueObjects.Enums;
 using BizPik.Orders.Hub.Integrations.Rappi.Domain.Entity;
 using BizPik.Orders.Hub.Integrations.Rappi.Domain.ValueObjects.DTOs.Request;
 using BizPik.Orders.Hub.Integrations.Rappi.Domain.ValueObjects.Enums;
 
-using OrderPayment = BizPik.Orders.Hub.Core.Orders.Domain.Entity.Payment.OrderPayment;
-using OrderTotal = BizPik.Orders.Hub.Core.Orders.Domain.Entity.OrderTotal;
+using OrderPayment = BizPik.Orders.Hub.Core.Domain.Entity.Payment.OrderPayment;
+using OrderTotal = BizPik.Orders.Hub.Core.Domain.Entity.OrderTotal;
 
 namespace BizPik.Orders.Hub.Integrations.Rappi.Application.Extensions;
 

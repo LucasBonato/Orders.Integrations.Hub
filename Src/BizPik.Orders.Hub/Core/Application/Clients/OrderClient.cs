@@ -1,8 +1,8 @@
-﻿using BizPik.Orders.Hub.Core.Orders.Domain.Contracts;
-using BizPik.Orders.Hub.Core.Orders.Domain.Entity;
-using BizPik.Orders.Hub.Core.Orders.Domain.ValueObjects.DTOs;
+﻿using BizPik.Orders.Hub.Core.Domain.Contracts;
+using BizPik.Orders.Hub.Core.Domain.Entity;
+using BizPik.Orders.Hub.Core.Domain.ValueObjects.DTOs;
 
-namespace BizPik.Orders.Hub.Core.Orders.Application.Clients;
+namespace BizPik.Orders.Hub.Core.Application.Clients;
 
 public class OrderClient(
     ILogger<OrderClient> logger,

@@ -1,14 +1,14 @@
-﻿using BizPik.Orders.Hub.Core.Orders.Application.Extensions;
-using BizPik.Orders.Hub.Core.Orders.Domain.Contracts.UseCases;
-using BizPik.Orders.Hub.Core.Orders.Domain.ValueObjects.DTOs.BizPik;
-using BizPik.Orders.Hub.Core.Orders.Domain.ValueObjects.DTOs.Request;
-using BizPik.Orders.Hub.Core.Orders.Domain.ValueObjects.Enums;
+﻿using BizPik.Orders.Hub.Core.Application.Extensions;
+using BizPik.Orders.Hub.Core.Domain.Contracts.UseCases;
+using BizPik.Orders.Hub.Core.Domain.ValueObjects.DTOs.BizPik;
+using BizPik.Orders.Hub.Core.Domain.ValueObjects.DTOs.Request;
+using BizPik.Orders.Hub.Core.Domain.ValueObjects.Enums;
 
 using Microsoft.AspNetCore.Mvc;
 
 using static Microsoft.AspNetCore.Http.Results;
 
-namespace BizPik.Orders.Hub.Core.Orders.Adapter;
+namespace BizPik.Orders.Hub.Core.Adapter;
 
 public abstract class OrdersHubAdapterLog;
 

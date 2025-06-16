@@ -1,8 +1,8 @@
-﻿using BizPik.Orders.Hub.Core.Orders.Application.Exceptions;
+﻿using BizPik.Orders.Hub.Core.Application.Exceptions;
 
 using Microsoft.AspNetCore.Mvc;
 
-namespace BizPik.Orders.Hub.Core.Orders.Application.Middlewares.Handlers;
+namespace BizPik.Orders.Hub.Core.Application.Middlewares.Handlers;
 
 public static class EnvironmentVariableNotFoundExceptionHandler
 {

@@ -1,8 +1,8 @@
 ﻿using System.Text.Json.Serialization;
 
-using BizPik.Orders.Hub.Core.Orders.Domain.ValueObjects.Enums;
+using BizPik.Orders.Hub.Core.Domain.ValueObjects.Enums;
 
-namespace BizPik.Orders.Hub.Core.Orders.Domain.Entity.Item;
+namespace BizPik.Orders.Hub.Core.Domain.Entity.Item;
 
 public record OrderItemOption(
     [property: JsonPropertyName("id")] string Id,

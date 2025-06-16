@@ -1,3 +1,3 @@
-﻿namespace BizPik.Orders.Hub.Core.Orders.Domain.Contracts;
+﻿namespace BizPik.Orders.Hub.Core.Domain.Contracts;
 
 public interface IOrderHttp;

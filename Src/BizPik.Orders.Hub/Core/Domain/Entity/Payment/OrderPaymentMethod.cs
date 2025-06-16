@@ -1,8 +1,8 @@
 ﻿using System.Text.Json.Serialization;
 
-using BizPik.Orders.Hub.Core.Orders.Domain.ValueObjects.Enums;
+using BizPik.Orders.Hub.Core.Domain.ValueObjects.Enums;
 
-namespace BizPik.Orders.Hub.Core.Orders.Domain.Entity.Payment;
+namespace BizPik.Orders.Hub.Core.Domain.Entity.Payment;
 
 public record OrderPaymentMethod(
     [property: JsonPropertyName("value")] decimal Value,

@@ -1,8 +1,8 @@
 ﻿using Anv;
 
-using BizPik.Orders.Hub.Core.Orders.Application.Exceptions;
+using BizPik.Orders.Hub.Core.Application.Exceptions;
 
-namespace BizPik.Orders.Hub.Core.Orders.Application.Extensions;
+namespace BizPik.Orders.Hub.Core.Application.Extensions;
 
 public static class ExceptionsExtensions {
     public static string NotNullEnv(this AnvEnv env) {

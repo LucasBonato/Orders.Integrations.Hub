@@ -1,4 +1,4 @@
-﻿using BizPik.Orders.Hub.Core.Orders.Application.Extensions;
+﻿using BizPik.Orders.Hub.Core.Application.Extensions;
 using BizPik.Orders.Hub.Integrations.Rappi.Application.Clients;
 using BizPik.Orders.Hub.Integrations.Rappi.Domain.ValueObjects.DTOs.Request;
 using BizPik.Orders.Hub.Integrations.Rappi.Domain.ValueObjects.DTOs.Response;

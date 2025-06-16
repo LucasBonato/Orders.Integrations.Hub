@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 
 using BizPik.Orders.Hub.Integrations.Ifood.Domain.ValueObjects.Enums.Handshake;
 
-namespace BizPik.Orders.Hub.Core.Orders.Domain.Entity.Dispute;
+namespace BizPik.Orders.Hub.Core.Domain.Entity.Dispute;
 
 public record DisputeAlternative(
     [property: JsonPropertyName("alternativeId")] string AlternativeId,

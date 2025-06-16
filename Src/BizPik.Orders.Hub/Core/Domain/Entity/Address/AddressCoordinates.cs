@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace BizPik.Orders.Hub.Core.Orders.Domain.Entity.Address;
+namespace BizPik.Orders.Hub.Core.Domain.Entity.Address;
 
 public record AddressCoordinates(
     [property: JsonPropertyName("latitude")] decimal Latitude,

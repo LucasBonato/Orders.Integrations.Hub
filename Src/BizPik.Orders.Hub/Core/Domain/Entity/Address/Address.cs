@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace BizPik.Orders.Hub.Core.Orders.Domain.Entity.Address;
+namespace BizPik.Orders.Hub.Core.Domain.Entity.Address;
 
 public record Address(
     [property: JsonPropertyName("country")] string Country,

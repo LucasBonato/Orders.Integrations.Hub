@@ -1,13 +1,13 @@
 ﻿using System.Text.Json.Serialization;
 
-using BizPik.Orders.Hub.Core.Orders.Domain.Entity.Discount;
-using BizPik.Orders.Hub.Core.Orders.Domain.Entity.Dispute;
-using BizPik.Orders.Hub.Core.Orders.Domain.Entity.Item;
-using BizPik.Orders.Hub.Core.Orders.Domain.Entity.Merchant;
-using BizPik.Orders.Hub.Core.Orders.Domain.Entity.Payment;
-using BizPik.Orders.Hub.Core.Orders.Domain.ValueObjects.Enums;
+using BizPik.Orders.Hub.Core.Domain.Entity.Discount;
+using BizPik.Orders.Hub.Core.Domain.Entity.Dispute;
+using BizPik.Orders.Hub.Core.Domain.Entity.Item;
+using BizPik.Orders.Hub.Core.Domain.Entity.Merchant;
+using BizPik.Orders.Hub.Core.Domain.Entity.Payment;
+using BizPik.Orders.Hub.Core.Domain.ValueObjects.Enums;
 
-namespace BizPik.Orders.Hub.Core.Orders.Domain.Entity;
+namespace BizPik.Orders.Hub.Core.Domain.Entity;
 
 public record Order(
     [property: JsonPropertyName("orderId")]                     string OrderId,

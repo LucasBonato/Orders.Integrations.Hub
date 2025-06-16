@@ -1,9 +1,9 @@
 ﻿using System.Text.Json.Serialization;
 
-using BizPik.Orders.Hub.Core.Orders.Domain.Entity.Dispute;
-using BizPik.Orders.Hub.Core.Orders.Domain.ValueObjects.Enums;
+using BizPik.Orders.Hub.Core.Domain.Entity.Dispute;
+using BizPik.Orders.Hub.Core.Domain.ValueObjects.Enums;
 
-namespace BizPik.Orders.Hub.Core.Orders.Domain.ValueObjects.DTOs;
+namespace BizPik.Orders.Hub.Core.Domain.ValueObjects.DTOs;
 
 public record OrderUpdate(
     [property: JsonPropertyName("orderId")] string OrderId,

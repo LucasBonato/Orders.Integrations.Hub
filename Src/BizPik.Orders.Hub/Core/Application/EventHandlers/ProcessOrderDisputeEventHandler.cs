@@ -1,9 +1,9 @@
-﻿using BizPik.Orders.Hub.Core.Orders.Domain.Contracts.UseCases;
-using BizPik.Orders.Hub.Core.Orders.Domain.ValueObjects.Events;
+﻿using BizPik.Orders.Hub.Core.Domain.Contracts.UseCases;
+using BizPik.Orders.Hub.Core.Domain.ValueObjects.Events;
 
 using FastEndpoints;
 
-namespace BizPik.Orders.Hub.Core.Orders.Application.EventHandlers;
+namespace BizPik.Orders.Hub.Core.Application.EventHandlers;
 
 public class ProcessOrderDisputeEventHandler(
     IServiceScopeFactory serviceScopeFactory

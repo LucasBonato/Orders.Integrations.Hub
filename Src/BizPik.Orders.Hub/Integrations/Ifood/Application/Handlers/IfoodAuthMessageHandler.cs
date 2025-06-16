@@ -1,4 +1,4 @@
-﻿using BizPik.Orders.Hub.Core.Orders.Application.Extensions;
+﻿using BizPik.Orders.Hub.Core.Application.Extensions;
 using BizPik.Orders.Hub.Integrations.Ifood.Application.Clients;
 using BizPik.Orders.Hub.Integrations.Ifood.Domain.ValueObjects.DTOs.Request;
 using BizPik.Orders.Hub.Integrations.Ifood.Domain.ValueObjects.DTOs.Response;

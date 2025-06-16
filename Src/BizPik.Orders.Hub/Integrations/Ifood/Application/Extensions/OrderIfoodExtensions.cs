@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 
-using BizPik.Orders.Hub.Core.Orders.Domain.Entity;
+using BizPik.Orders.Hub.Core.Domain.Entity;
 using BizPik.Orders.Hub.Integrations.Ifood.Domain.Entity.Handshake;
 
 namespace BizPik.Orders.Hub.Integrations.Ifood.Application.Extensions;

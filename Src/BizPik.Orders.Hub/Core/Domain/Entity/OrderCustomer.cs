@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace BizPik.Orders.Hub.Core.Orders.Domain.Entity;
+namespace BizPik.Orders.Hub.Core.Domain.Entity;
 
 public record OrderCustomer(
     [property: JsonPropertyName("id")] string Id,

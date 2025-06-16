@@ -1,4 +1,4 @@
-﻿namespace BizPik.Orders.Hub.Core.Orders.Domain.Contracts.UseCases;
+﻿namespace BizPik.Orders.Hub.Core.Domain.Contracts.UseCases;
 
 public interface IOrderCreateUseCase<TOrder>
 {

@@ -1,7 +1,7 @@
 ﻿using System.Text.Encodings.Web;
 using System.Text.Json;
 
-namespace BizPik.Orders.Hub.Core.Orders.Application.Extensions;
+namespace BizPik.Orders.Hub.Core.Application.Extensions;
 
 public static class LoggerExtensions
 {

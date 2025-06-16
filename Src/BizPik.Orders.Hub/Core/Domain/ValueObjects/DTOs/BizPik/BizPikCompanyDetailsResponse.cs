@@ -2,7 +2,7 @@
 
 using Newtonsoft.Json;
 
-namespace BizPik.Orders.Hub.Core.Orders.Domain.ValueObjects.DTOs.BizPik;
+namespace BizPik.Orders.Hub.Core.Domain.ValueObjects.DTOs.BizPik;
 
 public record BizPikCompanyDetailsResponse(
     [property: JsonProperty("id")]

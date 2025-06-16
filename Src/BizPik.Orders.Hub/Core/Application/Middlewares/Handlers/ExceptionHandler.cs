@@ -2,7 +2,7 @@
 
 using Microsoft.AspNetCore.Mvc;
 
-namespace BizPik.Orders.Hub.Core.Orders.Application.Middlewares.Handlers;
+namespace BizPik.Orders.Hub.Core.Application.Middlewares.Handlers;
 
 public static class ExceptionHandler {
     public static ProblemDetails HandleException(this Exception exception) {

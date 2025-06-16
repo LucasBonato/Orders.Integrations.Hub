@@ -1,8 +1,8 @@
-﻿using BizPik.Orders.Hub.Core.Orders.Domain.Entity;
-using BizPik.Orders.Hub.Core.Orders.Domain.Entity.Dispute;
+﻿using BizPik.Orders.Hub.Core.Domain.Entity;
+using BizPik.Orders.Hub.Core.Domain.Entity.Dispute;
 using BizPik.Orders.Hub.Integrations.Ifood.Domain.Entity.Handshake;
 
-using DisputeAlternative = BizPik.Orders.Hub.Core.Orders.Domain.Entity.Dispute.DisputeAlternative;
+using DisputeAlternative = BizPik.Orders.Hub.Core.Domain.Entity.Dispute.DisputeAlternative;
 
 namespace BizPik.Orders.Hub.Integrations.Ifood.Application.Extensions;
 

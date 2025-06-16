@@ -1,4 +1,4 @@
-﻿namespace BizPik.Orders.Hub.Core.Orders.Domain.ValueObjects.Enums;
+﻿namespace BizPik.Orders.Hub.Core.Domain.ValueObjects.Enums;
 
 public enum OrderPriority
 {
