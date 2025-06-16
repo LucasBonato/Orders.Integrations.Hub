@@ -1,4 +1,5 @@
-﻿using Amazon.S3;
+﻿using Amazon;
+using Amazon.S3;
 using Amazon.S3.Model;
 using Amazon.S3.Transfer;
 
@@ -38,14 +39,43 @@ public class SimpleStorageServiceClient(
         await s3Client.DeleteObjectAsync(BUCKET_NAME, key);
     }
 
+    public async Task DeleteFolder(string pathKey)
+    {
+        ListObjectsV2Request listDeleteRequest = new() {
+            BucketName = BUCKET_NAME,
+            Prefix = pathKey.EndsWith('/') ? pathKey : pathKey + "/",
+        };
+
+        ListObjectsV2Response response;
+
+        do
+        {
+            response = await s3Client.ListObjectsV2Async(listDeleteRequest);
+
+            if (response.S3Objects.Count > 0)
+            {
+                DeleteObjectsRequest deleteObjectsRequest = new() {
+                    BucketName = BUCKET_NAME,
+                    Objects = response.S3Objects.Select(s3Object => new KeyVersion() { Key = s3Object.Key}).ToList()
+                };
+
+                await s3Client.DeleteObjectsAsync(deleteObjectsRequest);
+            }
+
+            listDeleteRequest.ContinuationToken = response.NextContinuationToken;
+        } while (response.IsTruncated);
+    }
+
     private string GetSignedUrl(string key)
     {
         GetPreSignedUrlRequest request = new() {
             BucketName = BUCKET_NAME,
             Key = key,
             Expires = DateTime.Now.AddMinutes(30),
-            Verb = HttpVerb.GET
+            Verb = HttpVerb.GET,
         };
+
+        AWSConfigsS3.UseSignatureVersion4 = true;
 
         return s3Client.GetPreSignedURL(request);
     }
