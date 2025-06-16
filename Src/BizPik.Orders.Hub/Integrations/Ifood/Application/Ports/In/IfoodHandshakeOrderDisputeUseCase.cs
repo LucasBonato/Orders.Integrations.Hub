@@ -31,6 +31,10 @@ public class IfoodHandshakeOrderDisputeUseCase(
 
         if (type == OrderEventType.DISPUTE_STARTED) {
             dispute = JsonSerializer.Deserialize<HandshakeDispute>(json);
+
+            if (dispute?.Metadata?.Evidences is not null) {
+                dispute.Metadata.Evidences = await UploadEvidencesToObjectStorage(ifoodOrder.OrderId, dispute);
+            }
         }
         else {
             HandshakeSettlement? settlement = JsonSerializer.Deserialize<HandshakeSettlement>(json);
@@ -60,15 +64,13 @@ public class IfoodHandshakeOrderDisputeUseCase(
                     HandshakeGroup: default,
                     Metadata: null
                 );
+
+                await objectStorageClient.DeleteFolder(GenerateKeyUrlPath(ifoodOrder.OrderId, dispute.DisputeId));
             }
         }
 
         if (dispute is null)
             throw new Exception("Não foi possível converter disputa!");
-
-        if (dispute.Metadata?.Evidences is not null) {
-            dispute.Metadata.Evidences = await UploadEvidencesToObjectStorage(ifoodOrder.OrderId, dispute);
-        }
 
         await new ProcessOrderDisputeEvent(
             ExternalOrderId: ifoodOrder.OrderId,
@@ -101,8 +103,12 @@ public class IfoodHandshakeOrderDisputeUseCase(
         return tasks is null ? [] : (await Task.WhenAll(tasks)).ToList();
     }
 
+    private static string GenerateKeyUrlPath(string orderId, string disputeId) {
+        return $"dispute/{orderId}/{disputeId}";
+    }
+
     private static string GenerateKeyUrlFile(string orderId, string disputeId, string fileName)
     {
-        return $"dispute/{orderId}/{disputeId}/{Guid.CreateVersion7()}_{fileName}";
+        return $"{GenerateKeyUrlPath(orderId, disputeId)}/{Guid.CreateVersion7()}_{fileName}";
     }
 }
