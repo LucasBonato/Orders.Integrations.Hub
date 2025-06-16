@@ -1,4 +1,5 @@
 ﻿using BizPik.Orders.Hub.Core.Domain.ValueObjects.DTOs.Request;
+using BizPik.Orders.Hub.Integrations.Common;
 using BizPik.Orders.Hub.Integrations.Common.Contracts;
 using BizPik.Orders.Hub.Integrations.Ifood.Domain.Entity.Order;
 using BizPik.Orders.Hub.Integrations.Ifood.Domain.Entity.Order.MerchantDetails;
@@ -9,6 +10,7 @@ namespace BizPik.Orders.Hub.Integrations.Ifood.Domain.Contracts;
 
 public interface IIFoodClient : IIntegrationClient
 {
+    Task<DownloadFile> GetDisputeImage(string uri);
     Task<IfoodOrder> GetOrderDetails(string orderId);
     Task<IfoodMerchant> GetMerchantDetails(string merchantId);
     Task<IReadOnlyList<IfoodCancellationReasonResponse>> GetCancellationReasons(string orderId);

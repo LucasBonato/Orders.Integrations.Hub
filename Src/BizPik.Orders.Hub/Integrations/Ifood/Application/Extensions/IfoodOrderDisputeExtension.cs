@@ -78,7 +78,6 @@ public static class IfoodOrderDisputeExtension
         );
     }
 
-
     private static Price ToPrice(this Amount amount)
     {
         // Ifood send the value as string without the `,` or `.`, like `1500` is 15.00

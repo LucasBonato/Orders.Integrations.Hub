@@ -1,8 +1,11 @@
 ﻿using System.Text.Json;
 
+using BizPik.Orders.Hub.Core.Domain.Contracts;
 using BizPik.Orders.Hub.Core.Domain.Contracts.UseCases;
 using BizPik.Orders.Hub.Core.Domain.ValueObjects.Enums;
 using BizPik.Orders.Hub.Core.Domain.ValueObjects.Events;
+using BizPik.Orders.Hub.Integrations.Common;
+using BizPik.Orders.Hub.Integrations.Ifood.Application.Clients;
 using BizPik.Orders.Hub.Integrations.Ifood.Application.Extensions;
 using BizPik.Orders.Hub.Integrations.Ifood.Domain.Entity.Handshake;
 using BizPik.Orders.Hub.Integrations.Ifood.Domain.ValueObjects.DTOs.Request;
@@ -12,8 +15,10 @@ using FastEndpoints;
 
 namespace BizPik.Orders.Hub.Integrations.Ifood.Application.Ports.In;
 
-public class IfoodHandshakeOrderDisputeUseCase : IOrderDisputeUseCase<IfoodWebhookRequest>
-{
+public class IfoodHandshakeOrderDisputeUseCase(
+    IObjectStorageClient objectStorageClient,
+    IfoodClient ifoodClient
+) : IOrderDisputeUseCase<IfoodWebhookRequest> {
     public async Task<IfoodWebhookRequest> ExecuteAsync(IfoodWebhookRequest ifoodOrder)
     {
         OrderEventType type = ifoodOrder.FullCode is IfoodFullOrderStatus.HANDSHAKE_DISPUTE
@@ -61,6 +66,10 @@ public class IfoodHandshakeOrderDisputeUseCase : IOrderDisputeUseCase<IfoodWebho
         if (dispute is null)
             throw new Exception("Não foi possível converter disputa!");
 
+        if (dispute.Metadata?.Evidences is not null) {
+            dispute.Metadata.Evidences = await UploadEvidencesToObjectStorage(ifoodOrder.OrderId, dispute);
+        }
+
         await new ProcessOrderDisputeEvent(
             ExternalOrderId: ifoodOrder.OrderId,
             Integration: OrderIntegration.IFOOD,
@@ -69,5 +78,31 @@ public class IfoodHandshakeOrderDisputeUseCase : IOrderDisputeUseCase<IfoodWebho
         ).PublishAsync();
 
         return ifoodOrder;
+    }
+
+    private async Task<List<Media>> UploadEvidencesToObjectStorage(string orderId, HandshakeDispute dispute) {
+        List<Task<Media>>? tasks = dispute.Metadata?.Evidences?.Select(
+            async evidence => {
+                string imageId = evidence.Url.Split('/').Last();
+                DownloadFile file = await ifoodClient.GetDisputeImage(evidence.Url);
+
+                string keyPath = GenerateKeyUrlFile(orderId, dispute.DisputeId, imageId);
+
+                await using Stream fileStream = new MemoryStream(file.Bytes);
+                string fileUrl = await objectStorageClient.UploadFile(fileStream, file.ContentType, keyPath);
+
+                return new Media(
+                    Url: fileUrl,
+                    ContentType: file.ContentType
+                );
+            }
+        ).ToList();
+
+        return tasks is null ? [] : (await Task.WhenAll(tasks)).ToList();
+    }
+
+    private static string GenerateKeyUrlFile(string orderId, string disputeId, string fileName)
+    {
+        return $"dispute/{orderId}/{disputeId}/{Guid.CreateVersion7()}_{fileName}";
     }
 }

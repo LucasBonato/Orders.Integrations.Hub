@@ -4,9 +4,20 @@ using BizPik.Orders.Hub.Integrations.Ifood.Domain.ValueObjects.Enums.Handshake;
 
 namespace BizPik.Orders.Hub.Integrations.Ifood.Domain.Entity.Handshake;
 
-public record HandshakeMetadata(
-    [property: JsonPropertyName("item")] List<Item>? Items,
-    [property: JsonPropertyName("garnishItems")] List<GarnishItem>? GarnishItems,
-    [property: JsonPropertyName("evidences")] List<Media>? Evidences,
-    [property: JsonPropertyName("acceptCancellationReasons")] List<string>? AcceptCancellationReasons
-);
+public class HandshakeMetadata(
+    List<Item>? Items,
+    List<GarnishItem>? GarnishItems,
+    List<Media>? Evidences,
+    List<string>? AcceptCancellationReasons
+) {
+    [JsonPropertyName("item")] public List<Item>? Items { get; init; } = Items;
+
+    [JsonPropertyName("garnishItems")]
+    public List<GarnishItem>? GarnishItems { get; init; } = GarnishItems;
+
+    [JsonPropertyName("evidences")]
+    public List<Media>? Evidences { get; set; } = Evidences;
+
+    [JsonPropertyName("acceptCancellationReasons")]
+    public List<string>? AcceptCancellationReasons { get; init; } = AcceptCancellationReasons;
+}
