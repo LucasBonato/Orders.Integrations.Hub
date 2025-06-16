@@ -6,7 +6,7 @@ using Orders.Integrations.Hub.Integrations.Ifood.Domain.Contracts;
 using Orders.Integrations.Hub.Integrations.Ifood.Domain.ValueObjects.DTOs.Request;
 using Orders.Integrations.Hub.Integrations.Ifood.Domain.ValueObjects.Enums.Handshake;
 
-namespace Orders.Integrations.Hub.Integrations.Ifood.Application.Ports;
+namespace Orders.Integrations.Hub.Integrations.Ifood.Application.Ports.Out;
 
 public class IfoodHandshakeOrderDisputeRespondUseCase(
     IIFoodClient ifoodClient

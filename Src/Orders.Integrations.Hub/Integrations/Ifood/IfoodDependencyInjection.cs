@@ -2,14 +2,14 @@
 using System.Text.Json.Serialization;
 
 using Orders.Integrations.Hub.Core.Application.Extensions;
-using Orders.Integrations.Hub.Core.Application.Middlewares;
 using Orders.Integrations.Hub.Core.Domain.Contracts;
 using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases;
 using Orders.Integrations.Hub.Core.Domain.ValueObjects.Enums;
 using Orders.Integrations.Hub.Integrations.Common;
 using Orders.Integrations.Hub.Integrations.Ifood.Application.Clients;
 using Orders.Integrations.Hub.Integrations.Ifood.Application.Handlers;
-using Orders.Integrations.Hub.Integrations.Ifood.Application.Ports;
+using Orders.Integrations.Hub.Integrations.Ifood.Application.Ports.In;
+using Orders.Integrations.Hub.Integrations.Ifood.Application.Ports.Out;
 using Orders.Integrations.Hub.Integrations.Ifood.Domain.Contracts;
 using Orders.Integrations.Hub.Integrations.Ifood.Domain.ValueObjects.DTOs.Request;
 

@@ -6,7 +6,7 @@ using Orders.Integrations.Hub.Integrations.Ifood.Domain.ValueObjects.DTOs.Reques
 
 using FastEndpoints;
 
-namespace Orders.Integrations.Hub.Integrations.Ifood.Application.Ports;
+namespace Orders.Integrations.Hub.Integrations.Ifood.Application.Ports.In;
 
 public class IfoodOrderUpdateUseCase : IOrderUpdateUseCase<IfoodWebhookRequest>
 {

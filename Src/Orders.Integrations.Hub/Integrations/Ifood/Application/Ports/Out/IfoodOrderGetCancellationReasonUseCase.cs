@@ -3,7 +3,7 @@ using Orders.Integrations.Hub.Core.Domain.ValueObjects.DTOs.Response;
 using Orders.Integrations.Hub.Integrations.Ifood.Domain.Contracts;
 using Orders.Integrations.Hub.Integrations.Ifood.Domain.ValueObjects.Enums;
 
-namespace Orders.Integrations.Hub.Integrations.Ifood.Application.Ports;
+namespace Orders.Integrations.Hub.Integrations.Ifood.Application.Ports.Out;
 
 public class IfoodOrderGetCancellationReasonUseCase(
     IIFoodClient iFoodClient

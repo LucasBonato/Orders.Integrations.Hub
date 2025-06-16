@@ -3,7 +3,7 @@ using Orders.Integrations.Hub.Core.Domain.ValueObjects.DTOs.;
 using Orders.Integrations.Hub.Integrations.Ifood.Domain.Contracts;
 using Orders.Integrations.Hub.Integrations.Ifood.Domain.ValueObjects.DTOs.Request;
 
-namespace Orders.Integrations.Hub.Integrations.Ifood.Application.Ports;
+namespace Orders.Integrations.Hub.Integrations.Ifood.Application.Ports.Out;
 
 public class IfoodOrderChangeProductStatusUseCase(
     IIFoodClient ifoodClient
