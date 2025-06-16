@@ -1,6 +1,5 @@
 ﻿using BizPik.Orders.Hub.Core.Domain.Contracts.UseCases;
 using BizPik.Orders.Hub.Core.Domain.ValueObjects.DTOs.BizPik;
-using BizPik.Orders.Hub.Core.Domain.ValueObjects.Enums;
 using BizPik.Orders.Hub.Integrations.Ifood.Domain.Contracts;
 using BizPik.Orders.Hub.Integrations.Ifood.Domain.ValueObjects.DTOs.Request;
 
@@ -9,8 +8,6 @@ namespace BizPik.Orders.Hub.Integrations.Ifood.Application.Ports;
 public class IfoodOrderChangeProductStatusUseCase(
     IIFoodClient ifoodClient
 ) : IOrderChangeProductStatusUseCase {
-    public OrderIntegration Integration => OrderIntegration.IFOOD;
-
     public async Task Enable(BizPikSNSProductEvent productEvent)
     {
         foreach (var payload in productEvent.ProductSkus.Select(sku => IfoodPatchProductStatusRequest.Enable(itemId: sku, statusByCatalog: []))) {
