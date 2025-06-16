@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using System.Text.Json.Serialization;
 
 using Amazon;
 using Amazon.Runtime;
@@ -15,6 +16,8 @@ using BizPik.Orders.Hub.Core.Domain.Contracts;
 using BizPik.Orders.Hub.Core.Domain.Contracts.UseCases;
 
 using FastEndpoints;
+
+using Microsoft.AspNetCore.Mvc;
 
 using OpenTelemetry;
 using OpenTelemetry.Resources;
@@ -47,8 +50,17 @@ public static class CoreDependencyInjection
         services.AddTransient<IAmazonSimpleNotificationService>(_ => SimplesNotificationServiceConfiguration());
         services.AddScoped<IOrderUseCase, OrderUseCase>();
         services.AddScoped<IOrderDisputeUpdateUseCase, OrderDisputeUpdateUseCase>();
+
         services.AddFastEndpoints(options => {
             options.DisableAutoDiscovery = false;
+        });
+
+        services.AddSingleton<ICustomJsonSerializer, CoreJsonSerializer>();
+        services.Configure<JsonOptions>(options => {
+            options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+            options.JsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
+            options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+            options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.SnakeCaseUpper));
         });
         return services;
     }

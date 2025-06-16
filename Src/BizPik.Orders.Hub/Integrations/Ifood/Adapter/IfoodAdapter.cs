@@ -1,7 +1,7 @@
 ﻿using System.Text;
 
-using BizPik.Orders.Hub.Core.Orders.Application.Extensions;
-using BizPik.Orders.Hub.Core.Orders.Domain.Contracts.UseCases;
+using BizPik.Orders.Hub.Core.Application.Extensions;
+using BizPik.Orders.Hub.Core.Domain.Contracts.UseCases;
 using BizPik.Orders.Hub.Integrations.Common.Validators;
 using BizPik.Orders.Hub.Integrations.Ifood.Domain.ValueObjects.DTOs.Request;
 using BizPik.Orders.Hub.Integrations.Ifood.Domain.ValueObjects.Enums;
