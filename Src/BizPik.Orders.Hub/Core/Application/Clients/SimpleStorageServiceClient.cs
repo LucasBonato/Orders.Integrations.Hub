@@ -12,16 +12,14 @@ public class SimpleStorageServiceClient(
 ) : IObjectStorageClient {
     private readonly string BUCKET_NAME = AppEnv.OBJECT_STORAGE.BUCKET.NAME.NotNull();
 
-    public async Task<string> UploadFile(IFormFile file, string key)
+    public async Task<string> UploadFile(Stream file, string contentType, string key)
     {
         TransferUtility fileTransferUtility = new(s3Client);
 
-        Stream streamFile = file.OpenReadStream();
-
         TransferUtilityUploadRequest request = new() {
             BucketName = BUCKET_NAME,
-            InputStream = streamFile,
-            ContentType = file.ContentType,
+            InputStream = file,
+            ContentType = contentType,
             StorageClass = S3StorageClass.Standard,
             Key = key,
             Headers = {
