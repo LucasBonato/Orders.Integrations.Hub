@@ -8,7 +8,7 @@ using Orders.Integrations.Hub.Integrations.Rappi.Domain.Entity;
 
 using FastEndpoints;
 
-namespace Orders.Integrations.Hub.Integrations.Rappi.Application.Ports;
+namespace Orders.Integrations.Hub.Integrations.Rappi.Application.Ports.In;
 
 public class RappiOrderCreateUseCase(
     IInternalClient Client

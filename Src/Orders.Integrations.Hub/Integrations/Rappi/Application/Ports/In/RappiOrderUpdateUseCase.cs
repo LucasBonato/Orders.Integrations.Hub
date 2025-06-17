@@ -6,7 +6,7 @@ using Orders.Integrations.Hub.Integrations.Rappi.Domain.ValueObjects.DTOs.Reques
 
 using FastEndpoints;
 
-namespace Orders.Integrations.Hub.Integrations.Rappi.Application.Ports;
+namespace Orders.Integrations.Hub.Integrations.Rappi.Application.Ports.In;
 
 public class RappiOrderUpdateUseCase : IOrderUpdateUseCase<RappiWebhookEventOrderRequest> {
     public async Task<RappiWebhookEventOrderRequest> ExecuteAsync(RappiWebhookEventOrderRequest requestOrder)

@@ -5,7 +5,7 @@ using Orders.Integrations.Hub.Integrations.Rappi.Domain.Contracts;
 using Orders.Integrations.Hub.Integrations.Rappi.Domain.ValueObjects.DTOs.Request;
 using Orders.Integrations.Hub.Integrations.Rappi.Domain.ValueObjects.Enums;
 
-namespace Orders.Integrations.Hub.Integrations.Rappi.Application.Ports;
+namespace Orders.Integrations.Hub.Integrations.Rappi.Application.Ports.Out;
 
 public class RappiOrderChangeStatusUseCase(
     ILogger<RappiOrderChangeStatusUseCase> logger,

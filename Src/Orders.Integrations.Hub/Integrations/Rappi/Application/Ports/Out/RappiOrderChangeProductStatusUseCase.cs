@@ -1,20 +1,17 @@
 ﻿using Orders.Integrations.Hub.Core.Domain.Contracts;
 using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases;
 using Orders.Integrations.Hub.Core.Domain.ValueObjects.DTOs.;
-using Orders.Integrations.Hub.Core.Domain.ValueObjects.Enums;
 using Orders.Integrations.Hub.Integrations.Rappi.Application.Extensions;
 using Orders.Integrations.Hub.Integrations.Rappi.Domain.Contracts;
 using Orders.Integrations.Hub.Integrations.Rappi.Domain.ValueObjects.DTOs;
 using Orders.Integrations.Hub.Integrations.Rappi.Domain.ValueObjects.DTOs.Request;
 
-namespace Orders.Integrations.Hub.Integrations.Rappi.Application.Ports;
+namespace Orders.Integrations.Hub.Integrations.Rappi.Application.Ports.Out;
 
 public class RappiOrderChangeProductStatusUseCase(
     IRappiClient rappiClient,
     IInternalClient Client
 ) : IOrderChangeProductStatusUseCase {
-    public OrderIntegration Integration => OrderIntegration.RAPPI;
-    
     public async Task Enable(SNSProductEvent productEvent)
     {
         ResponseWrapper<List<IntegrationResponse>> response = await Client.GetIntegrationByCompanyId(productEvent.CompanyId.ToString());
@@ -38,12 +35,6 @@ public class RappiOrderChangeProductStatusUseCase(
             .ToArray();
 
         Task.WaitAll(requests);
-        return;
-
-        async Task MakeUpdateProductRequest(RappiAvailabilityUpdateItemsRequest request)
-        {
-            await rappiClient.PutAvailabilityProductsStatus([request]);
-        }
     }
 
     public async Task Disable(SNSProductEvent productEvent)
@@ -69,11 +60,10 @@ public class RappiOrderChangeProductStatusUseCase(
             .ToArray();
 
         Task.WaitAll(requests);
-        return;
+    }
 
-        async Task MakeUpdateProductRequest(RappiAvailabilityUpdateItemsRequest request)
-        {
-            await rappiClient.PutAvailabilityProductsStatus([request]);
-        }
+    private async Task MakeUpdateProductRequest(RappiAvailabilityUpdateItemsRequest request)
+    {
+        await rappiClient.PutAvailabilityProductsStatus([request]);
     }
 }
