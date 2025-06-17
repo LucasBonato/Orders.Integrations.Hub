@@ -9,8 +9,6 @@ terraform {
   }
 }
 
-resource "aws_instance" "aws_example" {
-  tags = {
-    Name = "ExampleInstance"
-  }
+module "s3" {
+  source = "../../modules/s3"
 }
