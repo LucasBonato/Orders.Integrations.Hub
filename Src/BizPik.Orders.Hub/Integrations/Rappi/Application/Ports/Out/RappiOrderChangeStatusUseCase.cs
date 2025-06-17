@@ -5,7 +5,7 @@ using BizPik.Orders.Hub.Integrations.Rappi.Domain.Contracts;
 using BizPik.Orders.Hub.Integrations.Rappi.Domain.ValueObjects.DTOs.Request;
 using BizPik.Orders.Hub.Integrations.Rappi.Domain.ValueObjects.Enums;
 
-namespace BizPik.Orders.Hub.Integrations.Rappi.Application.Ports;
+namespace BizPik.Orders.Hub.Integrations.Rappi.Application.Ports.Out;
 
 public class RappiOrderChangeStatusUseCase(
     ILogger<RappiOrderChangeStatusUseCase> logger,

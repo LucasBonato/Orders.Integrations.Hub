@@ -8,7 +8,7 @@ using BizPik.Orders.Hub.Integrations.Rappi.Domain.Entity;
 
 using FastEndpoints;
 
-namespace BizPik.Orders.Hub.Integrations.Rappi.Application.Ports;
+namespace BizPik.Orders.Hub.Integrations.Rappi.Application.Ports.In;
 
 public class RappiOrderCreateUseCase(
     IBizPikMonolithClient bizPikClient

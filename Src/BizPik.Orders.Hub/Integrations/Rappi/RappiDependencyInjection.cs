@@ -8,6 +8,8 @@ using BizPik.Orders.Hub.Core.Domain.ValueObjects.Enums;
 using BizPik.Orders.Hub.Integrations.Rappi.Application.Clients;
 using BizPik.Orders.Hub.Integrations.Rappi.Application.Handlers;
 using BizPik.Orders.Hub.Integrations.Rappi.Application.Ports;
+using BizPik.Orders.Hub.Integrations.Rappi.Application.Ports.In;
+using BizPik.Orders.Hub.Integrations.Rappi.Application.Ports.Out;
 using BizPik.Orders.Hub.Integrations.Rappi.Domain.Contracts;
 using BizPik.Orders.Hub.Integrations.Rappi.Domain.Entity;
 using BizPik.Orders.Hub.Integrations.Rappi.Domain.ValueObjects.DTOs.Request;

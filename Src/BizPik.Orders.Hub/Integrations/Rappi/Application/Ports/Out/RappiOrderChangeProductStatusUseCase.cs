@@ -1,20 +1,17 @@
 ﻿using BizPik.Orders.Hub.Core.Domain.Contracts;
 using BizPik.Orders.Hub.Core.Domain.Contracts.UseCases;
 using BizPik.Orders.Hub.Core.Domain.ValueObjects.DTOs.BizPik;
-using BizPik.Orders.Hub.Core.Domain.ValueObjects.Enums;
 using BizPik.Orders.Hub.Integrations.Rappi.Application.Extensions;
 using BizPik.Orders.Hub.Integrations.Rappi.Domain.Contracts;
 using BizPik.Orders.Hub.Integrations.Rappi.Domain.ValueObjects.DTOs;
 using BizPik.Orders.Hub.Integrations.Rappi.Domain.ValueObjects.DTOs.Request;
 
-namespace BizPik.Orders.Hub.Integrations.Rappi.Application.Ports;
+namespace BizPik.Orders.Hub.Integrations.Rappi.Application.Ports.Out;
 
 public class RappiOrderChangeProductStatusUseCase(
     IRappiClient rappiClient,
     IBizPikMonolithClient bizPikClient
 ) : IOrderChangeProductStatusUseCase {
-    public OrderIntegration Integration => OrderIntegration.RAPPI;
-    
     public async Task Enable(BizPikSNSProductEvent productEvent)
     {
         BizPikResponseWrapper<List<BizPikIntegrationResponse>> response = await bizPikClient.GetIntegrationByCompanyId(productEvent.CompanyId.ToString());
@@ -38,12 +35,6 @@ public class RappiOrderChangeProductStatusUseCase(
             .ToArray();
 
         Task.WaitAll(requests);
-        return;
-
-        async Task MakeUpdateProductRequest(RappiAvailabilityUpdateItemsRequest request)
-        {
-            await rappiClient.PutAvailabilityProductsStatus([request]);
-        }
     }
 
     public async Task Disable(BizPikSNSProductEvent productEvent)
@@ -69,11 +60,10 @@ public class RappiOrderChangeProductStatusUseCase(
             .ToArray();
 
         Task.WaitAll(requests);
-        return;
+    }
 
-        async Task MakeUpdateProductRequest(RappiAvailabilityUpdateItemsRequest request)
-        {
-            await rappiClient.PutAvailabilityProductsStatus([request]);
-        }
+    private async Task MakeUpdateProductRequest(RappiAvailabilityUpdateItemsRequest request)
+    {
+        await rappiClient.PutAvailabilityProductsStatus([request]);
     }
 }

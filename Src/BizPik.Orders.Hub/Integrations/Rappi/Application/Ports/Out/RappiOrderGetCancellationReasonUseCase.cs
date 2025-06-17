@@ -2,7 +2,7 @@
 using BizPik.Orders.Hub.Core.Domain.ValueObjects.DTOs.Response;
 using BizPik.Orders.Hub.Integrations.Rappi.Domain.ValueObjects.Enums;
 
-namespace BizPik.Orders.Hub.Integrations.Rappi.Application.Ports;
+namespace BizPik.Orders.Hub.Integrations.Rappi.Application.Ports.Out;
 
 public class RappiOrderGetCancellationReasonUseCase : IOrderGetCancellationReasonUseCase
 {
