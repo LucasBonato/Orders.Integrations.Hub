@@ -95,6 +95,7 @@ public static class RappiWebhookAdapter {
     /// </summary>
     /// <param name="context">The HttpContext of the request</param>
     /// <param name="logger">A logger</param>
+    /// <param name="serializer">A serializer with rappi configs</param>
     /// <returns>The Body of the request formatted as a RappiOrder</returns>
     private static async Task<TRequest> HandleSignature<TRequest>(
         HttpContext context,
