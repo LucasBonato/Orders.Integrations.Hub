@@ -47,6 +47,10 @@
         {
           "name": "INTEGRATIONS__RAPPI__ENDPOINT__AUTH",
           "value": "https://rests-integrations-dev.auth0.com/"
+        },
+        {
+          "name": "OBJECT_STORAGE__BUCKET__NAME",
+          "value": "bizpik-orders"
         }
       ],
       "environmentFiles": [],
