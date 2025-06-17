@@ -13,8 +13,8 @@ public static class AwsConfigurationExtensions
     private static string Region => AppEnv.AWS_REGION.GetDefault("us-east-1");
     private static bool IsLocalStack => AppEnv.LOCALSTACK.AWS.IS_LOCALSTACK.GetDefault(false);
     private static string LocalStackEndpointUrl => AppEnv.LOCALSTACK.ENDPOINT_URL.GetDefault("http://localhost:4566");
-    private static string Profile => !IsLocalStack
-        ? AppEnv.AWS_PROFILE.GetDefault("default")
+    private static string? Profile => !IsLocalStack
+        ? null
         : "localstack";
 
     public static AmazonSimpleNotificationServiceClient SimpleNotificationServiceConfiguration()
@@ -59,6 +59,6 @@ public static class AwsConfigurationExtensions
     }
 
     private static AWSCredentials LoadCredentials() {
-        return SSOCredentials.LoadSsoCredentials(Profile);
+        return FallbackCredentialsFactory.GetCredentials();
     }
 }
