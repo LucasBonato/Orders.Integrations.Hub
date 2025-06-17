@@ -14,7 +14,7 @@ public static class AwsConfigurationExtensions
     private static bool IsLocalStack => AppEnv.LOCALSTACK.AWS.IS_LOCALSTACK.GetDefault(false);
     private static string LocalStackEndpointUrl => AppEnv.LOCALSTACK.ENDPOINT_URL.GetDefault("http://localhost:4566");
     private static string Profile => !IsLocalStack
-        ? AppEnv.AWS_PROFILE.NotNullEnv()
+        ? AppEnv.AWS_PROFILE.GetDefault("default")
         : "localstack";
 
     public static AmazonSimpleNotificationServiceClient SimpleNotificationServiceConfiguration()
