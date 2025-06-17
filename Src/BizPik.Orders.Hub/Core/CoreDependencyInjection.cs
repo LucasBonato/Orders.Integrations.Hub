@@ -1,12 +1,9 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 
-using Amazon;
-using Amazon.Runtime;
-using Amazon.Runtime.CredentialManagement;
+using Amazon.S3;
 using Amazon.SimpleNotificationService;
 
-using BizPik.AWS.Credentials;
 using BizPik.Orders.Hub.Core.Adapter;
 using BizPik.Orders.Hub.Core.Application.Clients;
 using BizPik.Orders.Hub.Core.Application.Extensions;
@@ -48,8 +45,10 @@ public static class CoreDependencyInjection
     {
         services.AddExceptionHandler<ExceptionHandlerMiddleware>();
 
-        services.AddTransient<IAmazonSimpleNotificationService>(_ => SimplesNotificationServiceConfiguration());
-        services.AddTransient<IObjectStorageClient, SimpleStorageServiceClient>();
+        services.AddSingleton<IAmazonSimpleNotificationService>(_ => AwsConfigurationExtensions.SimpleNotificationServiceConfiguration());
+        services.AddSingleton<IAmazonS3>(_ => AwsConfigurationExtensions.SimpleStorageServiceConfiguration());
+
+        services.AddSingleton<IObjectStorageClient, SimpleStorageServiceClient>();
 
         services.AddScoped<IOrderUseCase, OrderUseCase>();
         services.AddScoped<IOrderDisputeUpdateUseCase, OrderDisputeUpdateUseCase>();
@@ -116,23 +115,5 @@ public static class CoreDependencyInjection
         });
 
         return services;
-    }
-
-    private static AmazonSimpleNotificationServiceClient SimplesNotificationServiceConfiguration()
-    {
-        bool isLocalSns = AppEnv.PUB_SUB.TOPICS.IS_LOCAL.GetDefault(false);
-        string profile;
-
-        if (isLocalSns) {
-            AmazonSimpleNotificationServiceConfig config = new();
-            profile = "localstack";
-            new CredentialProfileStoreChain().TryGetAWSCredentials(profile, out AWSCredentials? credentials);
-            config.Profile = new Profile(profile);
-            config.ServiceURL = "http://localhost:4566";
-            return new AmazonSimpleNotificationServiceClient(credentials: credentials, clientConfig: config);
-        }
-
-        profile = AppEnv.AWS_PROFILE.NotNullEnv();
-        return new AmazonSimpleNotificationServiceClient(SSOCredentials.LoadSsoCredentials(profile));
     }
 }

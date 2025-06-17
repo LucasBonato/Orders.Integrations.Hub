@@ -79,7 +79,18 @@ public static class AppEnv
         }
     }
 
+    public static class LOCALSTACK
+    {
+        public static class AWS
+        {
+            public static readonly AnvEnv IS_LOCALSTACK = new("LOCALSTACK__AWS__IS_LOCALSTACK");
+        }
+
+        public static readonly AnvEnv ENDPOINT_URL = new("LOCALSTACK__ENDPOINT_URL");
+    }
+
     // public static readonly AnvEnv AWS_API_GATEWAY_PROXY = new("AWS_API_GATEWAY_PROXY");
     public static readonly AnvEnv AWS_PROFILE = new("AWS_PROFILE");
+    public static readonly AnvEnv AWS_REGION = new("AWS_REGION");
     public static readonly AnvEnv OTEL_SERVICE_NAME = new("OTEL_SERVICE_NAME");
 }
