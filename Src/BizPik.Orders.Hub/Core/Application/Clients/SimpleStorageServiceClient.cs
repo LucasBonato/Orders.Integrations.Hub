@@ -9,7 +9,7 @@ using BizPik.Orders.Hub.Core.Domain.Contracts;
 namespace BizPik.Orders.Hub.Core.Application.Clients;
 
 public class SimpleStorageServiceClient(
-    AmazonS3Client s3Client
+    IAmazonS3 s3Client
 ) : IObjectStorageClient {
     private readonly string BUCKET_NAME = AppEnv.OBJECT_STORAGE.BUCKET.NAME.NotNullEnv();
 
