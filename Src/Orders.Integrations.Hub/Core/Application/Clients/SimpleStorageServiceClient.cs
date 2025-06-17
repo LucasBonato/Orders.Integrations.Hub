@@ -3,6 +3,7 @@ using Amazon.S3;
 using Amazon.S3.Model;
 using Amazon.S3.Transfer;
 
+using Orders.Integrations.Hub.Core.Application.Extensions;
 using Orders.Integrations.Hub.Core.Domain.Contracts;
 
 namespace Orders.Integrations.Hub.Core.Application.Clients;
@@ -10,7 +11,7 @@ namespace Orders.Integrations.Hub.Core.Application.Clients;
 public class SimpleStorageServiceClient(
     AmazonS3Client s3Client
 ) : IObjectStorageClient {
-    private readonly string BUCKET_NAME = AppEnv.OBJECT_STORAGE.BUCKET.NAME.NotNull();
+    private readonly string BUCKET_NAME = AppEnv.OBJECT_STORAGE.BUCKET.NAME.NotNullEnv();
 
     public async Task<string> UploadFile(Stream file, string contentType, string key)
     {
