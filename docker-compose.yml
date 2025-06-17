@@ -14,9 +14,12 @@ services:
       - "18888:3000"
       - "4317:4317"
       - "4318:4318"
-
   aspire-dashboard:
     image: mcr.microsoft.com/dotnet/aspire-dashboard:9.0
     ports:
       - "4317:18889"
       - "18888:18888"
+  localstack:
+    image: localstack/localstack:latest
+    ports:
+      - "4566:4566"
