@@ -7,6 +7,7 @@ using Orders.Integrations.Hub.Core.Domain.ValueObjects.Events;
 using Orders.Integrations.Hub.Integrations.Common;
 using Orders.Integrations.Hub.Integrations.Ifood.Application.Clients;
 using Orders.Integrations.Hub.Integrations.Ifood.Application.Extensions;
+using Orders.Integrations.Hub.Integrations.Ifood.Domain.Contracts;
 using Orders.Integrations.Hub.Integrations.Ifood.Domain.Entity.Handshake;
 using Orders.Integrations.Hub.Integrations.Ifood.Domain.ValueObjects.DTOs.Request;
 using Orders.Integrations.Hub.Integrations.Ifood.Domain.ValueObjects.Enums;
@@ -17,7 +18,7 @@ namespace Orders.Integrations.Hub.Integrations.Ifood.Application.Ports.In;
 
 public class IfoodHandshakeOrderDisputeUseCase(
     IObjectStorageClient objectStorageClient,
-    IfoodClient ifoodClient
+    IIFoodClient ifoodClient
 ) : IOrderDisputeUseCase<IfoodWebhookRequest> {
     public async Task<IfoodWebhookRequest> ExecuteAsync(IfoodWebhookRequest ifoodOrder)
     {
