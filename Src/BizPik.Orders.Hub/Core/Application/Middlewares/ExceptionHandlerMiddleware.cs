@@ -1,9 +1,9 @@
 ﻿using System.Diagnostics;
 using System.Net;
 
-using BizPik.Orders.Hub.Core.Application.Exceptions;
 using BizPik.Orders.Hub.Core.Application.Extensions;
 using BizPik.Orders.Hub.Core.Application.Middlewares.Handlers;
+using BizPik.Orders.Hub.Core.Domain.Contracts;
 
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
@@ -20,19 +20,21 @@ public class ExceptionHandlerMiddleware(
 
         logger.LogStructuredException(exception, httpContext, traceId, traceParent);
 
-        ProblemDetails details = exception switch {
-            EnvironmentVariableNotFoundException e => e.HandleException(),
-            InvalidOperationException e => e.HandleException(),
-            ArgumentNullException e => e.HandleException(),
-            _ => exception.HandleException()
-        };
+        ProblemDetails details = exception is IProblemDetailsException e
+            ? e.ToProblemDetails()
+            : exception switch {
+                InvalidOperationException ex => ex.HandleException(),
+                ArgumentNullException ex => ex.HandleException(),
+                _ => exception.HandleException()
+            };
 
         if (string.IsNullOrEmpty(details.Type)) {
             details.Type = "https://tools.ietf.org/html/rfc7231#section-6.6.1";
         }
 
         details.Instance = httpContext.Request.Path;
-        details.Extensions.Add("traceId", traceId);
+        details.Extensions.TryAdd("method", httpContext.Request.Method);
+        details.Extensions.TryAdd("traceId", traceId);
 
         httpContext.Response.ContentType = "application/json";
         httpContext.Response.StatusCode = details.Status?? (int)HttpStatusCode.InternalServerError;
