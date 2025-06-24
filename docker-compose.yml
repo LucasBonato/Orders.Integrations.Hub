@@ -22,4 +22,8 @@ services:
   localstack:
     image: localstack/localstack:latest
     ports:
-      - "4566:4566"
+      - "4566:4566"           # Gateway
+      - "4510-4559:4510-4559" # External services range
+    volumes:
+      - "${LOCALSTACK_VOLUME_DIR:-./volume}:/var/lib/localstack"
+      - "/var/run/docker.sock:/var/run/docker.sock"
