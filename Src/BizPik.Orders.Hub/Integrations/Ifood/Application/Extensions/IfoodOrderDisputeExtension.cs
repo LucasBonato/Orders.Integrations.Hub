@@ -24,7 +24,7 @@ public static class IfoodOrderDisputeExtension
                        .Select(reason => reason.ToString())
                        .ToList()?? []
                 )
-            ).ToList()?? [];
+            ).ToList();
 
         List<DisputeEvidence>? evidences = ifoodDispute.Metadata?.Evidences?
             .Select(evidence =>
@@ -38,7 +38,7 @@ public static class IfoodOrderDisputeExtension
                 new DisputeItem(
                     ExternalId: item.Id,
                     ExternalUniqueId: item.UniqueId,
-                    Sku: item.ExternalCode,
+                    Sku: item.ExternalCode?? item.IntegrationId?? string.Empty,
                     Index: item.Index,
                     Quantity: item.Quantity,
                     Price: item.Amount.ToPrice(),
