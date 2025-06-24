@@ -10,7 +10,7 @@ public class HandshakeMetadata(
     List<Media>? Evidences,
     List<string>? AcceptCancellationReasons
 ) {
-    [JsonPropertyName("item")] public List<Item>? Items { get; init; } = Items;
+    [JsonPropertyName("items")] public List<Item>? Items { get; init; } = Items;
 
     [JsonPropertyName("garnishItems")]
     public List<GarnishItem>? GarnishItems { get; init; } = GarnishItems;
