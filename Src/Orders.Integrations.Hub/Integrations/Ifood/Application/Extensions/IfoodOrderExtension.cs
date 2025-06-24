@@ -249,7 +249,7 @@ public static class IfoodOrderExtension
     private static OrderSponsorshipName ToOrder(this SponsorshipName sponsorshipName)
     {
         return sponsorshipName switch {
-            SponsorshipName.IFOOD => OrderSponsorshipName.MERCHANT,
+            SponsorshipName.IFOOD => OrderSponsorshipName.INTEGRATION,
             SponsorshipName.EXTERNAL => OrderSponsorshipName.MARKETPLACE,
             SponsorshipName.MERCHANT => OrderSponsorshipName.MERCHANT,
             SponsorshipName.CHAIN => OrderSponsorshipName.CHAIN,

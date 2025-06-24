@@ -4,5 +4,6 @@ public enum OrderSponsorshipName
 {
     MARKETPLACE,
     MERCHANT,
-    CHAIN
+    CHAIN,
+    INTEGRATION
 }
