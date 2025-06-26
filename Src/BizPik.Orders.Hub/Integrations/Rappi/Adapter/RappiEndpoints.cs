@@ -2,7 +2,7 @@
 
 public static class RappiEndpoints
 {
-    public static WebApplication AddRappiEndpoints(this WebApplication app)
+    public static WebApplication UseRappiEndpoints(this WebApplication app)
     {
         RouteGroupBuilder routeGroup = app
                 .MapGroup("/Rappi")
