@@ -2,7 +2,7 @@
 
 public static class IfoodEndpoints
 {
-    public static WebApplication AddIfoodEndpoints(this WebApplication app)
+    public static WebApplication UseIfoodEndpoints(this WebApplication app)
     {
         RouteGroupBuilder routeGroup = app
                 .MapGroup("/Ifood")
