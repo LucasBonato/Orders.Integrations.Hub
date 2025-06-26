@@ -5,7 +5,6 @@ using BizPik.Orders.Hub.Core.Domain.Contracts.UseCases;
 using BizPik.Orders.Hub.Core.Domain.ValueObjects.Enums;
 using BizPik.Orders.Hub.Core.Domain.ValueObjects.Events;
 using BizPik.Orders.Hub.Integrations.Common;
-using BizPik.Orders.Hub.Integrations.Ifood.Application.Clients;
 using BizPik.Orders.Hub.Integrations.Ifood.Application.Extensions;
 using BizPik.Orders.Hub.Integrations.Ifood.Domain.Contracts;
 using BizPik.Orders.Hub.Integrations.Ifood.Domain.Entity.Handshake;
