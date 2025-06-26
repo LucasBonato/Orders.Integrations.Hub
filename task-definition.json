@@ -51,6 +51,14 @@
         {
           "name": "OBJECT_STORAGE__BUCKET__NAME",
           "value": "bizpik-orders"
+        },
+        {
+          "name": "INTEGRATIONS__RAPPI__CACHE__KEY",
+          "value": "RAPPI_TOKEN"
+        },
+        {
+          "name": "INTEGRATIONS__IFOOD__CACHE__KEY",
+          "value": "IFOOD_TOKEN"
         }
       ],
       "environmentFiles": [],
