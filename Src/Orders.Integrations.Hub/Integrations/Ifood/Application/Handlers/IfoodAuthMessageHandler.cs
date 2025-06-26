@@ -34,7 +34,7 @@ public class IfoodAuthMessageHandler(
                        )
                    );
 
-                   return (token.AccessToken, TimeSpan.FromMinutes(token.ExpiresIn));
+                   return (token.AccessToken, TimeSpan.FromSeconds(token.ExpiresIn));
                }
         );
 

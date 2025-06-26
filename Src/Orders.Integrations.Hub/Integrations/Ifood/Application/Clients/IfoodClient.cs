@@ -161,9 +161,8 @@ public class IfoodClient(
 
     public async Task PostHandshakeDisputesAccept(string disputeId, RespondDisputeResponse request)
     {
-        //TODO: REMOVE THIS
-        if (!string.IsNullOrEmpty(request.Reason))
-            return;
+        // if (!string.IsNullOrEmpty(request.Reason))
+        //     return;
 
         string uri = $"order/v1.0/disputes/{disputeId}/accept";
 
@@ -197,9 +196,8 @@ public class IfoodClient(
 
     public async Task PostHandshakeDisputesAlternatives(string disputeId, string alternativeId, HandshakeAlternativeRequest request)
     {
-        //TODO: REMOVE THIS
-        if (request.Type is HandshakeAlternativeType.ADDITIONAL_TIME)
-            return;
+        // if (request.Type is HandshakeAlternativeType.ADDITIONAL_TIME)
+        //     return;
 
         string uri = $"order/v1.0/disputes/{disputeId}/alternatives/{alternativeId}";
 
