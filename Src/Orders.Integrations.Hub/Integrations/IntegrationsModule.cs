@@ -28,6 +28,7 @@ public static class IntegrationsModule
     private static IServiceCollection AddServices(this IServiceCollection services)
     {
         return services
+                .AddCacheServices()
                 .AddSingleton<ICacheService, MemoryCacheService>()
             ;
     }
