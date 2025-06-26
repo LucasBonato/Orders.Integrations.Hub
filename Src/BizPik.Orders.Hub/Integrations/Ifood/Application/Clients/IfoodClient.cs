@@ -10,6 +10,7 @@ using BizPik.Orders.Hub.Integrations.Ifood.Domain.Entity.Order;
 using BizPik.Orders.Hub.Integrations.Ifood.Domain.Entity.Order.MerchantDetails;
 using BizPik.Orders.Hub.Integrations.Ifood.Domain.ValueObjects.DTOs.Request;
 using BizPik.Orders.Hub.Integrations.Ifood.Domain.ValueObjects.DTOs.Response;
+using BizPik.Orders.Hub.Integrations.Ifood.Domain.ValueObjects.Enums.Handshake;
 
 namespace BizPik.Orders.Hub.Integrations.Ifood.Application.Clients;
 
@@ -160,6 +161,10 @@ public class IfoodClient(
 
     public async Task PostHandshakeDisputesAccept(string disputeId, RespondDisputeResponse request)
     {
+        //TODO: REMOVE THIS
+        if (!string.IsNullOrEmpty(request.Reason))
+            return;
+
         string uri = $"order/v1.0/disputes/{disputeId}/accept";
 
         HttpRequestMessage requestMessage = new (HttpMethod.Post, uri);
@@ -192,6 +197,10 @@ public class IfoodClient(
 
     public async Task PostHandshakeDisputesAlternatives(string disputeId, string alternativeId, HandshakeAlternativeRequest request)
     {
+        //TODO: REMOVE THIS
+        if (request.Type is HandshakeAlternativeType.ADDITIONAL_TIME)
+            return;
+
         string uri = $"order/v1.0/disputes/{disputeId}/alternatives/{alternativeId}";
 
         HttpRequestMessage requestMessage = new (HttpMethod.Post, uri);

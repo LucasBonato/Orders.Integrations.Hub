@@ -57,6 +57,8 @@ public static class IfoodAdapter
         {
             body = await reader.ReadToEndAsync();
         }
+        //TODO: REMOVE THIS
+        return JsonSerializer.Deserialize<IfoodWebhookRequest>(body)!;
 
         logger.LogInformation("[INFO] - IfoodSignatureValidator - Request Body: {body}", body);
 
