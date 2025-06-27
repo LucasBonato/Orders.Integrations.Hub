@@ -43,7 +43,7 @@ public class IfoodHandshakeOrderDisputeUseCase(
                 dispute = new HandshakeDispute(
                     DisputeId: settlement.DisputeId,
                     ParentDisputeId: settlement.DisputeId,
-                    Message: settlement.Reason?? settlement.Status.ToString(),
+                    Message: settlement.Status.ToString(), //?? settlement.Reason?? string.Empty,
                     Alternatives: settlement.SelectedDisputeAlternative is { } alternative
                         ? [
                             new DisputeAlternative(
