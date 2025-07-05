@@ -1,1 +1,1 @@
-# BizPik.Orders.Hub
+# Orders.Integrations.Hub

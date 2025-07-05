@@ -11,12 +11,12 @@ on:
   workflow_dispatch:
 
 env:
-  AWS_REGION: us-east-1
-  ECR_REPOSITORY: bizpik-orders-hub
-  ECS_SERVICE: bizpik-order-hub
-  ECS_CLUSTER: bizpik-prod-ecs
-  ECS_TASK_DEFINITION: task-definition.json
-  CONTAINER_NAME: node
+  AWS_REGION:
+  ECR_REPOSITORY:
+  ECS_SERVICE:
+  ECS_CLUSTER:
+  ECS_TASK_DEFINITION:
+  CONTAINER_NAME:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
