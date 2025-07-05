@@ -4,25 +4,12 @@ namespace Orders.Integrations.Hub;
 
 public static class AppEnv
 {
-    public static class 
+
+    public static class ORDERS
     {
-        public static class MONOLITH
+        public static class ENDPOINT
         {
-            public static class API_KEYS
-            {
-                public static readonly AnvEnv COMPANIES_INTEGRATIONS = new("__MONOLITH__API_KEYS__COMPANIES_INTEGRATIONS");
-            }
-            public static class ENDPOINT
-            {
-                public static readonly AnvEnv BASE_URL = new("__MONOLITH__ENDPOINT__BASE_URL");
-            }
-        }
-        public static class ORDERS
-        {
-            public static class ENDPOINT
-            {
-                public static readonly AnvEnv BASE_URL = new("__ORDERS__ENDPOINT__BASE_URL");
-            }
+            public static readonly AnvEnv BASE_URL = new("ORDERS__ENDPOINT__BASE_URL");
         }
     }
     public static class INTEGRATIONS

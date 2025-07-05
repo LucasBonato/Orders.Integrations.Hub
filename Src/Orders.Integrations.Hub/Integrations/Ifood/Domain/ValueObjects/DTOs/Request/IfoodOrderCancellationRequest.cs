@@ -9,11 +9,11 @@ public record IfoodOrderCancellationRequest(
     [property: JsonPropertyName("cancellationCode")] string CancellationCode
 ) {
     public IfoodOrderCancellationRequest(string reason) : this(
-        From(reason).ToString(),
-        ((int)From(reason)).ToString()
+        FromInternal(reason).ToString(),
+        ((int)FromInternal(reason)).ToString()
     ) { }
 
-    private static IfoodCancellationReasons From(string? reason)
+    private static IfoodCancellationReasons FromInternal(string? reason)
     {
         int reasonCode = Convert.ToInt32(reason);
         if (reasonCode == 2) {

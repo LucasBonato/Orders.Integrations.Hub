@@ -1,7 +1,7 @@
-﻿using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases;
-using Orders.Integrations.Hub.Core.Domain.ValueObjects.Events;
+﻿using FastEndpoints;
 
-using FastEndpoints;
+using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases;
+using Orders.Integrations.Hub.Core.Domain.ValueObjects.Events;
 
 namespace Orders.Integrations.Hub.Core.Application.EventHandlers;
 

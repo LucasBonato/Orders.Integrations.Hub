@@ -1,10 +1,9 @@
 ﻿using Amazon;
 using Amazon.Runtime;
 using Amazon.Runtime.CredentialManagement;
+using Amazon.Runtime.Credentials;
 using Amazon.S3;
 using Amazon.SimpleNotificationService;
-
-using .AWS.Credentials;
 
 namespace Orders.Integrations.Hub.Core.Application.Extensions;
 
@@ -59,6 +58,6 @@ public static class AwsConfigurationExtensions
     }
 
     private static AWSCredentials LoadCredentials() {
-        return FallbackCredentialsFactory.GetCredentials();
+        return DefaultAWSCredentialsIdentityResolver.GetCredentials();
     }
 }

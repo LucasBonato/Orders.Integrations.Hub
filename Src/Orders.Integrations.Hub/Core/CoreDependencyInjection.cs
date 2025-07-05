@@ -4,14 +4,6 @@ using System.Text.Json.Serialization;
 using Amazon.S3;
 using Amazon.SimpleNotificationService;
 
-using Orders.Integrations.Hub.Core.Adapter;
-using Orders.Integrations.Hub.Core.Application.Clients;
-using Orders.Integrations.Hub.Core.Application.Extensions;
-using Orders.Integrations.Hub.Core.Application.Middlewares;
-using Orders.Integrations.Hub.Core.Application.UseCases;
-using Orders.Integrations.Hub.Core.Domain.Contracts;
-using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases;
-
 using FastEndpoints;
 
 using Microsoft.AspNetCore.Mvc;
@@ -19,6 +11,14 @@ using Microsoft.AspNetCore.Mvc;
 using OpenTelemetry;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
+
+using Orders.Integrations.Hub.Core.Adapter;
+using Orders.Integrations.Hub.Core.Application.Clients;
+using Orders.Integrations.Hub.Core.Application.Extensions;
+using Orders.Integrations.Hub.Core.Application.Middlewares;
+using Orders.Integrations.Hub.Core.Application.UseCases;
+using Orders.Integrations.Hub.Core.Domain.Contracts;
+using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases;
 
 namespace Orders.Integrations.Hub.Core;
 
@@ -69,16 +69,8 @@ public static class CoreDependencyInjection
 
     private static IServiceCollection AddClients(this IServiceCollection services)
     {
-        services.AddHttpClient<IInternalClient, InternalClient>(client => {
-            client.BaseAddress = new Uri(AppEnv..MONOLITH.ENDPOINT.BASE_URL.NotNullEnv());
-        });
-
-        services.AddHttpClient<IOrderClient, OrderClient>(client => {
-            client.BaseAddress = new Uri(AppEnv..ORDERS.ENDPOINT.BASE_URL.NotNullEnv());
-        });
-
         services.AddHttpClient<IOrderHttp>(client => {
-            client.BaseAddress = new Uri(AppEnv..ORDERS.ENDPOINT.BASE_URL.NotNullEnv());
+            client.BaseAddress = new Uri(AppEnv.ORDERS.ENDPOINT.BASE_URL.NotNullEnv());
         });
 
         return services;

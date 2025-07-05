@@ -1,5 +1,9 @@
-﻿using System.Text;
+﻿using System.IO;
+using System.Text;
 using System.Text.Json;
+using System.Threading.Tasks;
+
+using Microsoft.AspNetCore.Http;
 
 namespace Orders.Integrations.Hub.Core.Application.Extensions;
 

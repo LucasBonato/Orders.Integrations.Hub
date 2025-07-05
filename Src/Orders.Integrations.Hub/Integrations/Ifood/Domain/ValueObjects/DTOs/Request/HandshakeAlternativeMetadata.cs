@@ -1,7 +1,8 @@
 ﻿using System.Text.Json.Serialization;
 
-using Orders.Integrations.Hub.Integrations.Ifood.Domain.Entity.Handshake;
 using Orders.Integrations.Hub.Integrations.Ifood.Domain.ValueObjects.Enums.Handshake;
+
+using Orders.Integrations.Hub.Integrations.Ifood.Domain.Entity.Handshake;
 
 namespace Orders.Integrations.Hub.Integrations.Ifood.Domain.ValueObjects.DTOs.Request;
 

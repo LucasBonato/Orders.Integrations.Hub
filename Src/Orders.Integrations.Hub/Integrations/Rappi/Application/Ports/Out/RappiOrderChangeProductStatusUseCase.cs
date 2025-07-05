@@ -1,7 +1,4 @@
-﻿using Orders.Integrations.Hub.Core.Domain.Contracts;
-using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases;
-using Orders.Integrations.Hub.Core.Domain.ValueObjects.DTOs.;
-using Orders.Integrations.Hub.Integrations.Rappi.Application.Extensions;
+﻿using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases;
 using Orders.Integrations.Hub.Integrations.Rappi.Domain.Contracts;
 using Orders.Integrations.Hub.Integrations.Rappi.Domain.ValueObjects.DTOs;
 using Orders.Integrations.Hub.Integrations.Rappi.Domain.ValueObjects.DTOs.Request;
@@ -9,14 +6,13 @@ using Orders.Integrations.Hub.Integrations.Rappi.Domain.ValueObjects.DTOs.Reques
 namespace Orders.Integrations.Hub.Integrations.Rappi.Application.Ports.Out;
 
 public class RappiOrderChangeProductStatusUseCase(
-    IRappiClient rappiClient,
-    IInternalClient Client
+    IRappiClient rappiClient
 ) : IOrderChangeProductStatusUseCase {
-    public async Task Enable(SNSProductEvent productEvent)
+    public async Task Enable(object productEvent)
     {
-        ResponseWrapper<List<IntegrationResponse>> response = await Client.GetIntegrationByCompanyId(productEvent.CompanyId.ToString());
-        IEnumerable<IntegrationResponse> integrations = response.Data.Where(integration => integration.IntegrationId is 26);
-        RappiIntegrationResolved[] stores = integrations.Select(integration => integration.Resolve()).ToArray();
+        object[] stores = [];
+        string storeId = string.Empty;
+        List<string> turnOn = [];
 
         if (stores.Length is 0)
         {
@@ -25,9 +21,9 @@ public class RappiOrderChangeProductStatusUseCase(
 
         Task[] requests = stores
             .Select(store => new RappiAvailabilityUpdateItemsRequest(
-                StoreIntegrationId: store.RappiStoreId,
+                StoreIntegrationId: storeId,
                 Items: new RappiAvailabilityItem(
-                    TurnOn: productEvent.ProductSkus,
+                    TurnOn: turnOn,
                     TurnOff: []
                 )
             ))
@@ -37,11 +33,11 @@ public class RappiOrderChangeProductStatusUseCase(
         Task.WaitAll(requests);
     }
 
-    public async Task Disable(SNSProductEvent productEvent)
+    public async Task Disable(object productEvent)
     {
-        ResponseWrapper<List<IntegrationResponse>> response = await Client.GetIntegrationByCompanyId(productEvent.CompanyId.ToString());
-        IEnumerable<IntegrationResponse> integrations = response.Data.Where(integration => integration.IntegrationId is 26);
-        RappiIntegrationResolved[] stores = integrations.Select(integration => integration.Resolve()).ToArray();
+        object[] stores = [];
+        string storeId = string.Empty;
+        List<string> turnOff = [];
 
         if (stores.Length is 0)
         {
@@ -50,10 +46,10 @@ public class RappiOrderChangeProductStatusUseCase(
 
         Task[] requests = stores
             .Select(store => new RappiAvailabilityUpdateItemsRequest(
-                StoreIntegrationId: store.RappiStoreId,
+                StoreIntegrationId: storeId,
                 Items: new RappiAvailabilityItem(
                     TurnOn: [],
-                    TurnOff: productEvent.ProductSkus
+                    TurnOff: turnOff
                 )
             ))
             .Select((Func<RappiAvailabilityUpdateItemsRequest, Task>)MakeUpdateProductRequest)

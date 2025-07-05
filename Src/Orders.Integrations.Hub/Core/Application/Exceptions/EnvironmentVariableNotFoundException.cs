@@ -1,8 +1,8 @@
 ﻿using System.Net;
 
-using Orders.Integrations.Hub.Core.Domain.Contracts;
-
 using Microsoft.AspNetCore.Mvc;
+
+using Orders.Integrations.Hub.Core.Domain.Contracts;
 
 namespace Orders.Integrations.Hub.Core.Application.Exceptions;
 

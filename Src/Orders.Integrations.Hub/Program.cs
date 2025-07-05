@@ -1,7 +1,7 @@
+using DotNetEnv;
+
 using Orders.Integrations.Hub.Core;
 using Orders.Integrations.Hub.Integrations;
-
-using DotNetEnv;
 
 using Scalar.AspNetCore;
 

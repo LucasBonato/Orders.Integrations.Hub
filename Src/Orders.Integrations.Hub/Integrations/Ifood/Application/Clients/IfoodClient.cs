@@ -2,6 +2,8 @@
 using System.Net.Http.Headers;
 using System.Text;
 
+using Orders.Integrations.Hub.Integrations.Ifood.Domain.ValueObjects.Enums.Handshake;
+
 using Orders.Integrations.Hub.Core.Domain.Contracts;
 using Orders.Integrations.Hub.Core.Domain.ValueObjects.DTOs.Request;
 using Orders.Integrations.Hub.Integrations.Common;
@@ -10,7 +12,6 @@ using Orders.Integrations.Hub.Integrations.Ifood.Domain.Entity.Order;
 using Orders.Integrations.Hub.Integrations.Ifood.Domain.Entity.Order.MerchantDetails;
 using Orders.Integrations.Hub.Integrations.Ifood.Domain.ValueObjects.DTOs.Request;
 using Orders.Integrations.Hub.Integrations.Ifood.Domain.ValueObjects.DTOs.Response;
-using Orders.Integrations.Hub.Integrations.Ifood.Domain.ValueObjects.Enums.Handshake;
 
 namespace Orders.Integrations.Hub.Integrations.Ifood.Application.Clients;
 

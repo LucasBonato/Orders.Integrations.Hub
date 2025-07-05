@@ -1,19 +1,21 @@
 ﻿using System.Text;
 
 using Orders.Integrations.Hub.Core.Application.Extensions;
-using Orders.Integrations.Hub.Core.Domain.Contracts;
-using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases;
-using Orders.Integrations.Hub.Core.Domain.ValueObjects.Enums;
-using Orders.Integrations.Hub.Core.Domain.ValueObjects.Events;
+
 using Orders.Integrations.Hub.Integrations.Common.Validators;
 using Orders.Integrations.Hub.Integrations.Rappi.Application.Extensions;
-using Orders.Integrations.Hub.Integrations.Rappi.Domain.Entity;
-using Orders.Integrations.Hub.Integrations.Rappi.Domain.ValueObjects.DTOs.Request;
-using Orders.Integrations.Hub.Integrations.Rappi.Domain.ValueObjects.DTOs.Response;
 
 using FastEndpoints;
 
 using Microsoft.AspNetCore.Mvc;
+
+using Orders.Integrations.Hub.Core.Domain.Contracts;
+using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases;
+using Orders.Integrations.Hub.Core.Domain.ValueObjects.Enums;
+using Orders.Integrations.Hub.Core.Domain.ValueObjects.Events;
+using Orders.Integrations.Hub.Integrations.Rappi.Domain.Entity;
+using Orders.Integrations.Hub.Integrations.Rappi.Domain.ValueObjects.DTOs.Request;
+using Orders.Integrations.Hub.Integrations.Rappi.Domain.ValueObjects.DTOs.Response;
 
 using static Microsoft.AspNetCore.Http.Results;
 

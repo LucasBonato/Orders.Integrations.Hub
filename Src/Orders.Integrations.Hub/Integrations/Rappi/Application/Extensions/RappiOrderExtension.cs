@@ -10,8 +10,10 @@ using Orders.Integrations.Hub.Integrations.Rappi.Domain.Entity;
 using Orders.Integrations.Hub.Integrations.Rappi.Domain.ValueObjects.DTOs.Request;
 using Orders.Integrations.Hub.Integrations.Rappi.Domain.ValueObjects.Enums;
 
+using Entity_OrderTotal = Orders.Integrations.Hub.Core.Domain.Entity.OrderTotal;
 using OrderPayment = Orders.Integrations.Hub.Core.Domain.Entity.Payment.OrderPayment;
 using OrderTotal = Orders.Integrations.Hub.Core.Domain.Entity.OrderTotal;
+using Payment_OrderPayment = Orders.Integrations.Hub.Core.Domain.Entity.Payment.OrderPayment;
 
 namespace Orders.Integrations.Hub.Integrations.Rappi.Application.Extensions;
 
@@ -128,13 +130,13 @@ public static class RappiOrderExtension
             Items: items,
             OtherFees: order.MapRappiOtherFeesToOpenDelivery(),
             Discounts: discounts,
-            Total: new OrderTotal(
+            Total: new Entity_OrderTotal(
                 Discount: order.OrderDetail.Totals.TotalDiscounts.ToBrl(),
                 ItemsPrice: order.OrderDetail.Totals.TotalProducts.ToBrl(),
                 OrderAmount: order.OrderDetail.Totals.TotalOrder.ToBrl(),
                 OtherFees: (order.OrderDetail.Totals.Charges.ServiceFee + order.OrderDetail.Totals.Charges.Shipping).ToBrl()
             ),
-            Payments: new OrderPayment(
+            Payments: new Payment_OrderPayment(
                 Prepaid: 0,
                 Pending: order.OrderDetail.Totals.TotalToPay?? 0,
                 Methods: paymentMethods

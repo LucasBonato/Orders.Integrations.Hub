@@ -1,5 +1,4 @@
-﻿using Amazon;
-using Amazon.S3;
+﻿using Amazon.S3;
 using Amazon.S3.Model;
 using Amazon.S3.Transfer;
 
@@ -62,7 +61,7 @@ public class SimpleStorageServiceClient(
             }
 
             listDeleteRequest.ContinuationToken = response.NextContinuationToken;
-        } while (response.IsTruncated);
+        } while (response.IsTruncated?? false);
     }
 
     private string GetSignedUrl(string key)
@@ -74,7 +73,7 @@ public class SimpleStorageServiceClient(
             Verb = HttpVerb.GET,
         };
 
-        AWSConfigsS3.UseSignatureVersion4 = true;
+        // AWSConfigsS3.UseSignatureVersion4 = true;
 
         return s3Client.GetPreSignedURL(request);
     }

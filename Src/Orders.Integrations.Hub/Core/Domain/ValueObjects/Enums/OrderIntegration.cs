@@ -2,6 +2,7 @@
 
 public enum OrderIntegration
 {
-    IFOOD = 0,
-    RAPPI = 1
+    NOTHING = 0,
+    IFOOD = 1,
+    RAPPI = 2
 }

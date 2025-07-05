@@ -2,6 +2,9 @@
 using System.Text.Json.Serialization;
 
 using Orders.Integrations.Hub.Core.Application.Extensions;
+
+using Microsoft.AspNetCore.Mvc;
+
 using Orders.Integrations.Hub.Core.Domain.Contracts;
 using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases;
 using Orders.Integrations.Hub.Core.Domain.ValueObjects.Enums;
@@ -12,8 +15,6 @@ using Orders.Integrations.Hub.Integrations.Ifood.Application.Ports.In;
 using Orders.Integrations.Hub.Integrations.Ifood.Application.Ports.Out;
 using Orders.Integrations.Hub.Integrations.Ifood.Domain.Contracts;
 using Orders.Integrations.Hub.Integrations.Ifood.Domain.ValueObjects.DTOs.Request;
-
-using Microsoft.AspNetCore.Mvc;
 
 namespace Orders.Integrations.Hub.Integrations.Ifood;
 

@@ -3,10 +3,11 @@ using System.Net;
 
 using Orders.Integrations.Hub.Core.Application.Extensions;
 using Orders.Integrations.Hub.Core.Application.Middlewares.Handlers;
-using Orders.Integrations.Hub.Core.Domain.Contracts;
 
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+
+using Orders.Integrations.Hub.Core.Domain.Contracts;
 
 namespace Orders.Integrations.Hub.Core.Application.Middlewares;
 

@@ -1,9 +1,10 @@
-﻿using Orders.Integrations.Hub.Integrations.Common.Application.Services;
-using Orders.Integrations.Hub.Integrations.Common.Contracts;
-using Orders.Integrations.Hub.Integrations.Ifood;
+﻿using Orders.Integrations.Hub.Integrations.Ifood;
 using Orders.Integrations.Hub.Integrations.Ifood.Adapter;
 using Orders.Integrations.Hub.Integrations.Rappi;
 using Orders.Integrations.Hub.Integrations.Rappi.Adapter;
+
+using Orders.Integrations.Hub.Integrations.Common.Application.Services;
+using Orders.Integrations.Hub.Integrations.Common.Contracts;
 
 namespace Orders.Integrations.Hub.Integrations;
 

@@ -1,17 +1,18 @@
 ﻿using System.Text.Json;
 
+using Orders.Integrations.Hub.Integrations.Ifood.Application.Extensions;
+
+using FastEndpoints;
+
 using Orders.Integrations.Hub.Core.Domain.Contracts;
 using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases;
 using Orders.Integrations.Hub.Core.Domain.ValueObjects.Enums;
 using Orders.Integrations.Hub.Core.Domain.ValueObjects.Events;
 using Orders.Integrations.Hub.Integrations.Common;
-using Orders.Integrations.Hub.Integrations.Ifood.Application.Extensions;
 using Orders.Integrations.Hub.Integrations.Ifood.Domain.Contracts;
 using Orders.Integrations.Hub.Integrations.Ifood.Domain.Entity.Handshake;
 using Orders.Integrations.Hub.Integrations.Ifood.Domain.ValueObjects.DTOs.Request;
 using Orders.Integrations.Hub.Integrations.Ifood.Domain.ValueObjects.Enums;
-
-using FastEndpoints;
 
 namespace Orders.Integrations.Hub.Integrations.Ifood.Application.Ports.In;
 

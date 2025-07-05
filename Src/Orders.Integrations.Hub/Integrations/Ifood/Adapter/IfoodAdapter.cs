@@ -1,12 +1,14 @@
 ﻿using System.Text;
 
 using Orders.Integrations.Hub.Core.Application.Extensions;
-using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases;
+
 using Orders.Integrations.Hub.Integrations.Common.Validators;
-using Orders.Integrations.Hub.Integrations.Ifood.Domain.ValueObjects.DTOs.Request;
-using Orders.Integrations.Hub.Integrations.Ifood.Domain.ValueObjects.Enums;
 
 using Microsoft.AspNetCore.Mvc;
+
+using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases;
+using Orders.Integrations.Hub.Integrations.Ifood.Domain.ValueObjects.DTOs.Request;
+using Orders.Integrations.Hub.Integrations.Ifood.Domain.ValueObjects.Enums;
 
 using static Microsoft.AspNetCore.Http.Results;
 
