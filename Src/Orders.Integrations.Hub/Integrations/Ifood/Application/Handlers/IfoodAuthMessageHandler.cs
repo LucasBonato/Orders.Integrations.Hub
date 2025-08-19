@@ -1,6 +1,7 @@
 ﻿using System.Net.Http.Headers;
 
 using Orders.Integrations.Hub.Core.Application.Extensions;
+using Orders.Integrations.Hub.Core.Domain.Contracts;
 using Orders.Integrations.Hub.Integrations.Common.Contracts;
 using Orders.Integrations.Hub.Integrations.Ifood.Application.Clients;
 using Orders.Integrations.Hub.Integrations.Ifood.Domain.ValueObjects.DTOs.Request;
@@ -10,8 +11,8 @@ namespace Orders.Integrations.Hub.Integrations.Ifood.Application.Handlers;
 
 public class IfoodAuthMessageHandler(
     ILogger<IfoodAuthMessageHandler> logger,
-    IfoodAuthClient ifoodAuthClient,
-    ICacheService memoryCache
+    IFoodAuthClient iFoodAuthClient,
+    ICacheService cacheService
 ) : DelegatingHandler {
     private readonly string CACHE_KEY = AppEnv.INTEGRATIONS.IFOOD.CACHE.KEY.NotNullEnv();
 
@@ -21,12 +22,12 @@ public class IfoodAuthMessageHandler(
             return await base.SendAsync(request, cancellationToken);
         }
 
-        string accessToken = await memoryCache.GetOrSetTokenAsync(
+        string accessToken = await cacheService.GetOrSetTokenAsync(
                CACHE_KEY,
                nameof(IfoodAuthMessageHandler),
                logger,
                async () => {
-                   IfoodAuthTokenResponse token = await ifoodAuthClient.RetrieveToken(
+                   IfoodAuthTokenResponse token = await iFoodAuthClient.RetrieveToken(
                        new IfoodAuthTokenRequest(
                            GrantType: "client_credentials",
                            ClientId: AppEnv.INTEGRATIONS.IFOOD.CLIENT.ID.NotNullEnv(),

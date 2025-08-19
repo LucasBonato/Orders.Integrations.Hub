@@ -1,12 +1,8 @@
-﻿using System.Text.Json;
-using System.Text.Json.Serialization;
-
-using Orders.Integrations.Hub.Core.Application.Extensions;
-
-using Microsoft.AspNetCore.Mvc;
-
+﻿using Orders.Integrations.Hub.Core.Application.Extensions;
 using Orders.Integrations.Hub.Core.Domain.Contracts;
 using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases;
+using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases.Integrations.In;
+using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases.Integrations.Out;
 using Orders.Integrations.Hub.Core.Domain.ValueObjects.Enums;
 using Orders.Integrations.Hub.Integrations.Common;
 using Orders.Integrations.Hub.Integrations.Ifood.Application.Clients;
@@ -38,13 +34,7 @@ public static class IfoodDependencyInjection
         services.AddKeyedScoped<IOrderChangeProductStatusUseCase, IfoodOrderChangeProductStatusUseCase>(OrderIntegration.IFOOD);
         services.AddKeyedScoped<IOrderGetCancellationReasonUseCase, IfoodOrderGetCancellationReasonUseCase>(OrderIntegration.IFOOD);
 
-        services.AddSingleton<ICustomJsonSerializer, CommonJsonSerializer>();
-        services.Configure<JsonOptions>(options => {
-            options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-            options.JsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
-            options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
-            options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.SnakeCaseUpper));
-        });
+        services.AddKeyedSingleton<ICustomJsonSerializer, CommonJsonSerializer>(OrderIntegration.IFOOD);
 
         return services;
     }
@@ -53,13 +43,13 @@ public static class IfoodDependencyInjection
     {
         string baseUrl = AppEnv.INTEGRATIONS.IFOOD.ENDPOINT.BASE_URL.NotNullEnv();
 
-        services.AddHttpClient<IfoodAuthClient, IfoodAuthClient>(client => {
+        services.AddHttpClient<IIFoodAuthClient, IFoodAuthClient>(client => {
             client.BaseAddress = new Uri(baseUrl);
         });
 
         services.AddScoped<IfoodAuthMessageHandler>();
 
-        services.AddHttpClient<IIFoodClient, IfoodClient>(client => {
+        services.AddHttpClient<IIFoodClient, IFoodClient>(client => {
             client.BaseAddress = new Uri(baseUrl);
         }).AddHttpMessageHandler<IfoodAuthMessageHandler>();
 

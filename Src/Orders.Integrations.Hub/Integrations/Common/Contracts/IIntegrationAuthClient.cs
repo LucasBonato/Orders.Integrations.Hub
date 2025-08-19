@@ -3,4 +3,5 @@
 public interface IIntegrationAuthClient<in TRequest, TResponse>
 {
     Task<TResponse> RetrieveToken(TRequest request);
+    Task<TResponse> RefreshToken(TRequest request);
 }

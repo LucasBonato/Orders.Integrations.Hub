@@ -1,4 +1,4 @@
-﻿namespace Orders.Integrations.Hub.Integrations.Common.Contracts;
+﻿namespace Orders.Integrations.Hub.Core.Domain.Contracts;
 
 public interface ICacheService {
     T? TryGet<T>(string key);
