@@ -14,11 +14,16 @@ public class RappiAuthClient(
     {
         string uri = "oauth/token";
 
-        logger.LogInformation("[INFO] - IfoodAuthClient - Uri: {uri}", uri);
+        logger.LogInformation("[INFO] - IFoodAuthClient - Uri: {uri}", uri);
 
         HttpResponseMessage response = await httpClient.PostAsync(uri, new StringContent(jsonSerializer.Serialize(request)));
 
         string responseContent = await response.Content.ReadAsStringAsync();
         return jsonSerializer.Deserialize<RappiAuthTokenResponse>(responseContent)!;
+    }
+
+    public Task<RappiAuthTokenResponse> RefreshToken(RappiAuthTokenRequest request)
+    {
+        throw new NotImplementedException();
     }
 }

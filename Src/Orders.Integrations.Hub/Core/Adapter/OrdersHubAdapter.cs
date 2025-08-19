@@ -1,22 +1,20 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
-
-using Orders.Integrations.Hub.Core.Application.Extensions;
-using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases;
+﻿using Orders.Integrations.Hub.Core.Application.Extensions;
+using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases.Integrations.Out;
 using Orders.Integrations.Hub.Core.Domain.ValueObjects.DTOs.Request;
 using Orders.Integrations.Hub.Core.Domain.ValueObjects.DTOs.Response;
 using Orders.Integrations.Hub.Core.Domain.ValueObjects.Enums;
+
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 
 using static Microsoft.AspNetCore.Http.TypedResults;
 
 namespace Orders.Integrations.Hub.Core.Adapter;
 
-public abstract class OrdersHubAdapterLog;
-
-public static class OrdersHubAdapter
+public class OrdersHubAdapter
 {
     public static async Task<Ok<List<CancellationReasonsResponse>>> GetIntegrationCancellationReason(
-        ILogger<OrdersHubAdapterLog> logger,
+        ILogger<OrdersHubAdapter> logger,
         [FromQuery] string? externalOrderId,
         [FromQuery] OrderIntegration integration,
         [FromServices] IServiceProvider serviceProvider

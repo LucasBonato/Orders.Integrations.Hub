@@ -1,7 +1,7 @@
 ﻿using Orders.Integrations.Hub.Core.Domain.Entity;
 using Orders.Integrations.Hub.Core.Domain.ValueObjects.DTOs;
 
-namespace Orders.Integrations.Hub.Core.Domain.Contracts;
+namespace Orders.Integrations.Hub.Core.Domain.Contracts.Clients;
 
 public interface IOrderClient
 {

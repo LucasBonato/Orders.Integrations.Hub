@@ -4,6 +4,7 @@ using Amazon.S3.Transfer;
 
 using Orders.Integrations.Hub.Core.Application.Extensions;
 using Orders.Integrations.Hub.Core.Domain.Contracts;
+using Orders.Integrations.Hub.Core.Domain.Contracts.Clients;
 
 namespace Orders.Integrations.Hub.Core.Application.Clients;
 

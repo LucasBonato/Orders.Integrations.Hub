@@ -1,6 +1,7 @@
-﻿using Orders.Integrations.Hub.Integrations.Common.Contracts;
+﻿using Orders.Integrations.Hub.Core.Domain.Contracts;
+using Orders.Integrations.Hub.Integrations.Common.Contracts;
 
-namespace Orders.Integrations.Hub.Integrations.Common.Application.Services;
+namespace Orders.Integrations.Hub.Core.Application.Services;
 
 public abstract class BaseCacheService : ICacheService
 {

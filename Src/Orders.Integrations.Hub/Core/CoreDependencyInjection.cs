@@ -16,8 +16,10 @@ using Orders.Integrations.Hub.Core.Adapter;
 using Orders.Integrations.Hub.Core.Application.Clients;
 using Orders.Integrations.Hub.Core.Application.Extensions;
 using Orders.Integrations.Hub.Core.Application.Middlewares;
+using Orders.Integrations.Hub.Core.Application.Services;
 using Orders.Integrations.Hub.Core.Application.UseCases;
 using Orders.Integrations.Hub.Core.Domain.Contracts;
+using Orders.Integrations.Hub.Core.Domain.Contracts.Clients;
 using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases;
 
 namespace Orders.Integrations.Hub.Core;
@@ -56,6 +58,11 @@ public static class CoreDependencyInjection
         services.AddFastEndpoints(options => {
             options.DisableAutoDiscovery = false;
         });
+
+        services
+            .AddCacheServices()
+            .AddSingleton<ICacheService, MemoryCacheService>()
+            ;
 
         services.AddSingleton<ICustomJsonSerializer, CoreJsonSerializer>();
         services.Configure<JsonOptions>(options => {
@@ -107,5 +114,12 @@ public static class CoreDependencyInjection
         });
 
         return services;
+    }
+
+    private static IServiceCollection AddCacheServices(this IServiceCollection services)
+    {
+        return services
+                .AddMemoryCache()
+            ;
     }
 }

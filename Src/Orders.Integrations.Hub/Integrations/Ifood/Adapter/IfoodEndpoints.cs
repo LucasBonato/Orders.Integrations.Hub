@@ -11,7 +11,7 @@ public static class IfoodEndpoints
             ;
 
         routeGroup
-            .MapPost("/Webhook", IfoodAdapter.Webhook)
+            .MapPost("/Webhook", IFoodAdapter.Webhook)
             // .AddEndpointFilter<IfoodSignatureValidator>()
         ;
 

@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
 
-namespace Orders.Integrations.Hub.Integrations.Common.Application.Services;
+namespace Orders.Integrations.Hub.Core.Application.Services;
 
 public class MemoryCacheService(
     IMemoryCache memoryCache

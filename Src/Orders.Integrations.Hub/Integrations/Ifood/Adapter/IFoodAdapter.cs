@@ -1,35 +1,34 @@
 ﻿using System.Text;
 
-using Orders.Integrations.Hub.Core.Application.Extensions;
-
-using Orders.Integrations.Hub.Integrations.Common.Validators;
-
 using Microsoft.AspNetCore.Mvc;
 
+using Orders.Integrations.Hub.Core.Application.Extensions;
+using Orders.Integrations.Hub.Core.Domain.Contracts;
 using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases;
+using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases.Integrations.In;
+using Orders.Integrations.Hub.Core.Domain.ValueObjects.Enums;
+using Orders.Integrations.Hub.Integrations.Common.Validators;
 using Orders.Integrations.Hub.Integrations.Ifood.Domain.ValueObjects.DTOs.Request;
 using Orders.Integrations.Hub.Integrations.Ifood.Domain.ValueObjects.Enums;
 
 using static Microsoft.AspNetCore.Http.Results;
 
-using JsonSerializer = System.Text.Json.JsonSerializer;
-
 namespace Orders.Integrations.Hub.Integrations.Ifood.Adapter;
 
-public abstract class IfoodAdapterLog;
-
-public static class IfoodAdapter
+public class IFoodAdapter
 {
     public static async Task<IResult> Webhook(
-        ILogger<IfoodAdapterLog> logger,
+        [FromKeyedServices(OrderIntegration.IFOOD)] ICustomJsonSerializer jsonSerializer,
         [FromServices] IOrderCreateUseCase<IfoodWebhookRequest> orderCreate,
         [FromServices] IOrderUpdateUseCase<IfoodWebhookRequest> orderUpdate,
         [FromServices] IOrderDisputeUseCase<IfoodWebhookRequest> orderDispute,
+        ILogger<IFoodAdapter> logger,
         HttpContext context
     ) {
-        IfoodWebhookRequest request = await HandleSignature(context, logger);
+        IfoodWebhookRequest request = await HandleSignature(jsonSerializer, logger, context);
 
-        logger.LogInformation("[INFO] - IfoodAdapter - Ifood Webhook code: {FullCode}", request.FullCode);
+        if (request.FullCode != IfoodFullOrderStatus.KEEPALIVE)
+            logger.LogInformation("[INFO] - IFoodAdapter - Ifood Webhook code: {FullCode}", request.FullCode);
 
         return request.FullCode switch
         {
@@ -52,31 +51,40 @@ public static class IfoodAdapter
         };
     }
 
-    private static async Task<IfoodWebhookRequest> HandleSignature(HttpContext context, ILogger<IfoodAdapterLog> logger)
-    {
+    private static async Task<IfoodWebhookRequest> HandleSignature(
+        ICustomJsonSerializer jsonSerializer,
+        ILogger<IFoodAdapter> logger,
+        HttpContext context
+    ) {
         string body;
         using (var reader = new StreamReader(context.Request.Body, Encoding.UTF8, detectEncodingFromByteOrderMarks: false, leaveOpen: true))
         {
             body = await reader.ReadToEndAsync();
         }
 
+        string? signature = context.Request.Headers["X-Ifood-Signature"].FirstOrDefault();
+
+        IfoodWebhookRequest request = jsonSerializer.Deserialize<IfoodWebhookRequest>(body)!;
+
+        if (request.FullCode == IfoodFullOrderStatus.KEEPALIVE)
+            return request;
+
         logger.LogInformation("[INFO] - IfoodSignatureValidator - Request Body: {body}", body);
 
-        string? signature = context.Request.Headers["X-Ifood-Signature"].FirstOrDefault();
         string secret = AppEnv.INTEGRATIONS.IFOOD.CLIENT.SECRET.NotNullEnv();
 
         if (signature == null)
         {
             logger.LogWarning("[WARN] - Signature header is missing.");
-            throw new("Signature header is missing.");
+            throw new Exception("Signature header is missing.");
         }
 
         if (!signature.IsSignatureValid(secret, body))
         {
             logger.LogWarning("[WARN] - Invalid signature.");
-            throw new("Invalid signature");
+            throw new Exception("Invalid signature");
         }
 
-        return JsonSerializer.Deserialize<IfoodWebhookRequest>(body)!;
+        return request;
     }
 }
