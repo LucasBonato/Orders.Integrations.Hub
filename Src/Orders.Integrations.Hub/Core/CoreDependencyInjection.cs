@@ -20,7 +20,7 @@ using Orders.Integrations.Hub.Core.Application.Services;
 using Orders.Integrations.Hub.Core.Application.UseCases;
 using Orders.Integrations.Hub.Core.Domain.Contracts;
 using Orders.Integrations.Hub.Core.Domain.Contracts.Clients;
-using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases;
+using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases.Core;
 
 namespace Orders.Integrations.Hub.Core;
 

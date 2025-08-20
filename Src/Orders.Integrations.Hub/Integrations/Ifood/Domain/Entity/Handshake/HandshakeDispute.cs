@@ -9,7 +9,7 @@ public record HandshakeDispute(
     [property: JsonPropertyName("parentDisputeId")] string? ParentDisputeId,
     [property: JsonPropertyName("action")] [property: JsonConverter(typeof(JsonStringEnumConverter))] HandshakeAction Action,
     [property: JsonPropertyName("message")] string? Message,
-    [property: JsonPropertyName("alternatives")] List<DisputeAlternative>? Alternatives,
+    [property: JsonPropertyName("alternatives")] List<IfoodDisputeAlternative>? Alternatives,
     [property: JsonPropertyName("expiresAt")] DateTime ExpiresAt,
     [property: JsonPropertyName("createdAt")] DateTime CreatedAt,
     [property: JsonPropertyName("handshakeType")] [property: JsonConverter(typeof(JsonStringEnumConverter))] HandshakeType HandshakeType,

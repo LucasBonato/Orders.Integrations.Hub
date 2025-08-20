@@ -2,8 +2,6 @@
 using System.Net.Http.Headers;
 using System.Text;
 
-using Orders.Integrations.Hub.Integrations.Ifood.Domain.ValueObjects.Enums.Handshake;
-
 using Orders.Integrations.Hub.Core.Domain.Contracts;
 using Orders.Integrations.Hub.Core.Domain.ValueObjects.DTOs.Request;
 using Orders.Integrations.Hub.Core.Domain.ValueObjects.Enums;

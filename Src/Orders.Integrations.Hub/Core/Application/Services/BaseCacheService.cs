@@ -1,5 +1,4 @@
 ﻿using Orders.Integrations.Hub.Core.Domain.Contracts;
-using Orders.Integrations.Hub.Integrations.Common.Contracts;
 
 namespace Orders.Integrations.Hub.Core.Application.Services;
 

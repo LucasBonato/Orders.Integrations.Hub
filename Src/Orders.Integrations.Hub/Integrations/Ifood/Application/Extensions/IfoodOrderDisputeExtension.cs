@@ -2,9 +2,6 @@
 using Orders.Integrations.Hub.Core.Domain.Entity.Dispute;
 using Orders.Integrations.Hub.Integrations.Ifood.Domain.Entity.Handshake;
 
-using Dispute_DisputeAlternative = Orders.Integrations.Hub.Core.Domain.Entity.Dispute.DisputeAlternative;
-using DisputeAlternative = Orders.Integrations.Hub.Core.Domain.Entity.Dispute.DisputeAlternative;
-
 namespace Orders.Integrations.Hub.Integrations.Ifood.Application.Extensions;
 
 public static class IfoodOrderDisputeExtension
@@ -14,9 +11,9 @@ public static class IfoodOrderDisputeExtension
         if (ifoodDispute == null)
             return null;
 
-        List<Dispute_DisputeAlternative>? alternatives = ifoodDispute.Alternatives?
+        List<DisputeAlternative>? alternatives = ifoodDispute.Alternatives?
             .Select(alternative =>
-                new Dispute_DisputeAlternative(
+                new DisputeAlternative(
                    AlternativeId: alternative.Id,
                    Type: alternative.Type,
                    Price: (alternative.Metadata is null) ? alternative.Amount?.ToPrice() : alternative.Metadata.Amount?.ToPrice(),

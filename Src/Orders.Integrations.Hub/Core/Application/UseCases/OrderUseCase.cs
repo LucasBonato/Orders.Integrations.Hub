@@ -1,8 +1,7 @@
 ﻿using System.Text.Json;
 
-using Orders.Integrations.Hub.Core.Domain.Contracts;
 using Orders.Integrations.Hub.Core.Domain.Contracts.Clients;
-using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases;
+using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases.Core;
 using Orders.Integrations.Hub.Core.Domain.ValueObjects.Events;
 
 namespace Orders.Integrations.Hub.Core.Application.UseCases;
