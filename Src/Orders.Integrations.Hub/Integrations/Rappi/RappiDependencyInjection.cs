@@ -1,14 +1,10 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 
-using Orders.Integrations.Hub.Core.Application.Extensions;
-
-using Orders.Integrations.Hub.Integrations.Rappi.Application.Ports;
-
 using Microsoft.AspNetCore.Mvc;
 
+using Orders.Integrations.Hub.Core.Application.Extensions;
 using Orders.Integrations.Hub.Core.Domain.Contracts;
-using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases;
 using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases.Integrations.In;
 using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases.Integrations.Out;
 using Orders.Integrations.Hub.Core.Domain.ValueObjects.Enums;

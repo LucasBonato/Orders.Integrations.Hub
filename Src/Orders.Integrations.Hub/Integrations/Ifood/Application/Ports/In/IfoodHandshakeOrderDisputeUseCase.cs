@@ -1,16 +1,13 @@
 ﻿using System.Text.Json;
 
-using Orders.Integrations.Hub.Integrations.Ifood.Application.Extensions;
-
 using FastEndpoints;
 
-using Orders.Integrations.Hub.Core.Domain.Contracts;
 using Orders.Integrations.Hub.Core.Domain.Contracts.Clients;
-using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases;
 using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases.Integrations.In;
 using Orders.Integrations.Hub.Core.Domain.ValueObjects.Enums;
 using Orders.Integrations.Hub.Core.Domain.ValueObjects.Events;
 using Orders.Integrations.Hub.Integrations.Common;
+using Orders.Integrations.Hub.Integrations.Ifood.Application.Extensions;
 using Orders.Integrations.Hub.Integrations.Ifood.Domain.Contracts;
 using Orders.Integrations.Hub.Integrations.Ifood.Domain.Entity.Handshake;
 using Orders.Integrations.Hub.Integrations.Ifood.Domain.ValueObjects.DTOs.Request;
@@ -49,7 +46,7 @@ public class IfoodHandshakeOrderDisputeUseCase(
                     Message: settlement.Status.ToString(), //?? settlement.Reason?? string.Empty,
                     Alternatives: settlement.SelectedDisputeAlternative is { } alternative
                         ? [
-                            new DisputeAlternative(
+                            new IfoodDisputeAlternative(
                                 Id: alternative.Id,
                                 Type: alternative.Type,
                                 Metadata: alternative.Metadata,

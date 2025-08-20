@@ -2,7 +2,6 @@
 
 using Orders.Integrations.Hub.Core.Application.Extensions;
 using Orders.Integrations.Hub.Core.Domain.Contracts;
-using Orders.Integrations.Hub.Integrations.Common.Contracts;
 using Orders.Integrations.Hub.Integrations.Ifood.Application.Clients;
 using Orders.Integrations.Hub.Integrations.Ifood.Domain.ValueObjects.DTOs.Request;
 using Orders.Integrations.Hub.Integrations.Ifood.Domain.ValueObjects.DTOs.Response;

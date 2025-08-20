@@ -1,5 +1,4 @@
-﻿using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases;
-using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases.Integrations.Out;
+﻿using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases.Integrations.Out;
 using Orders.Integrations.Hub.Integrations.Rappi.Domain.Contracts;
 using Orders.Integrations.Hub.Integrations.Rappi.Domain.ValueObjects.DTOs;
 using Orders.Integrations.Hub.Integrations.Rappi.Domain.ValueObjects.DTOs.Request;
@@ -17,7 +16,7 @@ public class RappiOrderChangeProductStatusUseCase(
 
         if (stores.Length is 0)
         {
-            throw new();
+            throw new Exception();
         }
 
         Task[] requests = stores
@@ -42,7 +41,7 @@ public class RappiOrderChangeProductStatusUseCase(
 
         if (stores.Length is 0)
         {
-            throw new();
+            throw new Exception();
         }
 
         Task[] requests = stores

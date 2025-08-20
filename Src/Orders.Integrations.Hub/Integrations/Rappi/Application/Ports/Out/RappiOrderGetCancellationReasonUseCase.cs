@@ -1,5 +1,4 @@
-﻿using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases;
-using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases.Integrations.Out;
+﻿using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases.Integrations.Out;
 using Orders.Integrations.Hub.Core.Domain.ValueObjects.DTOs.Response;
 using Orders.Integrations.Hub.Integrations.Rappi.Domain.ValueObjects.Enums;
 

@@ -78,7 +78,7 @@ public class RappiWebhookAdapter {
         ILogger<RappiWebhookAdapter> logger,
         HttpContext context
     ) {
-        RappiWebhookPingRequest request = await HandleSignature<RappiWebhookPingRequest>(context, logger, serializer);
+        RappiWebhookPingRequest _ = await HandleSignature<RappiWebhookPingRequest>(context, logger, serializer);
 
         // TODO - Manage better this response finding somewhere if the store is on
 
