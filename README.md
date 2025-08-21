@@ -275,8 +275,8 @@ cp .env.example .env
 #### 🔑 Environment Variables Overview
 
 > The exact keys used depend on whether an integration is **multi-tenant** or **centralized**.  
-> Multi-tenant integrations fetch credentials from the internal API (and mostly need base URLs + cache keys).  
-> Centralized integrations read credentials directly from env vars.
+> Multi-tenant integrations fetch credentials from the internal API (and mostly need base URLs).  
+> Centralized integrations read credentials directly from env vars + cache keys.
 
 | Category   | Variables (examples)                                                                                                                                                                                |
 |------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
