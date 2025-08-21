@@ -1,5 +1,7 @@
 ﻿using Orders.Integrations.Hub.Integrations.Common.Application;
 using Orders.Integrations.Hub.Integrations.Common.Contracts;
+using Orders.Integrations.Hub.Integrations.Food99;
+using Orders.Integrations.Hub.Integrations.Food99.Adapter;
 using Orders.Integrations.Hub.Integrations.IFood;
 using Orders.Integrations.Hub.Integrations.IFood.Adapter;
 using Orders.Integrations.Hub.Integrations.Rappi;
@@ -15,6 +17,7 @@ public static class IntegrationsDependencyInjection
                 .AddServices()
                 .AddIFood()
                 .AddRappi()
+                .AddFood99()
             ;
     }
 
@@ -23,6 +26,7 @@ public static class IntegrationsDependencyInjection
         return app
                 .UseIFoodEndpoints()
                 .UseRappiEndpoints()
+                .UseFood99Endpoints()
             ;
     }
 
