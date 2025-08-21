@@ -6,7 +6,7 @@ services:
     env_file:
       - .env
     ports:
-      - "5077:5077"
+      - "5077:8080"
     restart: always
   grafana.dashboard:
     image: grafana/otel-lgtm
