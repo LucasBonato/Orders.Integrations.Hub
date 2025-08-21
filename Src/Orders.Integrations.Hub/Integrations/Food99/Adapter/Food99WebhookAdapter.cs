@@ -2,11 +2,12 @@
 
 using Microsoft.AspNetCore.Mvc;
 
-using Orders.Integrations.Hub.Core.Application.Extensions;
 using Orders.Integrations.Hub.Core.Domain.Contracts;
+using Orders.Integrations.Hub.Core.Domain.Contracts.Clients;
 using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases.Integrations.In;
 using Orders.Integrations.Hub.Core.Domain.ValueObjects.Enums;
 using Orders.Integrations.Hub.Integrations.Common.Contracts;
+using Orders.Integrations.Hub.Integrations.Common.Extensions;
 using Orders.Integrations.Hub.Integrations.Common.Validators;
 using Orders.Integrations.Hub.Integrations.Food99.Domain.Entity;
 using Orders.Integrations.Hub.Integrations.Food99.Domain.ValueObjects.Enums;
@@ -22,12 +23,13 @@ public class Food99WebhookAdapter
         [FromServices] IOrderCreateUseCase<Food99WebhookRequest> orderCreate,
         [FromServices] IOrderUpdateUseCase<Food99WebhookRequest> orderUpdate,
         [FromServices] IOrderDisputeUseCase<Food99WebhookRequest> orderDispute,
-        [FromServices] IServiceProvider serviceProvider,
         [FromServices] IIntegrationContext integrationContext,
+        [FromServices] IServiceProvider serviceProvider,
+        [FromServices] IInternalClient internalClient,
         ILogger<Food99WebhookAdapter> logger,
         HttpContext context
     ) {
-        Food99WebhookRequest request = await HandleSignature(integrationContext, serializer, logger, context);
+        Food99WebhookRequest request = await HandleSignature(integrationContext, logger, serializer, internalClient, context);
 
         Food99WebhookRequest? result = request.Type switch {
             Food99Type.OrderNew => await orderCreate.ExecuteAsync(request),
@@ -53,12 +55,14 @@ public class Food99WebhookAdapter
     /// <param name="integrationContext">The context of the integration</param>
     /// <param name="serializer">A serializer with food99 configs</param>
     /// <param name="logger">A logger</param>
+    /// <param name="internalClient">Client to get info about the integration</param>
     /// <param name="context">The HttpContext of the request</param>
     /// <returns>The Body of the request formatted as a Food99Order</returns>
     private static async Task<Food99WebhookRequest> HandleSignature(
         IIntegrationContext integrationContext,
-        ICustomJsonSerializer serializer,
         ILogger<Food99WebhookAdapter> logger,
+        ICustomJsonSerializer serializer,
+        IInternalClient internalClient,
         HttpContext context
     ) {
         string body;
@@ -72,10 +76,10 @@ public class Food99WebhookAdapter
 
         logger.LogInformation("[INFO] - 99FoodSignatureValidator - Request body: {body}", body);
 
-        // integrationContext.Integration = await internalClient.GetIntegrationByExternalId(request.AppShopId);
+        integrationContext.Integration = (await internalClient.GetIntegrationByExternalId(request.AppShopId)).Resolve99Food();
         integrationContext.MerchantId = request.AppShopId;
 
-        string secret = AppEnv.INTEGRATIONS.FOOD99.CLIENT.SECRET.NotNullEnv();
+        string secret = integrationContext.Integration.ClientSecret;
 
         if (signature == null) {
             context.Response.StatusCode = 401;
