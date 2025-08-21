@@ -4,5 +4,6 @@ public enum OrderIntegration
 {
     NOTHING = 0,
     IFOOD = 1,
-    RAPPI = 2
+    RAPPI = 2,
+    FOOD99 = 3,
 }

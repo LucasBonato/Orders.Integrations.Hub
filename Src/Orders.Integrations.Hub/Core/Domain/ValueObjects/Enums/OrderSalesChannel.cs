@@ -4,5 +4,6 @@ public enum OrderSalesChannel
 {
     INTERNAL,
     IFOOD,
-    RAPPI
+    RAPPI,
+    FOOD99
 }
