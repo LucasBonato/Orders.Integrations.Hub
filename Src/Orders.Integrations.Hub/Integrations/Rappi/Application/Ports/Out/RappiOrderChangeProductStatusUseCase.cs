@@ -8,7 +8,7 @@ namespace Orders.Integrations.Hub.Integrations.Rappi.Application.Ports.Out;
 public class RappiOrderChangeProductStatusUseCase(
     IRappiClient rappiClient
 ) : IOrderChangeProductStatusUseCase {
-    public async Task Enable(object productEvent)
+    public Task Enable(object productEvent)
     {
         object[] stores = [];
         string storeId = string.Empty;
@@ -31,9 +31,11 @@ public class RappiOrderChangeProductStatusUseCase(
             .ToArray();
 
         Task.WaitAll(requests);
+
+        return Task.CompletedTask;
     }
 
-    public async Task Disable(object productEvent)
+    public Task Disable(object productEvent)
     {
         object[] stores = [];
         string storeId = string.Empty;
@@ -56,6 +58,8 @@ public class RappiOrderChangeProductStatusUseCase(
             .ToArray();
 
         Task.WaitAll(requests);
+
+        return Task.CompletedTask;
     }
 
     private async Task MakeUpdateProductRequest(RappiAvailabilityUpdateItemsRequest request)

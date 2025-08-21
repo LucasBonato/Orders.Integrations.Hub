@@ -7,7 +7,7 @@ public class InternalClient(
     ILogger<InternalClient> logger,
     HttpClient httpClient
 ) : IInternalClient {
-    public async Task<IntegrationResponse> GetIntegrationByExternalId(string externalId) {
+    public Task<IntegrationResponse> GetIntegrationByExternalId(string externalId) {
         throw new NotImplementedException();
     }
 }
