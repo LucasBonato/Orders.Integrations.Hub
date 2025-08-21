@@ -4,8 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 
 using Orders.Integrations.Hub.Core.Application.Extensions;
 using Orders.Integrations.Hub.Core.Domain.Contracts;
+using Orders.Integrations.Hub.Core.Domain.Contracts.Clients;
 using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases.Integrations.In;
 using Orders.Integrations.Hub.Core.Domain.ValueObjects.Enums;
+using Orders.Integrations.Hub.Integrations.Common.Contracts;
+using Orders.Integrations.Hub.Integrations.Common.Extensions;
 using Orders.Integrations.Hub.Integrations.Common.Validators;
 using Orders.Integrations.Hub.Integrations.Rappi.Domain.Entity;
 using Orders.Integrations.Hub.Integrations.Rappi.Domain.ValueObjects.DTOs.Request;
@@ -19,10 +22,12 @@ public class RappiWebhookAdapter {
     public static async Task<IResult> CreateOrder(
         [FromKeyedServices(OrderIntegration.RAPPI)] ICustomJsonSerializer serializer,
         [FromServices] IOrderCreateUseCase<RappiOrder> orderCreate,
+        [FromServices] IIntegrationContext integrationContext,
+        [FromServices] IInternalClient internalClient,
         ILogger<RappiWebhookAdapter> logger,
         HttpContext context
     ) {
-        RappiOrder request = await HandleSignature<RappiOrder>(context, logger, serializer);
+        RappiOrder request = await HandleSignature<RappiOrder>(integrationContext, logger, serializer, internalClient, context);
         
         await orderCreate.ExecuteAsync(request);
 
@@ -32,10 +37,12 @@ public class RappiWebhookAdapter {
     public static async Task<IResult> CancelOrder(
         [FromKeyedServices(OrderIntegration.RAPPI)] ICustomJsonSerializer serializer,
         [FromServices] IOrderUpdateUseCase<RappiWebhookEventOrderRequest> orderUpdate,
+        [FromServices] IIntegrationContext integrationContext,
+        [FromServices] IInternalClient internalClient,
         ILogger<RappiWebhookAdapter> logger,
         HttpContext context
     ) {
-        RappiWebhookEventOrderRequest request = await HandleSignature<RappiWebhookEventOrderRequest>(context, logger, serializer);
+        RappiWebhookEventOrderRequest request = await HandleSignature<RappiWebhookEventOrderRequest>(integrationContext, logger, serializer, internalClient, context);
         await orderUpdate.ExecuteAsync(request);
         return Accepted();
     }
@@ -43,20 +50,24 @@ public class RappiWebhookAdapter {
     public static async Task<IResult> PatchOrder(
         [FromKeyedServices(OrderIntegration.RAPPI)] ICustomJsonSerializer serializer,
         [FromServices] IOrderUpdateUseCase<RappiWebhookEventOrderRequest> orderUpdate,
+        [FromServices] IIntegrationContext integrationContext,
+        [FromServices] IInternalClient internalClient,
         ILogger<RappiWebhookAdapter> logger,
         HttpContext context
     ) {
-        RappiWebhookEventOrderRequest request = await HandleSignature<RappiWebhookEventOrderRequest>(context, logger, serializer);
+        RappiWebhookEventOrderRequest request = await HandleSignature<RappiWebhookEventOrderRequest>(integrationContext, logger, serializer, internalClient, context);
         await orderUpdate.ExecuteAsync(request);
         return Accepted();
     }
 
     public static async Task<IResult> PingStore(
         [FromKeyedServices(OrderIntegration.RAPPI)] ICustomJsonSerializer serializer,
+        [FromServices] IIntegrationContext integrationContext,
+        [FromServices] IInternalClient internalClient,
         ILogger<RappiWebhookAdapter> logger,
         HttpContext context
     ) {
-        RappiWebhookPingRequest _ = await HandleSignature<RappiWebhookPingRequest>(context, logger, serializer);
+        RappiWebhookPingRequest _ = await HandleSignature<RappiWebhookPingRequest>(integrationContext, logger, serializer, internalClient, context);
 
         // TODO - Manage better this response finding somewhere if the store is on
 
@@ -69,14 +80,18 @@ public class RappiWebhookAdapter {
     /// <summary>
     /// This will valid the signature <c>Rappi-Signature</c>
     /// </summary>
+    /// <param name="internalClient">Client to get info of the integration</param>
     /// <param name="context">The HttpContext of the request</param>
+    /// <param name="integrationContext">Context of the integration for the request scope</param>
     /// <param name="logger">A logger</param>
     /// <param name="serializer">A serializer with rappi configs</param>
     /// <returns>The Body of the request formatted as a RappiOrder</returns>
     private static async Task<TRequest> HandleSignature<TRequest>(
-        HttpContext context,
+        IIntegrationContext integrationContext,
         ILogger<RappiWebhookAdapter> logger,
-        ICustomJsonSerializer serializer
+        ICustomJsonSerializer serializer,
+        IInternalClient internalClient,
+        HttpContext context
     ) {
         string body;
         using (var reader = new StreamReader(context.Request.Body, Encoding.UTF8, detectEncodingFromByteOrderMarks: false, leaveOpen: true)) {
@@ -105,7 +120,17 @@ public class RappiWebhookAdapter {
 
         signature = timestampAndSign["sign"];
 
-        string secret = AppEnv.INTEGRATIONS.RAPPI.CLIENT.SECRET.NotNullEnv();
+        string merchantId = request switch {
+            RappiOrder rappiOrder => rappiOrder.Store.ExternalId,
+            RappiWebhookEventOrderRequest rappiOrderEvent => rappiOrderEvent.StoreId,
+            RappiWebhookPingRequest rappiPing => rappiPing.StoreId.ToString(),
+            _ => throw new InvalidOperationException()
+        };
+
+        integrationContext.Integration = (await internalClient.GetIntegrationByExternalId(merchantId)).ResolveRappi();
+        integrationContext.MerchantId = merchantId;
+
+        string secret = integrationContext.Integration.ClientSecret;
 
         if (!signature.IsSignatureValid(secret, body)) {
             logger.LogWarning("[WARN] - Invalid signature.");
