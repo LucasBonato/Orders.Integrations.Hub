@@ -1,12 +1,10 @@
 ﻿using System.Net.Http.Headers;
 
-using Orders.Integrations.Hub.Core.Application.Extensions;
 using Orders.Integrations.Hub.Core.Domain.Contracts;
-using Orders.Integrations.Hub.Core.Domain.ValueObjects.DTOs.Internal;
 using Orders.Integrations.Hub.Integrations.Common;
 using Orders.Integrations.Hub.Integrations.Common.Contracts;
 using Orders.Integrations.Hub.Integrations.Common.Extensions;
-using Orders.Integrations.Hub.Integrations.IFood.Application.Clients;
+using Orders.Integrations.Hub.Integrations.IFood.Domain.Contracts;
 using Orders.Integrations.Hub.Integrations.IFood.Domain.ValueObjects.DTOs.Request;
 using Orders.Integrations.Hub.Integrations.IFood.Domain.ValueObjects.DTOs.Response;
 
@@ -14,7 +12,7 @@ namespace Orders.Integrations.Hub.Integrations.IFood.Application.Handlers;
 
 public class IFoodAuthMessageHandler(
     ILogger<IFoodAuthMessageHandler> logger,
-    IFoodAuthClient iFoodAuthClient,
+    IIFoodAuthClient iFoodAuthClient,
     ICacheService cacheService
 ) : DelegatingHandler {
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
