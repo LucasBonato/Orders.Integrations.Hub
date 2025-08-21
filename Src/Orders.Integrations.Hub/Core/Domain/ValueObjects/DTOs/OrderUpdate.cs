@@ -5,7 +5,7 @@ namespace Orders.Integrations.Hub.Core.Domain.ValueObjects.DTOs;
 
 public record OrderUpdate(
     string OrderId,
-    string SourceAppId,
+    OrderIntegration SourceAppId,
     OrderEventType Type,
     DateTime CreateAt,
     OrderDispute? Dispute,

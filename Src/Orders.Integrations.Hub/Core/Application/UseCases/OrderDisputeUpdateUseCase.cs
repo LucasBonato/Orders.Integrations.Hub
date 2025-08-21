@@ -12,7 +12,7 @@ public class OrderDisputeUpdateUseCase(
     {
         OrderUpdate orderUpdate = new(
             OrderId: orderDisputeEvent.ExternalOrderId,
-            SourceAppId: orderDisputeEvent.Integration.ToString(),
+            SourceAppId: orderDisputeEvent.Integration,
             Type: orderDisputeEvent.Type,
             CreateAt: DateTime.UtcNow,
             Dispute: orderDisputeEvent.OrderDispute,

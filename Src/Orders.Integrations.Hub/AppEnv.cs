@@ -48,6 +48,22 @@ public static class AppEnv
                 public static readonly AnvEnv KEY = new("INTEGRATIONS__RAPPI__CACHE__KEY");
             }
         }
+        public static class FOOD99
+        {
+            public static class CLIENT
+            {
+                public static readonly AnvEnv ID = new("INTEGRATIONS__FOOD99__CLIENT__ID");
+                public static readonly AnvEnv SECRET = new("INTEGRATIONS__FOOD99__CLIENT__SECRET");
+            }
+            public static class ENDPOINT
+            {
+                public static readonly AnvEnv BASE_URL = new("INTEGRATIONS__FOOD99__ENDPOINT__BASE_URL");
+            }
+            public static class CACHE
+            {
+                public static readonly AnvEnv KEY = new("INTEGRATIONS__FOOD99__CACHE__KEY");
+            }
+        }
     }
     public static class MEMCACHED
     {

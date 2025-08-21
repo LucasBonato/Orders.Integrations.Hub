@@ -1,4 +1,5 @@
 ﻿using Orders.Integrations.Hub.Core.Domain.ValueObjects.DTOs.Internal;
+using Orders.Integrations.Hub.Integrations.Food99.Domain.ValueObjects.DTOs;
 using Orders.Integrations.Hub.Integrations.IFood.Domain.ValueObjects;
 using Orders.Integrations.Hub.Integrations.Rappi.Domain.ValueObjects.DTOs;
 
@@ -28,16 +29,16 @@ public static class IntegrationResolverExtension
         );
     }
 
-    // public static Food99IntegrationResolved Resolve99Food(this IntegrationResponse integration)
-    // {
-    //     string appShopId = integration.GetSettingValue("99food_app_shop_id");
-    //     bool autoAccept = integration.GetAutoAcceptProperty();
-    //
-    //     return new Food99IntegrationResolved(
-    //         Food99AppShopId: appShopId,
-    //         AutoAccept: autoAccept
-    //     );
-    // }
+    public static Food99IntegrationResolved Resolve99Food(this IntegrationResponse integration)
+    {
+        string appShopId = integration.GetSettingValue("99food_app_shop_id");
+        bool autoAccept = integration.GetAutoAcceptProperty();
+
+        return new Food99IntegrationResolved(
+            Food99AppShopId: appShopId,
+            AutoAccept: autoAccept
+        );
+    }
 
     private static bool GetAutoAcceptProperty(this IntegrationResponse integration) {
         string autoAcceptString = integration.Settings.FirstOrDefault(setting => setting.Name is "enable_auto_accept")?.Value ?? "false";
