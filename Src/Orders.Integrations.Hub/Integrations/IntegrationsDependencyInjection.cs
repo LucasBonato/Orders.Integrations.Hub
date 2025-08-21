@@ -16,7 +16,7 @@ public static class IntegrationsDependencyInjection
             ;
     }
 
-    public static IApplicationBuilder UseIntegrationsModule(this WebApplication app)
+    public static WebApplication UseIntegrationsModule(this WebApplication app)
     {
         return app
                 .UseIfoodEndpoints()

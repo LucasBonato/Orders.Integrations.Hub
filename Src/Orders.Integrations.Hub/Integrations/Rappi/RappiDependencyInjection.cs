@@ -1,9 +1,4 @@
-﻿using System.Text.Json;
-using System.Text.Json.Serialization;
-
-using Microsoft.AspNetCore.Mvc;
-
-using Orders.Integrations.Hub.Core.Application.Extensions;
+﻿using Orders.Integrations.Hub.Core.Application.Extensions;
 using Orders.Integrations.Hub.Core.Domain.Contracts;
 using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases.Integrations.In;
 using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases.Integrations.Out;
@@ -36,12 +31,6 @@ public static class RappiDependencyInjection
         services.AddKeyedScoped<IOrderGetCancellationReasonUseCase, RappiOrderGetCancellationReasonUseCase>(OrderIntegration.RAPPI);
 
         services.AddSingleton<ICustomJsonSerializer, RappiJsonSerializer>();
-        services.Configure<JsonOptions>(options => {
-            options.JsonSerializerOptions.PropertyNamingPolicy = RappiJsonSerializer.Options.PropertyNamingPolicy;
-            options.JsonSerializerOptions.DictionaryKeyPolicy = RappiJsonSerializer.Options.DictionaryKeyPolicy;
-            options.JsonSerializerOptions.PropertyNameCaseInsensitive = RappiJsonSerializer.Options.PropertyNameCaseInsensitive;
-            options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.SnakeCaseUpper));
-        });
 
         return services;
     }

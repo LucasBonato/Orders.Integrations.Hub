@@ -1,12 +1,10 @@
-﻿using System.Text.Json.Serialization;
-
-namespace Orders.Integrations.Hub.Core.Domain.Entity;
+﻿namespace Orders.Integrations.Hub.Core.Domain.Entity;
 
 public record OrderCustomer(
-    [property: JsonPropertyName("id")] string Id,
-    [property: JsonPropertyName("name")] string Name,
-    [property: JsonPropertyName("documentNumber")] string DocumentNumber,
-    [property: JsonPropertyName("email")] string? Email,
-    [property: JsonPropertyName("phone")] Phone Phone,
-    [property: JsonPropertyName("ordersCountOnMerchant")] int OrdersCountOnMerchant
+    string Id,
+    string Name,
+    string DocumentNumber,
+    string? Email,
+    Phone Phone,
+    int OrdersCountOnMerchant
 );

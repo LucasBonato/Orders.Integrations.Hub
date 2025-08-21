@@ -2,4 +2,4 @@
 
 namespace Orders.Integrations.Hub.Integrations.Common;
 
-public class CommonJsonSerializer : CoreJsonSerializer { }
+public class CommonJsonSerializer : CoreJsonSerializer;

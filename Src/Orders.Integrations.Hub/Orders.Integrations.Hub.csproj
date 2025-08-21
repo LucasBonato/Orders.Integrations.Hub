@@ -28,7 +28,6 @@
 
   <ItemGroup>
     <Folder Include="Core\Domain\Contracts\UseCases\Integrations\" />
-    <Folder Include="Integrations\Common\Application\" />
   </ItemGroup>
 
 </Project>

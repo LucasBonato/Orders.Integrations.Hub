@@ -1,25 +1,23 @@
-﻿using System.Text.Json.Serialization;
-
-using Orders.Integrations.Hub.Integrations.Ifood.Domain.ValueObjects.Enums;
+﻿using Orders.Integrations.Hub.Integrations.Ifood.Domain.ValueObjects.Enums;
 
 namespace Orders.Integrations.Hub.Integrations.Ifood.Domain.Entity.Order.Item;
 
 public record Item(
-    [property: JsonPropertyName("index")] int Index,
-    [property: JsonPropertyName("id")] string Id,
-    [property: JsonPropertyName("uniqueId")] string UniqueId,
-    [property: JsonPropertyName("imageUrl")] string ImageUrl,
-    [property: JsonPropertyName("externalCode")] string? ExternalCode,
-    [property: JsonPropertyName("ean")] string Ean,
-    [property: JsonPropertyName("name")] string Name,
-    [property: JsonPropertyName("type")] string Type,
-    [property: JsonPropertyName("quantity")] int Quantity,
-    [property: JsonPropertyName("unit")] [property: JsonConverter(typeof(JsonStringEnumConverter))] Unit Unit,
-    [property: JsonPropertyName("unitPrice")] decimal UnitPrice,
-    [property: JsonPropertyName("price")] decimal Price,
-    [property: JsonPropertyName("scalePrices")] ScalePrices ScalePrices,
-    [property: JsonPropertyName("optionsPrice")] decimal OptionsPrice,
-    [property: JsonPropertyName("totalPrice")] decimal TotalPrice,
-    [property: JsonPropertyName("observations")] string Observations,
-    [property: JsonPropertyName("options")] IReadOnlyList<Option>? Options
+    int Index,
+    string Id,
+    string UniqueId,
+    string ImageUrl,
+    string? ExternalCode,
+    string Ean,
+    string Name,
+    string Type,
+    int Quantity,
+    Unit Unit,
+    decimal UnitPrice,
+    decimal Price,
+    ScalePrices ScalePrices,
+    decimal OptionsPrice,
+    decimal TotalPrice,
+    string Observations,
+    IReadOnlyList<Option>? Options
 );
