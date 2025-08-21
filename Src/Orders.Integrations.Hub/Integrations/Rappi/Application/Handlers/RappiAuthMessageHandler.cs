@@ -1,5 +1,8 @@
 ﻿using Orders.Integrations.Hub.Core.Application.Extensions;
 using Orders.Integrations.Hub.Core.Domain.Contracts;
+using Orders.Integrations.Hub.Integrations.Common;
+using Orders.Integrations.Hub.Integrations.Common.Contracts;
+using Orders.Integrations.Hub.Integrations.Common.Extensions;
 using Orders.Integrations.Hub.Integrations.Rappi.Application.Clients;
 using Orders.Integrations.Hub.Integrations.Rappi.Domain.ValueObjects.DTOs.Request;
 using Orders.Integrations.Hub.Integrations.Rappi.Domain.ValueObjects.DTOs.Response;
@@ -11,23 +14,27 @@ public class RappiAuthMessageHandler(
     RappiAuthClient rappiAuthClient,
     ICacheService cacheService
 ) : DelegatingHandler {
-    private readonly string CACHE_KEY = AppEnv.INTEGRATIONS.RAPPI.CACHE.KEY.NotNullEnv();
-
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
         if (request.Headers.Authorization is not null) {
             return await base.SendAsync(request, cancellationToken);
         }
 
+        IIntegrationContext integrationContext = request.GetIntegrationContext();
+
+        IntegrationResolved integration = integrationContext.Integration ?? throw new NullReferenceException("integrationContext.Integration");
+
+        string cacheKey = $"rappi-token:{integration.TenantId}:{integration.MerchantId}";
+
         string accessToken = await cacheService.GetOrSetTokenAsync(
-            CACHE_KEY,
+            cacheKey,
             nameof(RappiAuthMessageHandler),
             logger,
             async () => {
                 RappiAuthTokenResponse token = await rappiAuthClient.RetrieveToken(
                     new RappiAuthTokenRequest(
-                        ClienteId: AppEnv.INTEGRATIONS.RAPPI.CLIENT.ID.NotNullEnv(),
-                        ClienteSecret: AppEnv.INTEGRATIONS.RAPPI.CLIENT.SECRET.NotNullEnv(),
+                        ClienteId: integration.ClientId,
+                        ClienteSecret: integration.ClientSecret,
                         Audience: AppEnv.INTEGRATIONS.RAPPI.CLIENT.AUDIENCE.NotNullEnv()
                     )
                 );

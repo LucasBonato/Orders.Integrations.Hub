@@ -1,11 +1,12 @@
-﻿using System.Net;
-using System.Net.Http.Headers;
+﻿using System.Net.Http.Headers;
 using System.Text;
 
 using Orders.Integrations.Hub.Core.Domain.Contracts;
 using Orders.Integrations.Hub.Core.Domain.ValueObjects.DTOs.Request;
 using Orders.Integrations.Hub.Core.Domain.ValueObjects.Enums;
 using Orders.Integrations.Hub.Integrations.Common;
+using Orders.Integrations.Hub.Integrations.Common.Contracts;
+using Orders.Integrations.Hub.Integrations.Common.Extensions;
 using Orders.Integrations.Hub.Integrations.IFood.Domain.Contracts;
 using Orders.Integrations.Hub.Integrations.IFood.Domain.Entity.Order;
 using Orders.Integrations.Hub.Integrations.IFood.Domain.Entity.Order.MerchantDetails;
@@ -16,12 +17,17 @@ namespace Orders.Integrations.Hub.Integrations.IFood.Application.Clients;
 
 public class IFoodClient(
     [FromKeyedServices(OrderIntegration.IFOOD)] ICustomJsonSerializer jsonSerializer,
+    IIntegrationContext integrationContext,
     ILogger<IFoodClient> logger,
     HttpClient httpClient
 ) : IIFoodClient {
     public async Task<DownloadFile> GetDisputeImage(string uri)
     {
-        HttpResponseMessage response = await httpClient.GetAsync(uri);
+        HttpRequestMessage request = new(HttpMethod.Get, uri);
+
+        request.SetIntegrationContext(integrationContext);
+
+        HttpResponseMessage response = await httpClient.SendAsync(request);
 
         if (!response.IsSuccessStatusCode)
         {
@@ -39,99 +45,64 @@ public class IFoodClient(
     public async Task<IFoodOrder> GetOrderDetails(string orderId)
     {
         string uri = $"order/v1.0/orders/{orderId}";
-        HttpResponseMessage response = await httpClient.GetAsync(uri);
-        if (!response.IsSuccessStatusCode)
-        {
-            throw new ApplicationException(await response.Content.ReadAsStringAsync());
-        }
-
-        logger.LogInformation("[INFO] - IFoodClient - OrderDetails: {body}", await response.Content.ReadAsStringAsync());
-
-        IFoodOrder responseContent = await response.Content.ReadFromJsonAsync<IFoodOrder>()
-                                        ?? throw new Exception();
-
-        return responseContent;
+        IFoodOrder order = await GetGenericRequest<IFoodOrder>(uri);
+        logger.LogInformation("[INFO] - IfoodClient - OrderDetails: {body}", jsonSerializer.Serialize(order));
+        return order;
     }
 
     public async Task<IFoodMerchant> GetMerchantDetails(string merchantId)
     {
         string uri = $"merchant/v1.0/merchants/{merchantId}";
-        HttpResponseMessage response = await httpClient.GetAsync(uri);
-        response.EnsureSuccessStatusCode();
-
-        IFoodMerchant responseContent = await response.Content.ReadFromJsonAsync<IFoodMerchant>()
-                                        ?? throw new Exception();
-
-        return responseContent;
+        IFoodMerchant merchant = await GetGenericRequest<IFoodMerchant>(uri);
+        return merchant;
     }
 
     public async Task ConfirmOrder(string orderId)
     {
         string uri = $"order/v1.0/orders/{orderId}/confirm";
 
-        HttpResponseMessage response = await httpClient.PostAsync(uri, null);
-        if (!response.IsSuccessStatusCode)
-        {
-            throw new Exception(response.Content.ReadAsStringAsync().Result);
-        }
+        await PostGenericRequest(uri);
     }
 
     public async Task PreparationStartedOrder(string orderId)
     {
         string uri = $"order/v1.0/orders/{orderId}/preparationStarted";
-        
-        HttpResponseMessage response = await httpClient.PostAsync(uri, null);
-        if (!response.IsSuccessStatusCode)
-        {
-            throw new Exception(response.Content.ReadAsStringAsync().Result);
-        }
+
+        await PostGenericRequest(uri);
     }
 
     public async Task ReadyToPickupOrder(string orderId)
     {
         string uri = $"order/v1.0/orders/{orderId}/readyToPickup";
-        
-        HttpResponseMessage response = await httpClient.PostAsync(uri, null);
-        if (!response.IsSuccessStatusCode)
-        {
-            throw new Exception(response.Content.ReadAsStringAsync().Result);
-        }
+
+        await PostGenericRequest(uri);
     }
 
     public async Task DispatchOrder(string orderId)
     {
         string uri = $"order/v1.0/orders/{orderId}/dispatch";
-        
-        HttpResponseMessage response = await httpClient.PostAsync(uri, null);
-        if (!response.IsSuccessStatusCode)
-        {
-            throw new Exception(response.Content.ReadAsStringAsync().Result);
-        }
+
+        await PostGenericRequest(uri);
     }
 
     public async Task RequestOrderCancellation(string orderId, IFoodOrderCancellationRequest request)
     {
         string uri = $"order/v1.0/orders/{orderId}/requestCancellation";
 
-        HttpRequestMessage requestMessage = new (HttpMethod.Post, uri);
-        var content = new StringContent(jsonSerializer.Serialize(request), Encoding.Default,"application/json");
-        content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-        requestMessage.Content = content;
-
-        HttpResponseMessage response = await httpClient.SendAsync(requestMessage);
-
-        if (!response.IsSuccessStatusCode)
-        {
-            string responseContent = await response.Content.ReadAsStringAsync();
-            throw new Exception(responseContent);
-        }
+        await PostGenericRequest(uri, request);
     }
 
     public async Task PatchProductStatus(string merchantId, IFoodPatchProductStatusRequest request)
     {
         string uri = $"catalog/v2.0/merchants/{merchantId}/items";
-        
-        HttpResponseMessage response = await httpClient.PatchAsync(uri, new StringContent(jsonSerializer.Serialize(request)));
+
+        HttpRequestMessage requestMessage = new(HttpMethod.Patch, uri);
+        requestMessage.SetIntegrationContext(integrationContext);
+        StringContent content = new(jsonSerializer.Serialize(request));
+        content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+        requestMessage.Content = content;
+
+        HttpResponseMessage response = await httpClient.SendAsync(requestMessage);
         if (!response.IsSuccessStatusCode)
         {
             throw new Exception(response.Content.ReadAsStringAsync().Result);
@@ -141,72 +112,75 @@ public class IFoodClient(
     public async Task<IReadOnlyList<IFoodCancellationReasonResponse>> GetCancellationReasons(string orderId)
     {
         string uri = $"order/v1.0/orders/{orderId}/cancellationReasons";
+        IReadOnlyList<IFoodCancellationReasonResponse> response = await GetGenericRequest<IReadOnlyList<IFoodCancellationReasonResponse>>(uri);
 
-        HttpResponseMessage response = await httpClient.GetAsync(uri);
-
-        if (!response.IsSuccessStatusCode)
-        {
-            throw new Exception(response.Content.ReadAsStringAsync().Result);
-        }
-
-        if (response.StatusCode == HttpStatusCode.NoContent || response.Content.Headers.ContentLength == 0)
-        {
-            return [];
-        }
-
-        IReadOnlyList<IFoodCancellationReasonResponse> responseContent = await response.Content.ReadFromJsonAsync<IReadOnlyList<IFoodCancellationReasonResponse>>()?? [];
-
-        return responseContent;
+        return response;
     }
 
     public async Task PostHandshakeDisputesAccept(string disputeId, RespondDisputeResponse request)
     {
-        // if (!string.IsNullOrEmpty(request.Reason))
-        //     return;
-
         string uri = $"order/v1.0/disputes/{disputeId}/accept";
 
-        HttpRequestMessage requestMessage = new (HttpMethod.Post, uri);
-        var content = new StringContent(jsonSerializer.Serialize(request), Encoding.Default,"application/json");
-        content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-        requestMessage.Content = content;
-
-        HttpResponseMessage response = await httpClient.SendAsync(requestMessage);
-        if (!response.IsSuccessStatusCode)
-        {
-            throw new Exception(response.Content.ReadAsStringAsync().Result);
-        }
+        await PostGenericRequest(uri, request);
     }
 
     public async Task PostHandshakeDisputesReject(string disputeId, RespondDisputeResponse request)
     {
         string uri = $"order/v1.0/disputes/{disputeId}/reject";
 
-        HttpRequestMessage requestMessage = new (HttpMethod.Post, uri);
-        var content = new StringContent(jsonSerializer.Serialize(request), Encoding.Default,"application/json");
-        content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-        requestMessage.Content = content;
-
-        HttpResponseMessage response = await httpClient.SendAsync(requestMessage);
-        if (!response.IsSuccessStatusCode)
-        {
-            throw new Exception(response.Content.ReadAsStringAsync().Result);
-        }
+        await PostGenericRequest(uri, request);
     }
 
     public async Task PostHandshakeDisputesAlternatives(string disputeId, string alternativeId, HandshakeAlternativeRequest request)
     {
-        // if (request.Type is HandshakeAlternativeType.ADDITIONAL_TIME)
-        //     return;
-
         string uri = $"order/v1.0/disputes/{disputeId}/alternatives/{alternativeId}";
 
-        HttpRequestMessage requestMessage = new (HttpMethod.Post, uri);
+        await PostGenericRequest(uri, request);
+    }
+
+    private async Task<TResponse> GetGenericRequest<TResponse>(string uri)
+    {
+        HttpRequestMessage request = new(HttpMethod.Get, uri);
+
+        request.SetIntegrationContext(integrationContext);
+
+        HttpResponseMessage response = await httpClient.SendAsync(request);
+
+        string responseContent = await response.Content.ReadAsStringAsync();
+
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new Exception(responseContent);
+        }
+
+        return jsonSerializer.Deserialize<TResponse>(responseContent)?? throw new Exception();
+    }
+
+    private async Task PostGenericRequest<T>(string uri, T? body)
+    {
+        logger.LogInformation("[INFO] - ChangeStatus - [{uri}]: {payload}", uri, jsonSerializer.Serialize(body));
+
+        HttpRequestMessage request = new (HttpMethod.Post, uri);
+        request.SetIntegrationContext(integrationContext);
         var content = new StringContent(jsonSerializer.Serialize(request), Encoding.Default,"application/json");
         content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-        requestMessage.Content = content;
+        request.Content = content;
 
-        HttpResponseMessage response = await httpClient.SendAsync(requestMessage);
+        HttpResponseMessage response = await httpClient.SendAsync(request);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            string responseContent = await response.Content.ReadAsStringAsync();
+            throw new Exception(responseContent);
+        }
+    }
+
+    private async Task PostGenericRequest(string uri)
+    {
+        HttpRequestMessage request = new (HttpMethod.Post, uri);
+        request.SetIntegrationContext(integrationContext);
+
+        HttpResponseMessage response = await httpClient.SendAsync(request);
 
         if (!response.IsSuccessStatusCode)
         {

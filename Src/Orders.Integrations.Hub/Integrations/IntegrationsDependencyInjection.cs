@@ -1,4 +1,6 @@
-﻿using Orders.Integrations.Hub.Integrations.IFood;
+﻿using Orders.Integrations.Hub.Integrations.Common.Application;
+using Orders.Integrations.Hub.Integrations.Common.Contracts;
+using Orders.Integrations.Hub.Integrations.IFood;
 using Orders.Integrations.Hub.Integrations.IFood.Adapter;
 using Orders.Integrations.Hub.Integrations.Rappi;
 using Orders.Integrations.Hub.Integrations.Rappi.Adapter;
@@ -26,6 +28,8 @@ public static class IntegrationsDependencyInjection
 
     private static IServiceCollection AddServices(this IServiceCollection services)
     {
-        return services;
+        return services
+            .AddScoped<IIntegrationContext, IntegrationContext>()
+            ;
     }
 }

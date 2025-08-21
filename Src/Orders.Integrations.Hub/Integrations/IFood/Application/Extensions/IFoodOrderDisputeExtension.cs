@@ -1,6 +1,8 @@
 ﻿using Orders.Integrations.Hub.Core.Domain.Entity;
 using Orders.Integrations.Hub.Core.Domain.Entity.Dispute;
+using Orders.Integrations.Hub.Core.Domain.ValueObjects.Enums;
 using Orders.Integrations.Hub.Integrations.IFood.Domain.Entity.Handshake;
+using Orders.Integrations.Hub.Integrations.IFood.Domain.ValueObjects.Enums.Handshake;
 
 namespace Orders.Integrations.Hub.Integrations.IFood.Application.Extensions;
 
@@ -15,7 +17,7 @@ public static class IFoodOrderDisputeExtension
             .Select(alternative =>
                 new DisputeAlternative(
                    AlternativeId: alternative.Id,
-                   Type: alternative.Type,
+                   Type: alternative.Type.ToOrder(),
                    Price: (alternative.Metadata is null) ? alternative.MaxAmount?.ToPrice() : alternative.Metadata.MaxAmount?.ToPrice(),
                    AllowedTimesInMinutes: (alternative.Metadata is null) ? alternative.AllowedsAdditionalTimeInMinutes : alternative.Metadata.AllowedsAdditionalTimeInMinutes,
                    AllowedTimesReasons: (alternative.Metadata is null) ? alternative.AllowedsAdditionalTimeReasons : alternative.Metadata.AllowedsAdditionalTimeReasons?
@@ -74,6 +76,16 @@ public static class IFoodOrderDisputeExtension
             Options: options,
             CancellationReasons: cancellationReasons
         );
+    }
+
+    private static AlternativeType ToOrder(this HandshakeAlternativeType type)
+    {
+        return type switch {
+            HandshakeAlternativeType.REFUND => AlternativeType.REFUND,
+            HandshakeAlternativeType.BENEFIT => AlternativeType.BENEFIT,
+            HandshakeAlternativeType.ADDITIONAL_TIME => AlternativeType.ADDITIONAL_TIME,
+            _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
+        };
     }
 
     private static Price ToPrice(this Amount amount)

@@ -39,7 +39,7 @@ public record Order(
 
     string ExternalId,
     string? OrderDisplayId,
-    int CompanyId,
+    string TenantId,
 
     OrderDispute? Dispute
 );

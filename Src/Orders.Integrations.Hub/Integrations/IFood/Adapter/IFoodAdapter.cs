@@ -2,10 +2,12 @@
 
 using Microsoft.AspNetCore.Mvc;
 
-using Orders.Integrations.Hub.Core.Application.Extensions;
 using Orders.Integrations.Hub.Core.Domain.Contracts;
+using Orders.Integrations.Hub.Core.Domain.Contracts.Clients;
 using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases.Integrations.In;
 using Orders.Integrations.Hub.Core.Domain.ValueObjects.Enums;
+using Orders.Integrations.Hub.Integrations.Common.Contracts;
+using Orders.Integrations.Hub.Integrations.Common.Extensions;
 using Orders.Integrations.Hub.Integrations.Common.Validators;
 using Orders.Integrations.Hub.Integrations.IFood.Domain.ValueObjects.DTOs.Request;
 using Orders.Integrations.Hub.Integrations.IFood.Domain.ValueObjects.Enums;
@@ -21,10 +23,12 @@ public class IFoodAdapter
         [FromServices] IOrderCreateUseCase<IFoodWebhookRequest> orderCreate,
         [FromServices] IOrderUpdateUseCase<IFoodWebhookRequest> orderUpdate,
         [FromServices] IOrderDisputeUseCase<IFoodWebhookRequest> orderDispute,
+        [FromServices] IIntegrationContext integrationContext,
+        [FromServices] IInternalClient internalClient,
         ILogger<IFoodAdapter> logger,
         HttpContext context
     ) {
-        IFoodWebhookRequest request = await HandleSignature(jsonSerializer, logger, context);
+        IFoodWebhookRequest request = await HandleSignature(integrationContext, jsonSerializer, internalClient, logger, context);
 
         if (request.FullCode != IFoodFullOrderStatus.KEEPALIVE)
             logger.LogInformation("[INFO] - IFoodAdapter - IFood Webhook code: {FullCode}", request.FullCode);
@@ -51,7 +55,9 @@ public class IFoodAdapter
     }
 
     private static async Task<IFoodWebhookRequest> HandleSignature(
+        IIntegrationContext integrationContext,
         ICustomJsonSerializer jsonSerializer,
+        IInternalClient internalClient,
         ILogger<IFoodAdapter> logger,
         HttpContext context
     ) {
@@ -70,7 +76,10 @@ public class IFoodAdapter
 
         logger.LogInformation("[INFO] - IFoodSignatureValidator - Request Body: {body}", body);
 
-        string secret = AppEnv.INTEGRATIONS.IFOOD.CLIENT.SECRET.NotNullEnv();
+        integrationContext.Integration = (await internalClient.GetIntegrationByExternalId(request.MerchantId)).ResolveIFood();
+        integrationContext.MerchantId = request.MerchantId;
+
+        string secret = integrationContext.Integration.ClientSecret;
 
         if (signature == null)
         {

@@ -17,7 +17,7 @@ namespace Orders.Integrations.Hub.Integrations.IFood.Application.Extensions;
 
 public static class IFoodOrderExtension
 {
-    public static Order ToOrder(this IFoodOrder order, int companyId)
+    public static Order ToOrder(this IFoodOrder order, string tenantId)
     {
         List<OrderItem> items = order.Items.Select(item => new OrderItem(
             Id: item.Id,
@@ -194,7 +194,7 @@ public static class IFoodOrderExtension
             SendPickedUp: false,
             SendTracking: false,
             ExtraInfo: order.ExtraInfo?? string.Empty,
-            CompanyId: companyId,
+            TenantId: tenantId,
             OrderDisplayId: Guid.NewGuid().ToString()[..5],
             ExternalId: order.Id,
             Dispute: null
@@ -363,7 +363,7 @@ public static class IFoodOrderExtension
     {
         return new OrderUpdate(
             OrderId: request.OrderId,
-            SourceAppId: nameof(OrderIntegration.IFOOD),
+            SourceAppId: OrderIntegration.IFOOD,
             Type: eventType?? request.FullCode.ToOrderEvent(),
             CreateAt: request.CreatedAt,
             Dispute: null,

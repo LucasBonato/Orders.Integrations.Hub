@@ -14,7 +14,7 @@ namespace Orders.Integrations.Hub.Integrations.Rappi.Application.Extensions;
 
 public static class RappiOrderExtension
 {
-    public static Order ToOrder(this RappiOrder order, int companyId)
+    public static Order ToOrder(this RappiOrder order, string tenantId)
     {
 
         decimal? orderTotal = order.OrderDetail.Totals.TotalProducts
@@ -158,7 +158,7 @@ public static class RappiOrderExtension
             SendPickedUp: false,
             SendTracking: false,
             ExtraInfo: string.Empty,
-            CompanyId: companyId,
+            TenantId: tenantId,
             OrderDisplayId: Guid.NewGuid().ToString()[..5],
             ExternalId: order.OrderDetail.OrderId,
             Dispute: null
@@ -282,7 +282,7 @@ public static class RappiOrderExtension
     {
         return new OrderUpdate(
             OrderId: request.OrderId,
-            SourceAppId: nameof(OrderIntegration.RAPPI),
+            SourceAppId: OrderIntegration.RAPPI,
             Type: request.OrderEvent.ToOrderEvent(),
             CreateAt: request.EventTime?? DateTime.UtcNow,
             Dispute: null,
@@ -294,7 +294,7 @@ public static class RappiOrderExtension
     {
         return new OrderUpdate(
             OrderId: request.OrderDetail.OrderId,
-            SourceAppId: nameof(OrderIntegration.RAPPI),
+            SourceAppId: OrderIntegration.RAPPI,
             Type: eventType,
             CreateAt: request.OrderDetail.CreatedAt,
             Dispute: null,

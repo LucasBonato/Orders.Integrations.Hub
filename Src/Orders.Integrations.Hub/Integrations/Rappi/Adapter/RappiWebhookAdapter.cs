@@ -1,16 +1,12 @@
 ﻿using System.Text;
 
-using FastEndpoints;
-
 using Microsoft.AspNetCore.Mvc;
 
 using Orders.Integrations.Hub.Core.Application.Extensions;
 using Orders.Integrations.Hub.Core.Domain.Contracts;
 using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases.Integrations.In;
 using Orders.Integrations.Hub.Core.Domain.ValueObjects.Enums;
-using Orders.Integrations.Hub.Core.Domain.ValueObjects.Events;
 using Orders.Integrations.Hub.Integrations.Common.Validators;
-using Orders.Integrations.Hub.Integrations.Rappi.Application.Extensions;
 using Orders.Integrations.Hub.Integrations.Rappi.Domain.Entity;
 using Orders.Integrations.Hub.Integrations.Rappi.Domain.ValueObjects.DTOs.Request;
 using Orders.Integrations.Hub.Integrations.Rappi.Domain.ValueObjects.DTOs.Response;
@@ -30,24 +26,6 @@ public class RappiWebhookAdapter {
         
         await orderCreate.ExecuteAsync(request);
 
-        return Created();
-    }
-
-    public static async Task<IResult> AutoAcceptOrder(
-        [FromKeyedServices(OrderIntegration.RAPPI)] ICustomJsonSerializer serializer,
-        [FromServices] IOrderCreateUseCase<RappiOrder> orderCreate,
-        ILogger<RappiWebhookAdapter> logger,
-        HttpContext context
-    ) {
-        RappiOrder request = await HandleSignature<RappiOrder>(context, logger, serializer);
-        
-        await orderCreate.ExecuteAsync(request);
-        
-        await new SendNotificationEvent(
-            Message: request.FromRappi(OrderEventType.CONFIRMED),
-            TopicArn: null
-        ).PublishAsync();
-        
         return Created();
     }
 
