@@ -4,7 +4,13 @@ namespace Orders.Integrations.Hub;
 
 public static class AppEnv
 {
-
+    public static class INTERNAL
+    {
+        public static class ENDPOINT
+        {
+            public static readonly AnvEnv BASE_URL = new("INTERNAL__ENDPOINT__BASE_URL");
+        }
+    }
     public static class ORDERS
     {
         public static class ENDPOINT
