@@ -77,7 +77,7 @@ public static class CoreDependencyInjection
     private static IServiceCollection AddClients(this IServiceCollection services)
     {
         services.AddHttpClient<IInternalClient, InternalClient>(client => {
-            client.BaseAddress = new Uri(""); //TODO: Add internal client url
+            client.BaseAddress = new Uri(AppEnv.INTERNAL.ENDPOINT.BASE_URL.NotNullEnv());
         });
         services.Decorate<IInternalClient, InternalCacheClient>();
 
