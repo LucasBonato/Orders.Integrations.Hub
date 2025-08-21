@@ -2,10 +2,9 @@
 using System.Net;
 using System.Web;
 
-using Orders.Integrations.Hub.Core.Application.Extensions;
 using Orders.Integrations.Hub.Core.Domain.Contracts;
-using Orders.Integrations.Hub.Core.Domain.ValueObjects.DTOs.Internal;
 using Orders.Integrations.Hub.Core.Domain.ValueObjects.Enums;
+using Orders.Integrations.Hub.Integrations.Common;
 using Orders.Integrations.Hub.Integrations.Common.Contracts;
 using Orders.Integrations.Hub.Integrations.Common.Extensions;
 using Orders.Integrations.Hub.Integrations.Food99.Domain.Contracts;
@@ -28,7 +27,7 @@ public class Food99AuthMessageHandler(
 
         IIntegrationContext integrationContext = request.GetIntegrationContext();
 
-        IntegrationResponse integration = integrationContext.Integration ?? throw new NullReferenceException("integrationContext.Integration");
+        IntegrationResolved integration = integrationContext.Integration ?? throw new NullReferenceException("integrationContext.Integration");
         string merchantId = integrationContext.MerchantId ?? throw new NullReferenceException("integrationContext.MerchantId");
 
         string cacheKey = $"food99-token:{integration.TenantId}:{merchantId}";
@@ -37,11 +36,12 @@ public class Food99AuthMessageHandler(
             cacheKey,
             nameof(Food99AuthMessageHandler),
             logger,
-            async () => await RetrieveTokenAsync(merchantId)
+            async () => await RetrieveTokenAsync(integration)
         );
 
         // This is bullshit, for some reason the 99Food needs the token in the body or the query params
         await InjectTokenIntoRequest(request, accessToken);
+
         logger.LogInformation(
             "[INFO] Injected token: {Token} into {Method} {Uri} {body}",
             accessToken,
@@ -62,7 +62,7 @@ public class Food99AuthMessageHandler(
         {
             logger.LogWarning("[WARN] - {context} - Token expired, trying to refresh...", nameof(Food99AuthMessageHandler));
 
-            (accessToken, TimeSpan expiration) = await RetrieveTokenAsync(merchantId);
+            (accessToken, TimeSpan expiration) = await RetrieveTokenAsync(integration);
 
             await cacheService.SetAsync(cacheKey, accessToken, expiration);
             await InjectTokenIntoRequest(request, accessToken);
@@ -74,10 +74,11 @@ public class Food99AuthMessageHandler(
         return response;
     }
 
-    private async Task<(string AccessToken, TimeSpan Expiration)> RetrieveTokenAsync(string merchantId)
+    private async Task<(string AccessToken, TimeSpan Expiration)> RetrieveTokenAsync(IntegrationResolved integration)
     {
-        string appId = AppEnv.INTEGRATIONS.FOOD99.CLIENT.ID.NotNullEnv();
-        string appSecret = AppEnv.INTEGRATIONS.FOOD99.CLIENT.SECRET.NotNullEnv();
+        string appId = integration.ClientId;
+        string appSecret = integration.ClientSecret;
+        string merchantId = integration.MerchantId;
 
         Food99AuthTokenResponse token = await GetTokenAsync(appId, appSecret, merchantId);
 

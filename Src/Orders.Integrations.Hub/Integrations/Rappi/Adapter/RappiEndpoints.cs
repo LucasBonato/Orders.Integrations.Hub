@@ -17,7 +17,6 @@ public static class RappiEndpoints
             ;
 
         webhook.MapPost("/", RappiWebhookAdapter.CreateOrder);
-        webhook.MapPost("/Auto-Accept", RappiWebhookAdapter.AutoAcceptOrder);
         webhook.MapPost("/Cancel", RappiWebhookAdapter.CancelOrder);
         webhook.MapPost("/Other", RappiWebhookAdapter.PatchOrder);
         webhook.MapPost("/Ping", RappiWebhookAdapter.PingStore);

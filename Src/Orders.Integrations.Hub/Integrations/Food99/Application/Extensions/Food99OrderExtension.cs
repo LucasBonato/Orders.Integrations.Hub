@@ -14,7 +14,7 @@ namespace Orders.Integrations.Hub.Integrations.Food99.Application.Extensions;
 
 public static class Food99OrderExtension
 {
-    public static Order ToOrder(this Food99WebhookRequest order, int tenantId)
+    public static Order ToOrder(this Food99WebhookRequest order, string tenantId)
     {
         Food99OrderInfo orderInfo = order.Data.OrderInfo;
 

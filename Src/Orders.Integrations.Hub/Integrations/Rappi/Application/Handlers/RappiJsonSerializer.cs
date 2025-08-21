@@ -7,7 +7,7 @@ namespace Orders.Integrations.Hub.Integrations.Rappi.Application.Handlers;
 
 public class RappiJsonSerializer : ICustomJsonSerializer
 {
-    public static readonly JsonSerializerOptions Options = new() {
+    private static readonly JsonSerializerOptions Options = new() {
         PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower,
         DictionaryKeyPolicy = JsonNamingPolicy.SnakeCaseLower,
         PropertyNameCaseInsensitive = true,

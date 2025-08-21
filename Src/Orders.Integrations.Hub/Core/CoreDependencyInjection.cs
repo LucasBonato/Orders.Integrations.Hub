@@ -76,6 +76,15 @@ public static class CoreDependencyInjection
 
     private static IServiceCollection AddClients(this IServiceCollection services)
     {
+        services.AddHttpClient<IInternalClient, InternalClient>(client => {
+            client.BaseAddress = new Uri(""); //TODO: Add internal client url
+        });
+        services.Decorate<IInternalClient, InternalCacheClient>();
+
+        services.AddHttpClient<IOrderClient, OrderClient>(client => {
+            client.BaseAddress = new Uri(AppEnv.ORDERS.ENDPOINT.BASE_URL.NotNullEnv());
+        });
+
         services.AddHttpClient<IOrderHttp>(client => {
             client.BaseAddress = new Uri(AppEnv.ORDERS.ENDPOINT.BASE_URL.NotNullEnv());
         });
