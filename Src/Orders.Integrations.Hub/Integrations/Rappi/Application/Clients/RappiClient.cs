@@ -1,4 +1,9 @@
-﻿using Orders.Integrations.Hub.Core.Domain.Contracts;
+﻿using System.Net.Http.Headers;
+
+using Orders.Integrations.Hub.Core.Domain.Contracts;
+using Orders.Integrations.Hub.Core.Domain.ValueObjects.Enums;
+using Orders.Integrations.Hub.Integrations.Common.Contracts;
+using Orders.Integrations.Hub.Integrations.Common.Extensions;
 using Orders.Integrations.Hub.Integrations.Rappi.Domain.Contracts;
 using Orders.Integrations.Hub.Integrations.Rappi.Domain.ValueObjects.DTOs.Request;
 using Orders.Integrations.Hub.Integrations.Rappi.Domain.ValueObjects.DTOs.Response;
@@ -6,8 +11,9 @@ using Orders.Integrations.Hub.Integrations.Rappi.Domain.ValueObjects.DTOs.Respon
 namespace Orders.Integrations.Hub.Integrations.Rappi.Application.Clients;
 
 public class RappiClient(
-    HttpClient httpClient,
-    ICustomJsonSerializer jsonSerializer
+    [FromKeyedServices(OrderIntegration.RAPPI)] ICustomJsonSerializer jsonSerializer,
+    IIntegrationContext integrationContext,
+    HttpClient httpClient
 ) : IRappiClient {
     public Task<List<RappiWebhookEventsResponse>> GetWebhooks()
     {
@@ -38,35 +44,24 @@ public class RappiClient(
     {
         const string uri = "availability/stores/items";
 
-        HttpResponseMessage response = await httpClient.PutAsync(uri, new StringContent(jsonSerializer.Serialize(request)));
-        if (!response.IsSuccessStatusCode)
-        {
-            throw new Exception(response.Content.ReadAsStringAsync().Result);
-        }
+        await PutGenericRequest(uri);
     }
 
     public async Task<List<RappiAvailabilityItemStatusResponse>> GetAvailabilityProducts(RappiAvailabilityItemsStatusRequest request)
     {
         const string uri = "/api/v2/restaurants-integrations-public-api/availability/items/status";
 
-        HttpResponseMessage response = await httpClient.PostAsync(uri, new StringContent(jsonSerializer.Serialize(request)));
-        if (!response.IsSuccessStatusCode)
-        {
-            throw new Exception(response.Content.ReadAsStringAsync().Result);
-        }
+        HttpResponseMessage response = await PostGenericRequest(uri, request);
 
-        throw new NotImplementedException();
+        return jsonSerializer.Deserialize<List<RappiAvailabilityItemStatusResponse>>(await response.Content.ReadAsStringAsync())
+               ?? throw new Exception();
     }
 
     public async Task ConfirmOrder(string orderId, string storeId)
     {
         string uri = $"restaurants/orders/v1/stores/{storeId}/orders/{orderId}/take";
 
-        HttpResponseMessage response = await httpClient.PutAsync(uri, null);
-        if (!response.IsSuccessStatusCode)
-        {
-            throw new Exception(response.Content.ReadAsStringAsync().Result);
-        }
+        await PutGenericRequest(uri);
     }
 
     public async Task ConfirmeOrderWithCookingTime(string orderId, string cookingTime)
@@ -74,11 +69,7 @@ public class RappiClient(
         string uri = $"orders/{orderId}/take/{cookingTime}";
         // string uri = $"restaurants/orders/v1/stores/{storeId}/orders/{orderId}/cooking_time/{cookingTime}/take";
 
-        HttpResponseMessage response = await httpClient.PutAsync(uri, null);
-        if (!response.IsSuccessStatusCode)
-        {
-            throw new Exception(response.Content.ReadAsStringAsync().Result);
-        }
+        await PutGenericRequest(uri);
     }
 
     public async Task RequestOrderCancellation(string orderId, RappiOrderRejectRequest request)
@@ -86,11 +77,7 @@ public class RappiClient(
         string uri = $"orders/{orderId}/reject";
         // string uri = $"restaurants/orders/v1/stores/{storeId}/orders/{orderId}/cancel_type/{request.CancelType}/reject";
 
-        HttpResponseMessage response = await httpClient.PutAsync(uri, null);
-        if (!response.IsSuccessStatusCode)
-        {
-            throw new Exception(response.Content.ReadAsStringAsync().Result);
-        }
+        await PutGenericRequest(uri);
     }
 
     public async Task ReadyToPickupOrder(string orderId)
@@ -98,7 +85,49 @@ public class RappiClient(
         string uri = $"orders/{orderId}/ready-for-pickup";
         // string uri = $"restaurants/orders/v1/stores/{storeId}/orders/{orderId}/ready-for-pickup";
 
-        HttpResponseMessage response = await httpClient.PostAsync(uri, null);
+        await PostGenericRequest(uri);
+    }
+
+    private async Task<HttpResponseMessage> PostGenericRequest<TRequest>(string uri, TRequest request) {
+        HttpRequestMessage requestMessage = new(HttpMethod.Post, uri);
+
+        requestMessage.SetIntegrationContext(integrationContext);
+
+        StringContent content = new(jsonSerializer.Serialize(request));
+        content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+        requestMessage.Content = content;
+
+        HttpResponseMessage response = await httpClient.SendAsync(requestMessage);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new Exception(response.Content.ReadAsStringAsync().Result);
+        }
+
+        return response;
+    }
+
+    private async Task PostGenericRequest(string uri) {
+        HttpRequestMessage requestMessage = new(HttpMethod.Post, uri);
+
+        requestMessage.SetIntegrationContext(integrationContext);
+
+        HttpResponseMessage response = await httpClient.SendAsync(requestMessage);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new Exception(response.Content.ReadAsStringAsync().Result);
+        }
+
+    }
+
+    private async Task PutGenericRequest(string uri) {
+        HttpRequestMessage requestMessage = new(HttpMethod.Put, uri);
+
+        requestMessage.SetIntegrationContext(integrationContext);
+
+        HttpResponseMessage response = await httpClient.SendAsync(requestMessage);
+
         if (!response.IsSuccessStatusCode)
         {
             throw new Exception(response.Content.ReadAsStringAsync().Result);

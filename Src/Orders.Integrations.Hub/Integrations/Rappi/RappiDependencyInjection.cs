@@ -30,7 +30,7 @@ public static class RappiDependencyInjection
         services.AddKeyedScoped<IOrderChangeProductStatusUseCase, RappiOrderChangeProductStatusUseCase>(OrderIntegration.RAPPI);
         services.AddKeyedScoped<IOrderGetCancellationReasonUseCase, RappiOrderGetCancellationReasonUseCase>(OrderIntegration.RAPPI);
 
-        services.AddSingleton<ICustomJsonSerializer, RappiJsonSerializer>();
+        services.AddKeyedSingleton<ICustomJsonSerializer, RappiJsonSerializer>(OrderIntegration.RAPPI);
 
         return services;
     }
