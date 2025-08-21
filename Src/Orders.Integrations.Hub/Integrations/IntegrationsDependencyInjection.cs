@@ -1,5 +1,5 @@
-﻿using Orders.Integrations.Hub.Integrations.Ifood;
-using Orders.Integrations.Hub.Integrations.Ifood.Adapter;
+﻿using Orders.Integrations.Hub.Integrations.IFood;
+using Orders.Integrations.Hub.Integrations.IFood.Adapter;
 using Orders.Integrations.Hub.Integrations.Rappi;
 using Orders.Integrations.Hub.Integrations.Rappi.Adapter;
 
@@ -11,7 +11,7 @@ public static class IntegrationsDependencyInjection
     {
         return services
                 .AddServices()
-                .AddIfood()
+                .AddIFood()
                 .AddRappi()
             ;
     }
@@ -19,7 +19,7 @@ public static class IntegrationsDependencyInjection
     public static WebApplication UseIntegrationsModule(this WebApplication app)
     {
         return app
-                .UseIfoodEndpoints()
+                .UseIFoodEndpoints()
                 .UseRappiEndpoints()
             ;
     }

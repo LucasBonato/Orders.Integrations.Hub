@@ -1,10 +1,10 @@
-using Orders.Integrations.Hub.Integrations.Ifood.Domain.ValueObjects.Enums.Handshake;
+using Orders.Integrations.Hub.Core.Domain.ValueObjects.Enums;
 
 namespace Orders.Integrations.Hub.Core.Domain.Entity.Dispute;
 
 public record DisputeAlternative(
     string AlternativeId,
-    HandshakeAlternativeType Type,
+    AlternativeType Type,
     Price? Price,
     List<int>? AllowedTimesInMinutes,
     List<string>? AllowedTimesReasons

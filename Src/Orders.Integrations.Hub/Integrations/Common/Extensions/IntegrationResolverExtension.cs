@@ -1,17 +1,17 @@
 ﻿using Orders.Integrations.Hub.Core.Domain.ValueObjects.DTOs.Internal;
-using Orders.Integrations.Hub.Integrations.Ifood.Domain.ValueObjects;
+using Orders.Integrations.Hub.Integrations.IFood.Domain.ValueObjects;
 using Orders.Integrations.Hub.Integrations.Rappi.Domain.ValueObjects.DTOs;
 
 namespace Orders.Integrations.Hub.Integrations.Common.Extensions;
 
 public static class IntegrationResolverExtension
 {
-    public static IfoodIntegrationResolved ResolveIfood(this IntegrationResponse integration)
+    public static IFoodIntegrationResolved ResolveIFood(this IntegrationResponse integration)
     {
         string merchantId = integration.GetSettingValue("ifood_merchant_id");
         bool autoAccept = integration.GetAutoAcceptProperty();
 
-        return new IfoodIntegrationResolved(
+        return new IFoodIntegrationResolved(
             IfoodMerchantId: merchantId,
             AutoAccept: autoAccept
         );
