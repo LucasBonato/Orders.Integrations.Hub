@@ -35,7 +35,7 @@ public static class CoreDependencyInjection
             ;
     }
 
-    public static IApplicationBuilder UseCore(this WebApplication app)
+    public static WebApplication UseCore(this WebApplication app)
     {
         app.UseExceptionHandler(_ => { });
         app.UseFastEndpoints();

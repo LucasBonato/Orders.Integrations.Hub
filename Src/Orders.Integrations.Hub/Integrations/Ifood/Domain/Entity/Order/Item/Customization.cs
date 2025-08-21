@@ -1,15 +1,13 @@
-﻿using System.Text.Json.Serialization;
-
-namespace Orders.Integrations.Hub.Integrations.Ifood.Domain.Entity.Order.Item;
+﻿namespace Orders.Integrations.Hub.Integrations.Ifood.Domain.Entity.Order.Item;
 
 public record Customization(
-    [property: JsonPropertyName("id")] string Id,
-    [property: JsonPropertyName("name")] string Name,
-    [property: JsonPropertyName("groupName")] string GroupName,
-    [property: JsonPropertyName("externalCode")] string ExternalCode,
-    [property: JsonPropertyName("type")] string Type,
-    [property: JsonPropertyName("quantity")] int Quantity,
-    [property: JsonPropertyName("unitPrice")] decimal UnitPrice,
-    [property: JsonPropertyName("addition")] decimal Addition,
-    [property: JsonPropertyName("price")] decimal Price
+    string Id,
+    string Name,
+    string GroupName,
+    string ExternalCode,
+    string Type,
+    int Quantity,
+    decimal UnitPrice,
+    decimal Addition,
+    decimal Price
 );

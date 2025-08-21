@@ -50,7 +50,7 @@ public class IfoodHandshakeOrderDisputeUseCase(
                                 Id: alternative.Id,
                                 Type: alternative.Type,
                                 Metadata: alternative.Metadata,
-                                Amount: alternative.Metadata.Amount,
+                                MaxAmount: alternative.Metadata.MaxAmount,
                                 AllowedsAdditionalTimeInMinutes: alternative.Metadata.AllowedsAdditionalTimeInMinutes,
                                 AllowedsAdditionalTimeReasons: alternative.Metadata.AllowedsAdditionalTimeReasons
                             )

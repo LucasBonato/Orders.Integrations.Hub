@@ -1,12 +1,10 @@
-﻿using System.Text.Json.Serialization;
-
-using Orders.Integrations.Hub.Integrations.Ifood.Domain.ValueObjects.Enums;
+﻿using Orders.Integrations.Hub.Integrations.Ifood.Domain.ValueObjects.Enums;
 
 namespace Orders.Integrations.Hub.Integrations.Ifood.Domain.ValueObjects.DTOs.Request;
 
 public record IfoodOrderCancellationRequest(
-    [property: JsonPropertyName("reason")] string Reason,
-    [property: JsonPropertyName("cancellationCode")] string CancellationCode
+    string Reason,
+    string CancellationCode
 ) {
     public IfoodOrderCancellationRequest(string reason) : this(
         FromInternal(reason).ToString(),

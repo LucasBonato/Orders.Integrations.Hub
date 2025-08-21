@@ -1,21 +1,19 @@
-﻿using System.Text.Json.Serialization;
-
-using Orders.Integrations.Hub.Integrations.Rappi.Domain.ValueObjects.Enums;
+﻿using Orders.Integrations.Hub.Integrations.Rappi.Domain.ValueObjects.Enums;
 
 namespace Orders.Integrations.Hub.Integrations.Rappi.Domain.Entity;
 
 public record RappiOrderDetails(
-    [property: JsonPropertyName("discounts")] List<RappiOrderDiscount>? Discounts,
-    [property: JsonPropertyName("order_id")] string OrderId,
-    [property: JsonPropertyName("cooking_time")] int? CookingTime,
-    [property: JsonPropertyName("min_cooking_time")] int? MinCookingTime,
-    [property: JsonPropertyName("max_cooking_time")] int? MaxCookingTime,
-    [property: JsonPropertyName("created_at")] DateTime CreatedAt,
-    [property: JsonPropertyName("delivery_method")] [property: JsonConverter(typeof(JsonStringEnumConverter))] RappiOrderDeliveryMethod DeliveryMethod,
-    [property: JsonPropertyName("payment_method")] [property: JsonConverter(typeof(JsonStringEnumConverter))] RappiOrderPaymentMethod PaymentMethod,
-    [property: JsonPropertyName("billing_information")] RappiOrderBillingInformation? BillingInformation,
-    [property: JsonPropertyName("delivery_information")] RappiOrderDeliveryInformation? DeliveryInformation,
-    [property: JsonPropertyName("totals")] RappiOrderTotals Totals,
-    [property: JsonPropertyName("items")] List<RappiOrderItem> Items,
-    [property: JsonPropertyName("delivery_discount")] RappiOrderDeliveryDiscount? DeliveryDiscount
+    List<RappiOrderDiscount>? Discounts,
+    string OrderId,
+    int? CookingTime,
+    int? MinCookingTime,
+    int? MaxCookingTime,
+    DateTime CreatedAt,
+    RappiOrderDeliveryMethod DeliveryMethod,
+    RappiOrderPaymentMethod PaymentMethod,
+    RappiOrderBillingInformation? BillingInformation,
+    RappiOrderDeliveryInformation? DeliveryInformation,
+    RappiOrderTotals Totals,
+    List<RappiOrderItem> Items,
+    RappiOrderDeliveryDiscount? DeliveryDiscount
 );
