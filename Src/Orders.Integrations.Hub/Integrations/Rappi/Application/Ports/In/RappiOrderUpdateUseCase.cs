@@ -1,9 +1,10 @@
 ﻿using Orders.Integrations.Hub.Integrations.Rappi.Application.Extensions;
 
 using FastEndpoints;
+
+using Orders.Integrations.Hub.Core.Application.Events;
 using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases.Integrations.In;
 using Orders.Integrations.Hub.Core.Domain.ValueObjects.Enums;
-using Orders.Integrations.Hub.Core.Domain.ValueObjects.Events;
 using Orders.Integrations.Hub.Integrations.Rappi.Domain.ValueObjects.DTOs.Request;
 
 namespace Orders.Integrations.Hub.Integrations.Rappi.Application.Ports.In;

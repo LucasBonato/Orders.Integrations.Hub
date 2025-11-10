@@ -2,11 +2,11 @@
 
 using Orders.Integrations.Hub.Core.Domain.ValueObjects.Enums;
 
-using Entity_Order = Orders.Integrations.Hub.Core.Domain.Entity.Order;
+using OrderEntity = Orders.Integrations.Hub.Core.Domain.Entity.Order;
 
-namespace Orders.Integrations.Hub.Core.Domain.ValueObjects.Events;
+namespace Orders.Integrations.Hub.Core.Application.Events;
 
 public record CreateOrderEvent(
-    Entity_Order Order,
+    OrderEntity Order,
     OrderSalesChannel SalesChannel = OrderSalesChannel.INTERNAL
 ) : IEvent;

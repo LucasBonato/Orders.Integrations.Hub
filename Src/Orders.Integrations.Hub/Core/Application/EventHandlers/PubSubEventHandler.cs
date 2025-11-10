@@ -6,7 +6,7 @@ using Orders.Integrations.Hub.Core.Application.Extensions;
 
 using FastEndpoints;
 
-using Orders.Integrations.Hub.Core.Domain.ValueObjects.Events;
+using Orders.Integrations.Hub.Core.Application.Events;
 
 namespace Orders.Integrations.Hub.Core.Application.EventHandlers;
 
