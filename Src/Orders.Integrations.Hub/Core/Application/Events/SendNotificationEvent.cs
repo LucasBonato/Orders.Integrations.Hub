@@ -2,7 +2,7 @@
 
 using Orders.Integrations.Hub.Core.Domain.ValueObjects.DTOs;
 
-namespace Orders.Integrations.Hub.Core.Domain.ValueObjects.Events;
+namespace Orders.Integrations.Hub.Core.Application.Events;
 
 public record SendNotificationEvent(
     OrderUpdate Message,

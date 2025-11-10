@@ -3,7 +3,7 @@
 using Orders.Integrations.Hub.Core.Domain.Entity.Dispute;
 using Orders.Integrations.Hub.Core.Domain.ValueObjects.Enums;
 
-namespace Orders.Integrations.Hub.Core.Domain.ValueObjects.Events;
+namespace Orders.Integrations.Hub.Core.Application.Events;
 
 public record ProcessOrderDisputeEvent(
     string ExternalOrderId,
