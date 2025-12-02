@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Diagnostics.Metrics;
 using System.Net;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -11,6 +12,7 @@ using FastEndpoints;
 using Microsoft.AspNetCore.Mvc;
 
 using OpenTelemetry;
+using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 
@@ -136,6 +138,20 @@ public static class CoreDependencyInjection
                     .AddAspNetCoreInstrumentation()
                     .AddAWSInstrumentation()
                     .AddHttpClientInstrumentation()
+                ;
+            })
+            .WithMetrics(metrics =>
+            {
+                metrics
+                    .AddMeter(serviceName)
+                    .AddAspNetCoreInstrumentation()
+                    .AddAWSInstrumentation()
+                    .AddHttpClientInstrumentation()
+                    .AddView(instrument =>
+                        instrument.GetType().GetGenericTypeDefinition() == typeof(Histogram<>)
+                            ? new Base2ExponentialBucketHistogramConfiguration()
+                            : null
+                    )
                 ;
             })
         ;
