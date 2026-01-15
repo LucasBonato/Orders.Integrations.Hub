@@ -5,11 +5,11 @@ using Orders.Integrations.Hub.Integrations.Common.Validators;
 namespace Orders.Integrations.Hub.Integrations.IFood;
 
 [IntegrationKeyDefinition]
-public static class IfoodIntegrationKey {
+public static class IFoodIntegrationKey {
     public const string Value = "IFOOD";
     public static IntegrationKey IFOOD => IntegrationKey.From(Value);
 
-    static IfoodIntegrationKey() {
+    static IFoodIntegrationKey() {
         IntegrationKeyValidator.ValidateRawValue(Value);
     }
 }

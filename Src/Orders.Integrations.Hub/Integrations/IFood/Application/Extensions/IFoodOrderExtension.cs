@@ -363,7 +363,7 @@ public static class IFoodOrderExtension
     {
         return new OrderUpdate(
             OrderId: request.OrderId,
-            SourceAppId: IfoodIntegrationKey.IFOOD,
+            SourceAppId: IFoodIntegrationKey.IFOOD,
             Type: eventType?? request.FullCode.ToOrderEvent(),
             CreateAt: request.CreatedAt,
             Dispute: null,
