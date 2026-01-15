@@ -8,4 +8,6 @@ public sealed record IntegrationKey {
     public static IntegrationKey From(string value) => new(value.Trim().ToUpperInvariant());
 
     public static IntegrationKey Nothing() => From(string.Empty);
+
+    public static implicit operator string(IntegrationKey key) => key.Value;
 }
