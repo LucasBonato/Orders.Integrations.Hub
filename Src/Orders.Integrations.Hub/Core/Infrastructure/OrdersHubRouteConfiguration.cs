@@ -1,6 +1,6 @@
-﻿namespace Orders.Integrations.Hub.Core.Adapter;
+﻿namespace Orders.Integrations.Hub.Core.Infrastructure;
 
-public static class OrdersHubEndpoints
+public static class OrdersHubRouteConfiguration
 {
     public static IApplicationBuilder AddOrdersHubEndpoints(this WebApplication app)
     {
@@ -28,14 +28,14 @@ public static class OrdersHubEndpoints
                 .WithDescription("Change order dispute in integrations")
             ;
 
-        routeGroup.MapGet("/Cancellation-Reason", OrdersHubAdapter.GetIntegrationCancellationReason);
+        routeGroup.MapGet("/Cancellation-Reason", OrdersHubController.GetIntegrationCancellationReason);
 
-        routeGroupStatus.MapPatch("/", OrdersHubAdapter.ChangeIntegrationStatus);
+        routeGroupStatus.MapPatch("/", OrdersHubController.ChangeIntegrationStatus);
 
-        routeGroupProductStatus.MapPost("/Enable", OrdersHubAdapter.EnableIntegrationProduct);
-        routeGroupProductStatus.MapPost("/Disable", OrdersHubAdapter.DisableIntegrationProduct);
+        routeGroupProductStatus.MapPost("/Enable", OrdersHubController.EnableIntegrationProduct);
+        routeGroupProductStatus.MapPost("/Disable", OrdersHubController.DisableIntegrationProduct);
 
-        routeGroupDispute.MapPost("/", OrdersHubAdapter.PostResponseDisputeIntegration);
+        routeGroupDispute.MapPost("/", OrdersHubController.PostResponseDisputeIntegration);
 
         return app;
     }
