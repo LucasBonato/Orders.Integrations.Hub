@@ -7,7 +7,7 @@ using Orders.Integrations.Hub.Integrations.Food99.Domain.ValueObjects.DTOs.Respo
 namespace Orders.Integrations.Hub.Integrations.Food99.Application.Clients;
 
 public class Food99AuthClient(
-    [FromKeyedServices(OrderIntegration.FOOD99)]
+    [FromKeyedServices(Food99IntegrationKey.Value)]
     ICustomJsonSerializer jsonSerializer,
     ILogger<Food99AuthClient> logger,
     HttpClient httpClient
