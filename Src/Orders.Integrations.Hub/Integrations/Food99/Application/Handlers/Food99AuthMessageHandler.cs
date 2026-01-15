@@ -14,7 +14,7 @@ using Orders.Integrations.Hub.Integrations.Food99.Domain.ValueObjects.DTOs.Respo
 namespace Orders.Integrations.Hub.Integrations.Food99.Application.Handlers;
 
 public class Food99AuthMessageHandler(
-    [FromKeyedServices(OrderIntegration.FOOD99)] ICustomJsonSerializer jsonSerializer,
+    [FromKeyedServices(Food99IntegrationKey.Value)] ICustomJsonSerializer jsonSerializer,
     ILogger<Food99AuthMessageHandler> logger,
     IFood99AuthClient food99AuthClient,
     ICacheService cacheService

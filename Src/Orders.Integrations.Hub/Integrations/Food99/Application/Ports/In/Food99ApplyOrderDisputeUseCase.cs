@@ -12,7 +12,7 @@ public class Food99ApplyOrderDisputeUseCase : IOrderDisputeUseCase<Food99Webhook
     public async Task<Food99WebhookRequest> ExecuteAsync(Food99WebhookRequest order) {
         await new ProcessOrderDisputeEvent(
             ExternalOrderId: order.Data.OrderId.ToString(),
-            Integration: OrderIntegration.FOOD99,
+            Integration: Food99IntegrationKey.FOOD99,
             OrderDispute: order.ToOrderDispute(),
             Type: OrderEventType.DISPUTE_STARTED
         ).PublishAsync();
