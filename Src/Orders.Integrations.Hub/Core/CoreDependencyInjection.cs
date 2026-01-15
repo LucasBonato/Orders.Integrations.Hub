@@ -59,6 +59,7 @@ public static class CoreDependencyInjection
 
         services.AddScoped<IOrderUseCase, OrderUseCase>();
         services.AddScoped<IOrderDisputeUpdateUseCase, OrderDisputeUpdateUseCase>();
+        services.AddScoped<IIntegrationRouter, IntegrationRouter>();
 
         services.AddFastEndpoints(options => {
             options.DisableAutoDiscovery = false;
