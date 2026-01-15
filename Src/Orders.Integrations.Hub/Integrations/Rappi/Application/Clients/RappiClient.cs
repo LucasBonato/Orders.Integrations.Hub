@@ -1,7 +1,6 @@
 ﻿using System.Net.Http.Headers;
 
 using Orders.Integrations.Hub.Core.Domain.Contracts;
-using Orders.Integrations.Hub.Core.Domain.ValueObjects.Enums;
 using Orders.Integrations.Hub.Integrations.Common.Contracts;
 using Orders.Integrations.Hub.Integrations.Common.Extensions;
 using Orders.Integrations.Hub.Integrations.Rappi.Domain.Contracts;
@@ -11,7 +10,7 @@ using Orders.Integrations.Hub.Integrations.Rappi.Domain.ValueObjects.DTOs.Respon
 namespace Orders.Integrations.Hub.Integrations.Rappi.Application.Clients;
 
 public class RappiClient(
-    [FromKeyedServices(OrderIntegration.RAPPI)] ICustomJsonSerializer jsonSerializer,
+    [FromKeyedServices(RappiIntegrationKey.Value)] ICustomJsonSerializer jsonSerializer,
     IIntegrationContext integrationContext,
     HttpClient httpClient
 ) : IRappiClient {

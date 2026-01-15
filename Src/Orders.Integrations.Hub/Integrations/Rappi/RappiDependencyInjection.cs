@@ -2,7 +2,6 @@
 using Orders.Integrations.Hub.Core.Domain.Contracts;
 using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases.Integrations.In;
 using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases.Integrations.Out;
-using Orders.Integrations.Hub.Core.Domain.ValueObjects.Enums;
 using Orders.Integrations.Hub.Integrations.Rappi.Application.Clients;
 using Orders.Integrations.Hub.Integrations.Rappi.Application.Handlers;
 using Orders.Integrations.Hub.Integrations.Rappi.Application.Ports.In;
@@ -26,11 +25,11 @@ public static class RappiDependencyInjection
         services.AddTransient<IOrderCreateUseCase<RappiOrder>, RappiOrderCreateUseCase>();
         services.AddTransient<IOrderUpdateUseCase<RappiWebhookEventOrderRequest>, RappiOrderUpdateUseCase>();
 
-        services.AddKeyedScoped<IOrderChangeStatusUseCase, RappiOrderChangeStatusUseCase>(OrderIntegration.RAPPI);
-        services.AddKeyedScoped<IOrderChangeProductStatusUseCase, RappiOrderChangeProductStatusUseCase>(OrderIntegration.RAPPI);
-        services.AddKeyedScoped<IOrderGetCancellationReasonUseCase, RappiOrderGetCancellationReasonUseCase>(OrderIntegration.RAPPI);
+        services.AddKeyedScoped<IOrderChangeStatusUseCase, RappiOrderChangeStatusUseCase>(RappiIntegrationKey.Value);
+        services.AddKeyedScoped<IOrderChangeProductStatusUseCase, RappiOrderChangeProductStatusUseCase>(RappiIntegrationKey.Value);
+        services.AddKeyedScoped<IOrderGetCancellationReasonUseCase, RappiOrderGetCancellationReasonUseCase>(RappiIntegrationKey.Value);
 
-        services.AddKeyedSingleton<ICustomJsonSerializer, RappiJsonSerializer>(OrderIntegration.RAPPI);
+        services.AddKeyedSingleton<ICustomJsonSerializer, RappiJsonSerializer>(RappiIntegrationKey.Value);
 
         return services;
     }
