@@ -1,0 +1,14 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/Src/">
+    <Project Path="Src/Orders.Integrations.Hub/Orders.Integrations.Hub.csproj" />
+  </Folder>
+  <Folder Name="/Test/">
+    <Project Path="Test/Orders.Integrations.Hub.ArchTests/Orders.Integrations.Hub.ArchTests.csproj" />
+    <Project Path="Test/Orders.Integrations.Hub.UnitTests/Orders.Integrations.Hub.UnitTests.csproj" />
+  </Folder>
+</Solution>
