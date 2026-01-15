@@ -2,7 +2,6 @@
 using Orders.Integrations.Hub.Core.Domain.Contracts;
 using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases.Integrations.In;
 using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases.Integrations.Out;
-using Orders.Integrations.Hub.Core.Domain.ValueObjects.Enums;
 using Orders.Integrations.Hub.Integrations.Common;
 using Orders.Integrations.Hub.Integrations.IFood.Application.Clients;
 using Orders.Integrations.Hub.Integrations.IFood.Application.Handlers;
@@ -23,17 +22,16 @@ public static class IFoodDependencyInjection
 
     private static IServiceCollection AddIFoodServices(this IServiceCollection services)
     {
-        services.AddTransient<IOrderChangeStatusUseCase, IFoodOrderChangeStatusUseCase>();
         services.AddTransient<IOrderCreateUseCase<IFoodWebhookRequest>, IFoodOrderCreateUseCase>();
         services.AddTransient<IOrderUpdateUseCase<IFoodWebhookRequest>, IFoodOrderUpdateUseCase>();
         services.AddTransient<IOrderDisputeUseCase<IFoodWebhookRequest>, IFoodHandshakeOrderDisputeUseCase>();
 
-        services.AddKeyedScoped<IOrderChangeStatusUseCase, IFoodOrderChangeStatusUseCase>(OrderIntegration.IFOOD);
-        services.AddKeyedScoped<IOrderDisputeRespondUseCase, IFoodHandshakeOrderDisputeRespondUseCase>(OrderIntegration.IFOOD);
-        services.AddKeyedScoped<IOrderChangeProductStatusUseCase, IFoodOrderChangeProductStatusUseCase>(OrderIntegration.IFOOD);
-        services.AddKeyedScoped<IOrderGetCancellationReasonUseCase, IFoodOrderGetCancellationReasonUseCase>(OrderIntegration.IFOOD);
+        services.AddKeyedScoped<IOrderChangeStatusUseCase, IFoodOrderChangeStatusUseCase>(IFoodIntegrationKey.Value);
+        services.AddKeyedScoped<IOrderDisputeRespondUseCase, IFoodHandshakeOrderDisputeRespondUseCase>(IFoodIntegrationKey.Value);
+        services.AddKeyedScoped<IOrderChangeProductStatusUseCase, IFoodOrderChangeProductStatusUseCase>(IFoodIntegrationKey.Value);
+        services.AddKeyedScoped<IOrderGetCancellationReasonUseCase, IFoodOrderGetCancellationReasonUseCase>(IFoodIntegrationKey.Value);
 
-        services.AddKeyedSingleton<ICustomJsonSerializer, CommonJsonSerializer>(OrderIntegration.IFOOD);
+        services.AddKeyedSingleton<ICustomJsonSerializer, CommonJsonSerializer>(IFoodIntegrationKey.Value);
 
         return services;
     }

@@ -11,7 +11,7 @@ using Orders.Integrations.Hub.Integrations.Food99.Domain.ValueObjects.DTOs.Reque
 namespace Orders.Integrations.Hub.Integrations.Food99.Application.Clients;
 
 public class Food99Client(
-    [FromKeyedServices(OrderIntegration.FOOD99)] ICustomJsonSerializer jsonSerializer,
+    [FromKeyedServices(Food99IntegrationKey.Value)] ICustomJsonSerializer jsonSerializer,
     IIntegrationContext integrationContext,
     ILogger<Food99Client> logger,
     HttpClient httpClient
