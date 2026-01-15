@@ -13,6 +13,12 @@ indent_size = 2
 
 #### Core EditorConfig Options ####
 
+# Always place parameters/arguments on separate lines
+csharp_wrap_parameters = true
+csharp_wrap_parameters_style = chop_always
+csharp_wrap_arguments = true
+csharp_wrap_arguments_style = chop_always
+
 # Indentation and spacing
 indent_size = 4
 tab_width = 4

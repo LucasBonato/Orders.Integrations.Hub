@@ -16,15 +16,16 @@ using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 
-using Orders.Integrations.Hub.Core.Adapter;
 using Orders.Integrations.Hub.Core.Application.Clients;
 using Orders.Integrations.Hub.Core.Application.Extensions;
+using Orders.Integrations.Hub.Core.Application.Integration;
 using Orders.Integrations.Hub.Core.Application.Middlewares;
 using Orders.Integrations.Hub.Core.Application.Services;
 using Orders.Integrations.Hub.Core.Application.UseCases;
 using Orders.Integrations.Hub.Core.Domain.Contracts;
 using Orders.Integrations.Hub.Core.Domain.Contracts.Clients;
 using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases.Core;
+using Orders.Integrations.Hub.Core.Infrastructure;
 
 namespace Orders.Integrations.Hub.Core;
 
@@ -58,6 +59,7 @@ public static class CoreDependencyInjection
 
         services.AddScoped<IOrderUseCase, OrderUseCase>();
         services.AddScoped<IOrderDisputeUpdateUseCase, OrderDisputeUpdateUseCase>();
+        services.AddScoped<IIntegrationRouter, IntegrationRouter>();
 
         services.AddFastEndpoints(options => {
             options.DisableAutoDiscovery = false;
@@ -100,6 +102,9 @@ public static class CoreDependencyInjection
             options.JsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
             options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
             options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.SnakeCaseUpper));
+        });
+        services.ConfigureHttpJsonOptions(options => {
+            options.SerializerOptions.Converters.Add(new IntegrationKeyJsonConverter());
         });
         return services;
     }

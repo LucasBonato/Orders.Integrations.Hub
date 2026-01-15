@@ -420,7 +420,7 @@ public static class Food99OrderExtension
     {
         return new OrderUpdate(
             OrderId: request.Data.OrderId.ToString(),
-            SourceAppId: OrderIntegration.FOOD99,
+            SourceAppId: Food99IntegrationKey.FOOD99,
             Type: eventType?? request.Type.ToOrderEvent(request.Data.DeliveryStatus),
             CreateAt: request.Timestamp.ToDateTime(),
             Dispute: null,

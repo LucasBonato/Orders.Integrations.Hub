@@ -2,11 +2,9 @@
 
 using Microsoft.AspNetCore.Mvc;
 
-using Orders.Integrations.Hub.Core.Application.Extensions;
 using Orders.Integrations.Hub.Core.Domain.Contracts;
 using Orders.Integrations.Hub.Core.Domain.Contracts.Clients;
 using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases.Integrations.In;
-using Orders.Integrations.Hub.Core.Domain.ValueObjects.Enums;
 using Orders.Integrations.Hub.Integrations.Common.Contracts;
 using Orders.Integrations.Hub.Integrations.Common.Extensions;
 using Orders.Integrations.Hub.Integrations.Common.Validators;
@@ -20,7 +18,7 @@ namespace Orders.Integrations.Hub.Integrations.Rappi.Adapter;
 
 public class RappiWebhookAdapter {
     public static async Task<IResult> CreateOrder(
-        [FromKeyedServices(OrderIntegration.RAPPI)] ICustomJsonSerializer serializer,
+        [FromKeyedServices(RappiIntegrationKey.Value)] ICustomJsonSerializer serializer,
         [FromServices] IOrderCreateUseCase<RappiOrder> orderCreate,
         [FromServices] IIntegrationContext integrationContext,
         [FromServices] IInternalClient internalClient,
@@ -35,7 +33,7 @@ public class RappiWebhookAdapter {
     }
 
     public static async Task<IResult> CancelOrder(
-        [FromKeyedServices(OrderIntegration.RAPPI)] ICustomJsonSerializer serializer,
+        [FromKeyedServices(RappiIntegrationKey.Value)] ICustomJsonSerializer serializer,
         [FromServices] IOrderUpdateUseCase<RappiWebhookEventOrderRequest> orderUpdate,
         [FromServices] IIntegrationContext integrationContext,
         [FromServices] IInternalClient internalClient,
@@ -48,7 +46,7 @@ public class RappiWebhookAdapter {
     }
 
     public static async Task<IResult> PatchOrder(
-        [FromKeyedServices(OrderIntegration.RAPPI)] ICustomJsonSerializer serializer,
+        [FromKeyedServices(RappiIntegrationKey.Value)] ICustomJsonSerializer serializer,
         [FromServices] IOrderUpdateUseCase<RappiWebhookEventOrderRequest> orderUpdate,
         [FromServices] IIntegrationContext integrationContext,
         [FromServices] IInternalClient internalClient,
@@ -61,7 +59,7 @@ public class RappiWebhookAdapter {
     }
 
     public static async Task<IResult> PingStore(
-        [FromKeyedServices(OrderIntegration.RAPPI)] ICustomJsonSerializer serializer,
+        [FromKeyedServices(RappiIntegrationKey.Value)] ICustomJsonSerializer serializer,
         [FromServices] IIntegrationContext integrationContext,
         [FromServices] IInternalClient internalClient,
         ILogger<RappiWebhookAdapter> logger,
