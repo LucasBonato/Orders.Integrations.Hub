@@ -8,8 +8,7 @@ namespace Orders.Integrations.Hub.Core.Application.UseCases;
 public class OrderDisputeUpdateUseCase(
     IOrderClient orderClient
 ) : IOrderDisputeUpdateUseCase {
-    public async Task ProcessDispute(ProcessOrderDisputeEvent orderDisputeEvent)
-    {
+    public async Task ProcessDispute(ProcessOrderDisputeEvent orderDisputeEvent) {
         OrderUpdate orderUpdate = new(
             OrderId: orderDisputeEvent.ExternalOrderId,
             SourceAppId: orderDisputeEvent.Integration,

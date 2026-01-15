@@ -1,4 +1,5 @@
-﻿using Orders.Integrations.Hub.Core.Domain.ValueObjects.Enums;
+﻿using Orders.Integrations.Hub.Core.Application.Integration;
+using Orders.Integrations.Hub.Core.Domain.ValueObjects.Enums;
 
 namespace Orders.Integrations.Hub.Core.Domain.ValueObjects.DTOs.Request;
 
@@ -7,7 +8,7 @@ public record ChangeOrderStatusRequest(
     string ExternalId,
     string MerchantId,
     OrderEventType Status,
-    OrderIntegration Integration,
+    IntegrationKey Integration,
     string? CancellationReason,
     CancellationMetadata? CancellationMetadata
 );

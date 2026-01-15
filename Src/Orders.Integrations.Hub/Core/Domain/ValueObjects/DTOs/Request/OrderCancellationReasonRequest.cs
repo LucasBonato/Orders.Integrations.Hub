@@ -1,8 +1,8 @@
-﻿using Orders.Integrations.Hub.Core.Domain.ValueObjects.Enums;
+﻿using Orders.Integrations.Hub.Core.Application.Integration;
 
 namespace Orders.Integrations.Hub.Core.Domain.ValueObjects.DTOs.Request;
 
 public record OrderCancellationReasonRequest(
     string OrderId,
-    OrderIntegration Integration
+    IntegrationKey Integration
 );
