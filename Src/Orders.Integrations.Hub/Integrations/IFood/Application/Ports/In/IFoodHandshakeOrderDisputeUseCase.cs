@@ -74,7 +74,7 @@ public class IFoodHandshakeOrderDisputeUseCase(
 
         await new ProcessOrderDisputeEvent(
             ExternalOrderId: foodOrder.OrderId,
-            Integration: IfoodIntegrationKey.IFOOD,
+            Integration: IFoodIntegrationKey.IFOOD,
             OrderDispute: dispute.ToOrder(),
             Type: type
         ).PublishAsync();

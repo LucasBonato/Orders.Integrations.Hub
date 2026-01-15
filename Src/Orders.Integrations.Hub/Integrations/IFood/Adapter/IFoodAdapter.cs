@@ -19,7 +19,7 @@ namespace Orders.Integrations.Hub.Integrations.IFood.Adapter;
 public class IFoodAdapter
 {
     public static async Task<IResult> Webhook(
-        [FromKeyedServices(IfoodIntegrationKey.Value)] ICustomJsonSerializer jsonSerializer,
+        [FromKeyedServices(IFoodIntegrationKey.Value)] ICustomJsonSerializer jsonSerializer,
         [FromServices] IOrderCreateUseCase<IFoodWebhookRequest> orderCreate,
         [FromServices] IOrderUpdateUseCase<IFoodWebhookRequest> orderUpdate,
         [FromServices] IOrderDisputeUseCase<IFoodWebhookRequest> orderDispute,

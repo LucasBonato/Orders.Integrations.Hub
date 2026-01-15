@@ -49,7 +49,7 @@ public class IntegrationKeyValidationTests
     public void GetIntegrationKeyTypes_InIntegrationsNamespace_AllHaveIntegrationKeyDefinitionAttribute()
     {
         // Arrange
-        var assembly = typeof(IfoodIntegrationKey).Assembly;
+        var assembly = typeof(IFoodIntegrationKey).Assembly;
 
         // Act
         List<Type> typesWithoutAttribute = assembly
@@ -70,7 +70,7 @@ public class IntegrationKeyValidationTests
     public void GetIntegrationKeyTypes_WithIntegrationKeyDefinitionAttribute_AllHaveValueField()
     {
         // Arrange
-        var assembly = typeof(IfoodIntegrationKey).Assembly;
+        var assembly = typeof(IFoodIntegrationKey).Assembly;
         var integrationKeyTypes = assembly
             .GetTypes()
             .Where(type => type.GetCustomAttribute<IntegrationKeyDefinitionAttribute>() is not null)
@@ -93,7 +93,7 @@ public class IntegrationKeyValidationTests
     public void GetIntegrationKeyTypes_WithIntegrationKeyDefinitionAttribute_AllValuesAreNormalized()
     {
         // Arrange
-        var assembly = typeof(IfoodIntegrationKey).Assembly;
+        var assembly = typeof(IFoodIntegrationKey).Assembly;
         var integrationKeyTypes = assembly
             .GetTypes()
             .Where(type => type.GetCustomAttribute<IntegrationKeyDefinitionAttribute>() is not null)

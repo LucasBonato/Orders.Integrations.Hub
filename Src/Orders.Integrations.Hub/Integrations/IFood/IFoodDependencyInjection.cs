@@ -26,12 +26,12 @@ public static class IFoodDependencyInjection
         services.AddTransient<IOrderUpdateUseCase<IFoodWebhookRequest>, IFoodOrderUpdateUseCase>();
         services.AddTransient<IOrderDisputeUseCase<IFoodWebhookRequest>, IFoodHandshakeOrderDisputeUseCase>();
 
-        services.AddKeyedScoped<IOrderChangeStatusUseCase, IFoodOrderChangeStatusUseCase>(IfoodIntegrationKey.Value);
-        services.AddKeyedScoped<IOrderDisputeRespondUseCase, IFoodHandshakeOrderDisputeRespondUseCase>(IfoodIntegrationKey.Value);
-        services.AddKeyedScoped<IOrderChangeProductStatusUseCase, IFoodOrderChangeProductStatusUseCase>(IfoodIntegrationKey.Value);
-        services.AddKeyedScoped<IOrderGetCancellationReasonUseCase, IFoodOrderGetCancellationReasonUseCase>(IfoodIntegrationKey.Value);
+        services.AddKeyedScoped<IOrderChangeStatusUseCase, IFoodOrderChangeStatusUseCase>(IFoodIntegrationKey.Value);
+        services.AddKeyedScoped<IOrderDisputeRespondUseCase, IFoodHandshakeOrderDisputeRespondUseCase>(IFoodIntegrationKey.Value);
+        services.AddKeyedScoped<IOrderChangeProductStatusUseCase, IFoodOrderChangeProductStatusUseCase>(IFoodIntegrationKey.Value);
+        services.AddKeyedScoped<IOrderGetCancellationReasonUseCase, IFoodOrderGetCancellationReasonUseCase>(IFoodIntegrationKey.Value);
 
-        services.AddKeyedSingleton<ICustomJsonSerializer, CommonJsonSerializer>(IfoodIntegrationKey.Value);
+        services.AddKeyedSingleton<ICustomJsonSerializer, CommonJsonSerializer>(IFoodIntegrationKey.Value);
 
         return services;
     }

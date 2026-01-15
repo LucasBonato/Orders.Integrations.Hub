@@ -7,7 +7,7 @@ using Orders.Integrations.Hub.Integrations.IFood.Domain.ValueObjects.DTOs.Respon
 namespace Orders.Integrations.Hub.Integrations.IFood.Application.Clients;
 
 public class IFoodAuthClient(
-    [FromKeyedServices(IfoodIntegrationKey.Value)] ICustomJsonSerializer jsonSerializer,
+    [FromKeyedServices(IFoodIntegrationKey.Value)] ICustomJsonSerializer jsonSerializer,
     ILogger<IFoodAuthClient> logger,
     HttpClient httpClient
 ) : IIFoodAuthClient {
