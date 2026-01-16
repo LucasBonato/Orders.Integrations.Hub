@@ -1,6 +1,7 @@
 ﻿using System.Net.Http.Headers;
 using System.Text;
 
+using Orders.Integrations.Hub.Core.Application.Ports.Out.Serialization;
 using Orders.Integrations.Hub.Core.Domain.Contracts;
 using Orders.Integrations.Hub.Integrations.Common.Contracts;
 using Orders.Integrations.Hub.Integrations.Common.Extensions;

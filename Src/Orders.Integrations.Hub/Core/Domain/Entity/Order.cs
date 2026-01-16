@@ -3,7 +3,7 @@ using Orders.Integrations.Hub.Core.Domain.Entity.Dispute;
 using Orders.Integrations.Hub.Core.Domain.Entity.Item;
 using Orders.Integrations.Hub.Core.Domain.Entity.Merchant;
 using Orders.Integrations.Hub.Core.Domain.Entity.Payment;
-using Orders.Integrations.Hub.Core.Domain.ValueObjects.Enums;
+using Orders.Integrations.Hub.Core.Domain.Enums;
 
 namespace Orders.Integrations.Hub.Core.Domain.Entity;
 

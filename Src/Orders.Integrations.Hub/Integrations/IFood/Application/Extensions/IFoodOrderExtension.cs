@@ -1,13 +1,13 @@
 ﻿using System.Globalization;
 
+using Orders.Integrations.Hub.Core.Application.DTOs;
 using Orders.Integrations.Hub.Core.Domain.Entity;
 using Orders.Integrations.Hub.Core.Domain.Entity.Address;
 using Orders.Integrations.Hub.Core.Domain.Entity.Discount;
 using Orders.Integrations.Hub.Core.Domain.Entity.Item;
 using Orders.Integrations.Hub.Core.Domain.Entity.Merchant;
 using Orders.Integrations.Hub.Core.Domain.Entity.Payment;
-using Orders.Integrations.Hub.Core.Domain.ValueObjects.DTOs;
-using Orders.Integrations.Hub.Core.Domain.ValueObjects.Enums;
+using Orders.Integrations.Hub.Core.Domain.Enums;
 using Orders.Integrations.Hub.Integrations.IFood.Domain.Entity.Handshake;
 using Orders.Integrations.Hub.Integrations.IFood.Domain.Entity.Order;
 using Orders.Integrations.Hub.Integrations.IFood.Domain.ValueObjects.DTOs.Request;
@@ -147,7 +147,7 @@ public static class IFoodOrderExtension
             OrderId: order.Id,
             Type: order.OrderType.ToOrder(),
             DisplayId: order.DisplayId,
-            SourceAppId: OrderSalesChannel.IFOOD.ToString(),
+            SourceAppId: IFoodIntegrationKey.IFOOD,
             SalesChannel: order.SalesChannel.ToString(),
             VirtualBrand: order.Merchant.Id,
             CreatedAt: order.CreatedAt,

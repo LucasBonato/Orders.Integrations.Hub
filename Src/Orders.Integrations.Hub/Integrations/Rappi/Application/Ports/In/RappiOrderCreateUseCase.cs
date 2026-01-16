@@ -1,8 +1,8 @@
 ﻿using FastEndpoints;
 
 using Orders.Integrations.Hub.Core.Application.Events;
-using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases.Integrations.In;
-using Orders.Integrations.Hub.Core.Domain.ValueObjects.Enums;
+using Orders.Integrations.Hub.Core.Domain.Contracts.Ports.In;
+using Orders.Integrations.Hub.Core.Domain.Enums;
 using Orders.Integrations.Hub.Integrations.Common.Contracts;
 using Orders.Integrations.Hub.Integrations.Rappi.Application.Extensions;
 using Orders.Integrations.Hub.Integrations.Rappi.Domain.Entity;
@@ -18,7 +18,7 @@ public class RappiOrderCreateUseCase(
 
         await new CreateOrderEvent(
             Order: request.ToOrder(tenantId),
-            SalesChannel: OrderSalesChannel.RAPPI
+            SalesChannel: RappiIntegrationKey.RAPPI
         ).PublishAsync();
 
         if (integrationContext.Integration.AutoAccept)

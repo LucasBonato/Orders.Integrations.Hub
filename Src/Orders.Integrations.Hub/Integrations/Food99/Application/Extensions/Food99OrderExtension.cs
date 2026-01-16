@@ -1,12 +1,12 @@
-﻿using Orders.Integrations.Hub.Core.Domain.Entity;
+﻿using Orders.Integrations.Hub.Core.Application.DTOs;
+using Orders.Integrations.Hub.Core.Domain.Entity;
 using Orders.Integrations.Hub.Core.Domain.Entity.Address;
 using Orders.Integrations.Hub.Core.Domain.Entity.Discount;
 using Orders.Integrations.Hub.Core.Domain.Entity.Dispute;
 using Orders.Integrations.Hub.Core.Domain.Entity.Item;
 using Orders.Integrations.Hub.Core.Domain.Entity.Merchant;
 using Orders.Integrations.Hub.Core.Domain.Entity.Payment;
-using Orders.Integrations.Hub.Core.Domain.ValueObjects.DTOs;
-using Orders.Integrations.Hub.Core.Domain.ValueObjects.Enums;
+using Orders.Integrations.Hub.Core.Domain.Enums;
 using Orders.Integrations.Hub.Integrations.Food99.Domain.Entity;
 using Orders.Integrations.Hub.Integrations.Food99.Domain.ValueObjects.Enums;
 
@@ -139,8 +139,8 @@ public static class Food99OrderExtension
             OrderId: order.Data.OrderId.ToString(),
             Type: OrderType.DELIVERY,
             DisplayId: Guid.NewGuid().ToString()[..5],
-            SourceAppId: nameof(OrderSalesChannel.FOOD99),
-            SalesChannel: nameof(OrderSalesChannel.FOOD99),
+            SourceAppId: Food99IntegrationKey.FOOD99,
+            SalesChannel: Food99IntegrationKey.FOOD99,
             VirtualBrand: order.AppShopId,
             CreatedAt: order.Timestamp.ToDateTime(),
             LastEvent: OrderEventType.CREATED,

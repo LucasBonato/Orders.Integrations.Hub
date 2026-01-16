@@ -1,8 +1,8 @@
 ﻿using FastEndpoints;
 
 using Orders.Integrations.Hub.Core.Application.Events;
-using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases.Integrations.In;
-using Orders.Integrations.Hub.Core.Domain.ValueObjects.Enums;
+using Orders.Integrations.Hub.Core.Domain.Contracts.Ports.In;
+using Orders.Integrations.Hub.Core.Domain.Enums;
 using Orders.Integrations.Hub.Integrations.Common.Contracts;
 using Orders.Integrations.Hub.Integrations.Food99.Application.Extensions;
 using Orders.Integrations.Hub.Integrations.Food99.Domain.Entity;
@@ -17,7 +17,7 @@ public class Food99OrderCreateUseCase(
 
         await new CreateOrderEvent(
             Order: requestOrder.ToOrder(tenantId),
-            SalesChannel: OrderSalesChannel.FOOD99
+            SalesChannel: Food99IntegrationKey.FOOD99
         ).PublishAsync();
 
         if (integrationContext.Integration.AutoAccept) {
