@@ -1,5 +1,4 @@
 ﻿using Orders.Integrations.Hub.Core.Domain.Contracts;
-using Orders.Integrations.Hub.Core.Domain.ValueObjects.Enums;
 using Orders.Integrations.Hub.Integrations.Food99.Domain.Contracts;
 using Orders.Integrations.Hub.Integrations.Food99.Domain.ValueObjects.DTOs.Request;
 using Orders.Integrations.Hub.Integrations.Food99.Domain.ValueObjects.DTOs.Response;
