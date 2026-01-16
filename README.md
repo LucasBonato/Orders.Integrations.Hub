@@ -1,6 +1,6 @@
 # Integrations Hub for Orders
 
-**`Orders.Integrations.Hub`** is a modular and extensible integration hub built with **.NET 9**, designed to receive and 
+**`Orders.Integrations.Hub`** is a modular and extensible integration hub built with **.NET 10**, designed to receive and 
 standardize external orders from platforms like iFood, Rappi, **99Food**, and more. It forwards these orders to an internal 
 system using a clean and decoupled architecture.
 
