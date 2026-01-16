@@ -5,10 +5,10 @@ namespace Orders.Integrations.Hub.Core.Infrastructure;
 
 public sealed class IntegrationRouter(IServiceProvider serviceProvider) : IIntegrationRouter {
     public TUseCase Resolve<TUseCase>(IntegrationKey key) where TUseCase : notnull {
-        TUseCase service = serviceProvider.GetRequiredKeyedService<TUseCase>(key);
+        TUseCase? service = serviceProvider.GetKeyedService<TUseCase>(key.Value);
 
         return service?? throw new UnknownIntegrationException(typeof(TUseCase), key);
     }
 
-    public bool CanResolve<TUseCase>(IntegrationKey key) where TUseCase : notnull => serviceProvider.GetKeyedService<TUseCase>(key) is not null;
+    public bool CanResolve<TUseCase>(IntegrationKey key) where TUseCase : notnull => serviceProvider.GetKeyedService<TUseCase>(key.Value) is not null;
 }
