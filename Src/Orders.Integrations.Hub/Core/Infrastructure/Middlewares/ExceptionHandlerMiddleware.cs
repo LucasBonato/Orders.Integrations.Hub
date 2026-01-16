@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
-using Orders.Integrations.Hub.Core.Domain.Contracts;
 using Orders.Integrations.Hub.Core.Infrastructure.Exceptions;
 using Orders.Integrations.Hub.Core.Infrastructure.Middlewares.Handlers;
 

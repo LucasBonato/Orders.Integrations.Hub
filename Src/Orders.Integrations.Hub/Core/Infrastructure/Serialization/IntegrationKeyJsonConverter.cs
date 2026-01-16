@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 
-using Orders.Integrations.Hub.Core.Infrastructure.Integration;
+using Orders.Integrations.Hub.Core.Application.DTOs;
 
 namespace Orders.Integrations.Hub.Core.Infrastructure.Serialization;
 

@@ -2,7 +2,6 @@
 using System.Text.Json.Serialization;
 
 using Orders.Integrations.Hub.Core.Application.Ports.Out.Serialization;
-using Orders.Integrations.Hub.Core.Domain.Contracts;
 
 namespace Orders.Integrations.Hub.Integrations.Food99.Application.Handlers;
 
