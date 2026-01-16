@@ -3,9 +3,9 @@
 using FastEndpoints;
 
 using Orders.Integrations.Hub.Core.Application.Events;
-using Orders.Integrations.Hub.Core.Domain.Contracts.Clients;
-using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases.Integrations.In;
-using Orders.Integrations.Hub.Core.Domain.ValueObjects.Enums;
+using Orders.Integrations.Hub.Core.Application.Ports.Out.Clients;
+using Orders.Integrations.Hub.Core.Domain.Contracts.Ports.In;
+using Orders.Integrations.Hub.Core.Domain.Enums;
 using Orders.Integrations.Hub.Integrations.Common;
 using Orders.Integrations.Hub.Integrations.IFood.Application.Extensions;
 using Orders.Integrations.Hub.Integrations.IFood.Domain.Contracts;

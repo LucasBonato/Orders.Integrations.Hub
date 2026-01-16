@@ -1,5 +1,5 @@
-﻿using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases.Integrations.Out;
-using Orders.Integrations.Hub.Core.Domain.ValueObjects.DTOs.Response;
+﻿using Orders.Integrations.Hub.Core.Application.DTOs.Response;
+using Orders.Integrations.Hub.Core.Domain.Contracts.Ports.Out;
 using Orders.Integrations.Hub.Integrations.Rappi.Domain.ValueObjects.Enums;
 
 namespace Orders.Integrations.Hub.Integrations.Rappi.Application.Ports.Out;

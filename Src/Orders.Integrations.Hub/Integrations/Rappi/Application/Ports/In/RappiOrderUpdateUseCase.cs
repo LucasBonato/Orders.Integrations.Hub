@@ -1,10 +1,8 @@
-﻿using Orders.Integrations.Hub.Integrations.Rappi.Application.Extensions;
-
-using FastEndpoints;
+﻿using FastEndpoints;
 
 using Orders.Integrations.Hub.Core.Application.Events;
-using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases.Integrations.In;
-using Orders.Integrations.Hub.Core.Domain.ValueObjects.Enums;
+using Orders.Integrations.Hub.Core.Domain.Contracts.Ports.In;
+using Orders.Integrations.Hub.Integrations.Rappi.Application.Extensions;
 using Orders.Integrations.Hub.Integrations.Rappi.Domain.ValueObjects.DTOs.Request;
 
 namespace Orders.Integrations.Hub.Integrations.Rappi.Application.Ports.In;
@@ -14,7 +12,7 @@ public class RappiOrderUpdateUseCase : IOrderUpdateUseCase<RappiWebhookEventOrde
     {
         await new UpdateOrderStatusEvent(
             OrderUpdate: requestOrder.FromRappi(),
-            SalesChannel: OrderSalesChannel.RAPPI
+            SalesChannel: RappiIntegrationKey.RAPPI
         ).PublishAsync();
 
         return requestOrder;

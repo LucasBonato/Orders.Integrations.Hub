@@ -1,6 +1,6 @@
 ﻿using FastEndpoints;
 
-using Orders.Integrations.Hub.Core.Domain.ValueObjects.DTOs;
+using Orders.Integrations.Hub.Core.Application.DTOs;
 
 namespace Orders.Integrations.Hub.Core.Application.Events;
 

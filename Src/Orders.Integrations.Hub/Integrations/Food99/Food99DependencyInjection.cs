@@ -1,7 +1,8 @@
-﻿using Orders.Integrations.Hub.Core.Application.Extensions;
+﻿using Orders.Integrations.Hub.Core.Application.Ports.Out.Serialization;
 using Orders.Integrations.Hub.Core.Domain.Contracts;
-using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases.Integrations.In;
-using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases.Integrations.Out;
+using Orders.Integrations.Hub.Core.Domain.Contracts.Ports.In;
+using Orders.Integrations.Hub.Core.Domain.Contracts.Ports.Out;
+using Orders.Integrations.Hub.Core.Infrastructure.Extensions;
 using Orders.Integrations.Hub.Integrations.Food99.Application.Clients;
 using Orders.Integrations.Hub.Integrations.Food99.Application.Handlers;
 using Orders.Integrations.Hub.Integrations.Food99.Application.Ports.In;

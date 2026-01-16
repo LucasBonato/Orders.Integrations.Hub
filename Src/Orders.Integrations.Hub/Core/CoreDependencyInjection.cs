@@ -16,16 +16,21 @@ using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 
-using Orders.Integrations.Hub.Core.Application.Clients;
-using Orders.Integrations.Hub.Core.Application.Extensions;
-using Orders.Integrations.Hub.Core.Application.Integration;
-using Orders.Integrations.Hub.Core.Application.Middlewares;
-using Orders.Integrations.Hub.Core.Application.Services;
+using Orders.Integrations.Hub.Core.Adapters.In.Http;
+using Orders.Integrations.Hub.Core.Adapters.Out.Cache.Memory;
+using Orders.Integrations.Hub.Core.Adapters.Out.HttpClients;
+using Orders.Integrations.Hub.Core.Application.Ports.In.Integration;
+using Orders.Integrations.Hub.Core.Application.Ports.In.UseCases;
+using Orders.Integrations.Hub.Core.Application.Ports.Out.Cache;
+using Orders.Integrations.Hub.Core.Application.Ports.Out.Clients;
+using Orders.Integrations.Hub.Core.Application.Ports.Out.Serialization;
 using Orders.Integrations.Hub.Core.Application.UseCases;
 using Orders.Integrations.Hub.Core.Domain.Contracts;
-using Orders.Integrations.Hub.Core.Domain.Contracts.Clients;
-using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases.Core;
 using Orders.Integrations.Hub.Core.Infrastructure;
+using Orders.Integrations.Hub.Core.Infrastructure.Extensions;
+using Orders.Integrations.Hub.Core.Infrastructure.Integration;
+using Orders.Integrations.Hub.Core.Infrastructure.Middlewares;
+using Orders.Integrations.Hub.Core.Infrastructure.Serialization;
 
 namespace Orders.Integrations.Hub.Core;
 
@@ -117,10 +122,6 @@ public static class CoreDependencyInjection
         services.Decorate<IInternalClient, InternalCacheClient>();
 
         services.AddHttpClient<IOrderClient, OrderClient>(client => {
-            client.BaseAddress = new Uri(AppEnv.ORDERS.ENDPOINT.BASE_URL.NotNullEnv());
-        });
-
-        services.AddHttpClient<IOrderHttp>(client => {
             client.BaseAddress = new Uri(AppEnv.ORDERS.ENDPOINT.BASE_URL.NotNullEnv());
         });
 

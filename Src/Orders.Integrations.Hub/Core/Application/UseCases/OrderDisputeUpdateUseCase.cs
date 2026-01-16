@@ -1,7 +1,7 @@
-﻿using Orders.Integrations.Hub.Core.Application.Events;
-using Orders.Integrations.Hub.Core.Domain.Contracts.Clients;
-using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases.Core;
-using Orders.Integrations.Hub.Core.Domain.ValueObjects.DTOs;
+﻿using Orders.Integrations.Hub.Core.Application.DTOs;
+using Orders.Integrations.Hub.Core.Application.Events;
+using Orders.Integrations.Hub.Core.Application.Ports.In.UseCases;
+using Orders.Integrations.Hub.Core.Application.Ports.Out.Clients;
 
 namespace Orders.Integrations.Hub.Core.Application.UseCases;
 

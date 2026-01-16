@@ -1,4 +1,4 @@
-﻿using Orders.Integrations.Hub.Core.Domain.ValueObjects.DTOs.Internal;
+﻿using Orders.Integrations.Hub.Core.Application.DTOs.Internal;
 
 namespace Orders.Integrations.Hub.Integrations.Common.Extensions;
 

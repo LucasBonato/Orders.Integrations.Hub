@@ -1,8 +1,8 @@
 ﻿using FastEndpoints;
 
-using Orders.Integrations.Hub.Core.Application.Integration;
 using Orders.Integrations.Hub.Core.Domain.Entity.Dispute;
-using Orders.Integrations.Hub.Core.Domain.ValueObjects.Enums;
+using Orders.Integrations.Hub.Core.Domain.Enums;
+using Orders.Integrations.Hub.Core.Infrastructure.Integration;
 
 namespace Orders.Integrations.Hub.Core.Application.Events;
 

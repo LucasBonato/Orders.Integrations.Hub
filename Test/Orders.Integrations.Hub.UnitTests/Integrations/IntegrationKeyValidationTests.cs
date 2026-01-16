@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-using Orders.Integrations.Hub.Core.Application.Integration;
+using Orders.Integrations.Hub.Core.Infrastructure.Integration;
 using Orders.Integrations.Hub.Integrations.Common;
 using Orders.Integrations.Hub.Integrations.Common.Validators;
 using Orders.Integrations.Hub.Integrations.IFood;

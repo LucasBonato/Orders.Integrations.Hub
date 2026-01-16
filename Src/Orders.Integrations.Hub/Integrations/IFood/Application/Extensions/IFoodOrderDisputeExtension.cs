@@ -1,6 +1,6 @@
 ﻿using Orders.Integrations.Hub.Core.Domain.Entity;
 using Orders.Integrations.Hub.Core.Domain.Entity.Dispute;
-using Orders.Integrations.Hub.Core.Domain.ValueObjects.Enums;
+using Orders.Integrations.Hub.Core.Domain.Enums;
 using Orders.Integrations.Hub.Integrations.IFood.Domain.Entity.Handshake;
 using Orders.Integrations.Hub.Integrations.IFood.Domain.ValueObjects.Enums.Handshake;
 
