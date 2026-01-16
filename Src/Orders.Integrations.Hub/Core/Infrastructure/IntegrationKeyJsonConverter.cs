@@ -6,7 +6,7 @@ using Orders.Integrations.Hub.Core.Application.Integration;
 namespace Orders.Integrations.Hub.Core.Infrastructure;
 
 public sealed class IntegrationKeyJsonConverter : JsonConverter<IntegrationKey> {
-    public override IntegrationKey? Read(
+    public override IntegrationKey Read(
         ref Utf8JsonReader reader,
         Type typeToConvert,
         JsonSerializerOptions options
