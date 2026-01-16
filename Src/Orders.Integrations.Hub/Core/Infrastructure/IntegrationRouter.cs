@@ -7,7 +7,7 @@ public sealed class IntegrationRouter(IServiceProvider serviceProvider) : IInteg
     public TUseCase Resolve<TUseCase>(IntegrationKey key) where TUseCase : notnull {
         TUseCase? service = serviceProvider.GetKeyedService<TUseCase>(key.Value);
 
-        return service?? throw new UnknownIntegrationException(typeof(TUseCase), key);
+        return service?? throw new UnknownIntegrationException(key);
     }
 
     public bool CanResolve<TUseCase>(IntegrationKey key) where TUseCase : notnull => serviceProvider.GetKeyedService<TUseCase>(key.Value) is not null;
