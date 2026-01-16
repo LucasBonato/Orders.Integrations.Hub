@@ -11,6 +11,7 @@ system using a clean and decoupled architecture.
 - [📁 Project Structure](#-project-structure)
 - [🧱 Integration Architecture](#-integration-architecture)
     - [➕ Adding a New Integration](#-adding-a-new-integration)
+    - [🔑 Integration Keys & Routing](#-integration-keys--routing)
     - [🧩 Use Cases Overview](#-use-cases-overview)
     - [🏪 Multi-Tenant Support](#-multi-tenant-support)
     - [🏗 Centralized Credentials Mode](#-centralized-credentials-mode)
@@ -37,6 +38,7 @@ This project serves as a central entry point for receiving and processing extern
 - 📃 **Scalar** (OpenAPI alternative) for documentation
 - 🔄 **Event-driven** internal communication using **FastEndpoints**
 - 🔌 **Pluggable integrations** (e.g., Rappi, iFood, **99Food**)
+- 🔑 **Type-safe integration routing** with `IntegrationKey` value objects
 - 🏪 **Multi-tenant support** (per-merchant credentials via internal API + caching)
 - 🧾 **Custom JSON serialization per integration** (no `JsonPropertyName` attributes)
 - 📦 **Memory and Distributed Caching**
@@ -97,11 +99,86 @@ Each integration is encapsulated in its own folder and follows its own mini-arch
 evolve integrations independently.
 
 ### ➕ Adding a New Integration
-1. Create a folder under `Integrations/[NewPartner]`.
-2. Implement the architecture that you prefer (adapters, use cases, clients).
-3. Register dependencies in `[Integration]DependencyInjection.cs`.
-4. (Optional) Provide a custom JSON serializer (see below).
-5. (Optional/Recommended Way) Implement the Use Cases for your integration
+1. **Create the integration folder** under `Integrations/IntegrationName`.
+2. **Define the Integration Key** with validation:
+```csharp
+   // Integrations/IntegrationName/IntegrationNameIntegrationKey.cs
+   [IntegrationKeyDefinition]
+   public static class IntegrationNameIntegrationKey 
+   {
+       public const string Value = "INTEGRATION_NAME";
+       
+       public static readonly IntegrationKey INTEGRATION_NAME = IntegrationKey.From(Value);
+       
+       static IntegrationNameIntegrationKey() {
+           IntegrationKeyValidator.ValidateRawValue(Value);
+       }
+   }
+```
+2. **Implement the architecture** that you prefer (adapters, use cases, clients).
+3. **Register dependencies** in `Integrations/IntegrationName/IntegrationNameDependencyInjection.cs`:
+```csharp
+    public static IServiceCollection AddIntegrationNameIntegration(this IServiceCollection services) {
+        
+        services.AddKeyedScoped<IOrderChangeStatusUseCase, IntegrationNameOrderChangeStatusUseCase>(IntegrationNameIntegrationKey.Value);
+        
+        // ...
+        
+        return services;
+    }
+```
+4. **(Optional)** Provide a custom JSON serializer (see below).
+5. **(Optional/Recommended)** Implement the Use Cases for your integration
+
+---
+
+### 🔑 Integration Keys & Routing
+
+The hub uses a type-safe `IntegrationKey` value object instead of enums to achieve extensibility and avoid coupling the
+Core domain to specific integrations.
+
+#### **IntegrationKey Value Object**
+```csharp
+public sealed record IntegrationKey {
+    public string Value { get; }
+    
+    private IntegrationKey(string value) => Value = value;
+    
+    public static IntegrationKey From(string value) => new(value.Trim().ToUpperInvariant());
+}
+```
+
+#### **Integration Router**
+
+The `IIntegrationRouter` dynamically resolves use cases based on the integration key at runtime:
+
+**Usage in Controllers:**
+```csharp
+public static async Task<Ok<List>> GetIntegrationCancellationReason(
+    [FromQuery] string? externalOrderId,
+    [FromQuery] IntegrationKey integration, // Automatically parsed from query string
+    [FromServices] IIntegrationRouter router
+) {
+    var useCase = router.Resolve<IOrderChangeStatusUseCase>(integration);
+    return TypedResults.Ok(await useCase.ExecuteAsync(externalOrderId));
+}
+```
+
+**HTTP Request Example:**
+```http
+GET /api/orders/cancellation-reasons?externalOrderId=123&integration=ifood
+```
+- The `integration` parameter (`"ifood"`) is automatically normalized to `"IFOOD"`
+- The router resolves the iFood-specific use case implementation
+- Type-safe at compile time, flexible at runtime
+
+#### **Benefits of IntegrationKey**
+
+✅ **Extensible**: Add new integrations without modifying Core domain  
+✅ **Type-safe**: Strongly typed with compile-time validation  
+✅ **Normalized**: Automatic uppercase normalization prevents DI mismatches  
+✅ **Validated**: Runtime validation catches configuration errors at startup
+
 ---
 
 ### 🧩 Use Cases Overview
@@ -193,14 +270,14 @@ public class RappiJsonSerializer : ICustomJsonSerializer
 Then in the DI you just need to add the service now with the integration key
 
 ```csharp
-services.AddKeyedSingleton<ICustomJsonSerializer, RappiJsonSerializer>(OrderIntegration.RAPPI);
+services.AddKeyedSingleton<ICustomJsonSerializer, RappiJsonSerializer>(RappiIntegrationKey.Value);
 ```
 
 Now just use it in your integration
 
 ```csharp
 public IResult Handle(
-    [FromKeyedServices(OrderIntegration.RAPPI)] ICustomJsonSerializer jsonSerializer,
+    [FromKeyedServices(RappiIntegrationKey.Value)] ICustomJsonSerializer jsonSerializer,
     /* other deps */
 ) {
     // Use the serializer to parse/format payloads for this integration
@@ -224,6 +301,7 @@ This decouples payload shapes per partner and avoids leaking partner-specific ca
 ## 🧪 Testing
 
 - ✅ **Unit Tests** for application logic.
+- ✅ **Integration Key Validation Tests** to ensure all keys are properly normalized and validated at startup.
 - 🧱 **Architecture Tests** using ArchUnit.NET to enforce domain boundaries and modularity.
 
 ---
