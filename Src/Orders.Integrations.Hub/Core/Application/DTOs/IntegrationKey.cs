@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace Orders.Integrations.Hub.Core.Infrastructure.Integration;
+namespace Orders.Integrations.Hub.Core.Application.DTOs;
 
 public sealed record IntegrationKey : IParsable<IntegrationKey> {
     public string Value { get; }

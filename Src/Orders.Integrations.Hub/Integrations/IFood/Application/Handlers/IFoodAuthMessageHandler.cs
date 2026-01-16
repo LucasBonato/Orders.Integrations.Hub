@@ -1,7 +1,6 @@
 ﻿using System.Net.Http.Headers;
 
 using Orders.Integrations.Hub.Core.Application.Ports.Out.Cache;
-using Orders.Integrations.Hub.Core.Domain.Contracts;
 using Orders.Integrations.Hub.Integrations.Common;
 using Orders.Integrations.Hub.Integrations.Common.Contracts;
 using Orders.Integrations.Hub.Integrations.Common.Extensions;

@@ -1,12 +1,13 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
+using Orders.Integrations.Hub.Core.Application.DTOs;
 using Orders.Integrations.Hub.Core.Application.DTOs.Request;
 using Orders.Integrations.Hub.Core.Application.DTOs.Response;
 using Orders.Integrations.Hub.Core.Application.Ports.In.Integration;
 using Orders.Integrations.Hub.Core.Domain.Contracts.Ports.Out;
 using Orders.Integrations.Hub.Core.Infrastructure.Extensions;
-using Orders.Integrations.Hub.Core.Infrastructure.Integration;
+
 
 using static Microsoft.AspNetCore.Http.TypedResults;
 

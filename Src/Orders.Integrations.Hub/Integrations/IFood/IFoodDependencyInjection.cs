@@ -1,5 +1,4 @@
 ﻿using Orders.Integrations.Hub.Core.Application.Ports.Out.Serialization;
-using Orders.Integrations.Hub.Core.Domain.Contracts;
 using Orders.Integrations.Hub.Core.Domain.Contracts.Ports.In;
 using Orders.Integrations.Hub.Core.Domain.Contracts.Ports.Out;
 using Orders.Integrations.Hub.Core.Infrastructure.Extensions;

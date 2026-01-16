@@ -25,8 +25,6 @@ using Orders.Integrations.Hub.Core.Application.Ports.Out.Cache;
 using Orders.Integrations.Hub.Core.Application.Ports.Out.Clients;
 using Orders.Integrations.Hub.Core.Application.Ports.Out.Serialization;
 using Orders.Integrations.Hub.Core.Application.UseCases;
-using Orders.Integrations.Hub.Core.Domain.Contracts;
-using Orders.Integrations.Hub.Core.Infrastructure;
 using Orders.Integrations.Hub.Core.Infrastructure.Extensions;
 using Orders.Integrations.Hub.Core.Infrastructure.Integration;
 using Orders.Integrations.Hub.Core.Infrastructure.Middlewares;

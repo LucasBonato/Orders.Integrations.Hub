@@ -1,4 +1,4 @@
-﻿using Orders.Integrations.Hub.Core.Infrastructure.Integration;
+﻿using Orders.Integrations.Hub.Core.Application.DTOs;
 using Orders.Integrations.Hub.Integrations.Common;
 using Orders.Integrations.Hub.Integrations.Common.Validators;
 
