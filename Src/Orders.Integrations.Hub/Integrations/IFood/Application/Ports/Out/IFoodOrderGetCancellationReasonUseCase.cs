@@ -10,9 +10,8 @@ public class IFoodOrderGetCancellationReasonUseCase(
 ) : IOrderGetCancellationReasonUseCase {
     public async Task<List<CancellationReasonsResponse>> ExecuteAsync(string? externalOrderId)
     {
-        if (string.IsNullOrEmpty(externalOrderId)) {
+        if (string.IsNullOrEmpty(externalOrderId))
             throw new ArgumentNullException(nameof(externalOrderId));
-        }
 
         var ifoodCancellationReasons = await iFoodClient.GetCancellationReasons(externalOrderId);
 
