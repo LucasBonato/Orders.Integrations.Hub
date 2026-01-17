@@ -20,12 +20,10 @@ using Orders.Integrations.Hub.Core.Adapters.In.Http;
 using Orders.Integrations.Hub.Core.Adapters.Out.Cache.Memory;
 using Orders.Integrations.Hub.Core.Adapters.Out.HttpClients;
 using Orders.Integrations.Hub.Core.Application.Ports.In.Integration;
-using Orders.Integrations.Hub.Core.Application.Ports.In.UseCases;
 using Orders.Integrations.Hub.Core.Application.Ports.Out.Cache;
 using Orders.Integrations.Hub.Core.Application.Ports.Out.Clients;
 using Orders.Integrations.Hub.Core.Application.Ports.Out.Messaging;
 using Orders.Integrations.Hub.Core.Application.Ports.Out.Serialization;
-using Orders.Integrations.Hub.Core.Application.UseCases;
 using Orders.Integrations.Hub.Core.Infrastructure.Extensions;
 using Orders.Integrations.Hub.Core.Infrastructure.Integration;
 using Orders.Integrations.Hub.Core.Infrastructure.Messaging;
@@ -59,13 +57,10 @@ public static class CoreDependencyInjection
 
         services.AddSingleton<IAmazonSimpleNotificationService>(_ => AwsConfigurationExtensions.SimpleNotificationServiceConfiguration());
         services.AddSingleton<IAmazonS3>(_ => AwsConfigurationExtensions.SimpleStorageServiceConfiguration());
-
         services.AddSingleton<IObjectStorageClient, SimpleStorageServiceClient>();
 
         services.AddSingleton<ICommandDispatcher, FastEndpointsCommandDispatcher>();
 
-        services.AddScoped<IOrderUseCase, OrderUseCase>();
-        services.AddScoped<IOrderDisputeUpdateUseCase, OrderDisputeUpdateUseCase>();
         services.AddScoped<IIntegrationRouter, IntegrationRouter>();
 
         services.AddFastEndpoints(options => {
@@ -74,7 +69,6 @@ public static class CoreDependencyInjection
 
         services
             .AddCacheServices()
-            .AddSingleton<ICacheService, MemoryCacheService>()
             .AddProblemDetails(options =>
                 options.CustomizeProblemDetails = context => {
                     HttpContext httpContext = context.HttpContext;
@@ -181,6 +175,7 @@ public static class CoreDependencyInjection
     {
         return services
                 .AddMemoryCache()
+                .AddSingleton<ICacheService, MemoryCacheService>()
             ;
     }
 }
