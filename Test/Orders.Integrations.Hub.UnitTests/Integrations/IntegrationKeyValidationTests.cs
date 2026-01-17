@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 
 using Orders.Integrations.Hub.Core.Application.DTOs;
+using Orders.Integrations.Hub.Core.Domain.ValueObjects;
 using Orders.Integrations.Hub.Integrations.Common;
 using Orders.Integrations.Hub.Integrations.Common.Validators;
 using Orders.Integrations.Hub.Integrations.IFood;
