@@ -1,6 +1,5 @@
-﻿using FastEndpoints;
-
-using Orders.Integrations.Hub.Core.Application.Events;
+﻿using Orders.Integrations.Hub.Core.Application.Commands;
+using Orders.Integrations.Hub.Core.Application.Ports.Out.Messaging;
 using Orders.Integrations.Hub.Core.Domain.Contracts.Ports.In;
 using Orders.Integrations.Hub.Core.Domain.Enums;
 using Orders.Integrations.Hub.Integrations.Common.Contracts;
@@ -13,6 +12,7 @@ namespace Orders.Integrations.Hub.Integrations.IFood.Application.Ports.In;
 
 public class IFoodOrderCreateUseCase(
     IIntegrationContext integrationContext,
+    ICommandDispatcher dispatcher,
     IIFoodClient iFoodClient
 ) : IOrderCreateUseCase<IFoodWebhookRequest> {
     public async Task<IFoodWebhookRequest> ExecuteAsync(IFoodWebhookRequest requestOrder)
@@ -21,17 +21,20 @@ public class IFoodOrderCreateUseCase(
 
         string tenantId = integrationContext.Integration!.TenantId?? string.Empty;
 
-        await new CreateOrderEvent(
-            Order: foodOrder.ToOrder(tenantId),
-            SalesChannel: IFoodIntegrationKey.IFOOD
-        ).PublishAsync();
+        await dispatcher.DispatchAsync(
+            new CreateOrderCommand(
+                Order: foodOrder.ToOrder(tenantId)
+            )
+        );
 
         if (integrationContext.Integration.AutoAccept)
         {
-            await new SendNotificationEvent(
-                Message: requestOrder.FromIFood(OrderEventType.CONFIRMED),
-                TopicArn: null
-            ).PublishAsync();
+            await dispatcher.DispatchAsync(
+                new SendNotificationCommand(
+                    Message: requestOrder.FromIFood(OrderEventType.CONFIRMED),
+                    TopicArn: null
+                )
+            );
         }
 
         return requestOrder;

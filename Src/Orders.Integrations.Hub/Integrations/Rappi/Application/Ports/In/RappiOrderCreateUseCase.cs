@@ -1,6 +1,5 @@
-﻿using FastEndpoints;
-
-using Orders.Integrations.Hub.Core.Application.Events;
+﻿using Orders.Integrations.Hub.Core.Application.Commands;
+using Orders.Integrations.Hub.Core.Application.Ports.Out.Messaging;
 using Orders.Integrations.Hub.Core.Domain.Contracts.Ports.In;
 using Orders.Integrations.Hub.Core.Domain.Enums;
 using Orders.Integrations.Hub.Integrations.Common.Contracts;
@@ -10,23 +9,27 @@ using Orders.Integrations.Hub.Integrations.Rappi.Domain.Entity;
 namespace Orders.Integrations.Hub.Integrations.Rappi.Application.Ports.In;
 
 public class RappiOrderCreateUseCase(
-    IIntegrationContext integrationContext
+    IIntegrationContext integrationContext,
+    ICommandDispatcher dispatcher
 ) : IOrderCreateUseCase<RappiOrder> {
     public async Task<RappiOrder> ExecuteAsync(RappiOrder request)
     {
         string tenantId = integrationContext.Integration!.TenantId?? string.Empty;
 
-        await new CreateOrderEvent(
-            Order: request.ToOrder(tenantId),
-            SalesChannel: RappiIntegrationKey.RAPPI
-        ).PublishAsync();
+        await dispatcher.DispatchAsync(
+            new CreateOrderCommand(
+                Order: request.ToOrder(tenantId)
+            )
+        );
 
         if (integrationContext.Integration.AutoAccept)
         {
-            await new SendNotificationEvent(
-                Message: request.FromRappi(OrderEventType.CONFIRMED),
-                TopicArn: null
-            ).PublishAsync();
+            await dispatcher.DispatchAsync(
+                new SendNotificationCommand(
+                    Message: request.FromRappi(OrderEventType.CONFIRMED),
+                    TopicArn: null
+                )
+            );
         }
 
         return request;
