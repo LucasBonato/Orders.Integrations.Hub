@@ -1,17 +1,18 @@
 ﻿using FastEndpoints;
 
-using Orders.Integrations.Hub.Core.Application.Events;
+using Orders.Integrations.Hub.Core.Application.Commands;
 using Orders.Integrations.Hub.Core.Application.Ports.In.UseCases;
+using Orders.Integrations.Hub.Core.Infrastructure.Messaging;
 
 namespace Orders.Integrations.Hub.Core.Adapters.In.Messaging.EventHandlers;
 
 public class CreateOrderEventHandler(
     IServiceScopeFactory serviceScopeFactory
-) : IEventHandler<CreateOrderEvent> {
-    public async Task HandleAsync(CreateOrderEvent orderEvent, CancellationToken cancellationToken)
+) : IEventHandler<FastEndpointsCommandEnvelope<CreateOrderCommand>> {
+    public async Task HandleAsync(CreateOrderCommand orderCommand, CancellationToken cancellationToken)
     {
         using var scope = serviceScopeFactory.CreateScope();
         var services = scope.Resolve<IOrderUseCase>();
-        await services.CreateOrder(orderEvent);
+        await services.CreateOrder(orderCommand);
     }
 }
