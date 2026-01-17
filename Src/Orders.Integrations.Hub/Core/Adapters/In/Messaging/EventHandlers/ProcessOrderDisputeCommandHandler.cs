@@ -3,6 +3,7 @@
 using Orders.Integrations.Hub.Core.Application.Commands;
 using Orders.Integrations.Hub.Core.Application.DTOs;
 using Orders.Integrations.Hub.Core.Application.Ports.Out.Clients;
+using Orders.Integrations.Hub.Core.Domain.ValueObjects;
 using Orders.Integrations.Hub.Core.Infrastructure.Messaging;
 
 namespace Orders.Integrations.Hub.Core.Adapters.In.Messaging.EventHandlers;

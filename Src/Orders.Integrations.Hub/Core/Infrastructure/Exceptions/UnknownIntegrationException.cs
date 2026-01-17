@@ -3,6 +3,7 @@
 using Microsoft.AspNetCore.Mvc;
 
 using Orders.Integrations.Hub.Core.Application.DTOs;
+using Orders.Integrations.Hub.Core.Domain.ValueObjects;
 
 namespace Orders.Integrations.Hub.Core.Infrastructure.Exceptions;
 

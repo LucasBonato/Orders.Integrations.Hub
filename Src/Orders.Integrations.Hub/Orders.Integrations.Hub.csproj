@@ -27,9 +27,4 @@
     <PackageReference Include="Scrutor" Version="7.0.0" />  
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Core\Adapters\In\Messaging\" />
-    <Folder Include="Core\Domain\ValueObjects\" />
-  </ItemGroup>
-
 </Project>
