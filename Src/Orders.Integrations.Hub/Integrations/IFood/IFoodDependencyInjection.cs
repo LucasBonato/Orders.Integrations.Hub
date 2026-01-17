@@ -1,6 +1,6 @@
-﻿using Orders.Integrations.Hub.Core.Application.Ports.Out.Serialization;
-using Orders.Integrations.Hub.Core.Domain.Contracts.Ports.In;
-using Orders.Integrations.Hub.Core.Domain.Contracts.Ports.Out;
+﻿using Orders.Integrations.Hub.Core.Application.Ports.In.UseCases;
+using Orders.Integrations.Hub.Core.Application.Ports.Out.Serialization;
+using Orders.Integrations.Hub.Core.Application.Ports.Out.UseCases;
 using Orders.Integrations.Hub.Core.Infrastructure.Extensions;
 using Orders.Integrations.Hub.Integrations.Common;
 using Orders.Integrations.Hub.Integrations.IFood.Application.Clients;
