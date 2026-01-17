@@ -17,7 +17,7 @@ public class PubSubCommandHandler(
 ) : IEventHandler<FastEndpointsCommandEnvelope<SendNotificationCommand>> {
     public async Task HandleAsync(FastEndpointsCommandEnvelope<SendNotificationCommand> envelope, CancellationToken ct)
     {
-        SendNotificationCommand command = envelope.command;
+        SendNotificationCommand command = envelope.Command;
 
         string shareConfirmOrderTopicArn = command.TopicArn ?? AppEnv.PUB_SUB.TOPICS.ACCEPT_ORDER.NotNullEnv();
 
