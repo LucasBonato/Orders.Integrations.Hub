@@ -12,14 +12,14 @@ public class OrderClient(
     public async Task CreateOrder(Order order)
     {
         if (logger.IsEnabled(LogLevel.Information))
-            logger.LogInformation("[INFO] - CreateOrderEventHandler - Creating Order, Id: {orderId}", order.OrderId);
+            logger.LogInformation("[INFO] - CreateOrderCommandHandler - Creating Order, Id: {orderId}", order.OrderId);
 
         HttpResponseMessage response = await httpClient.PostAsJsonAsync("Orders", order);
 
         if (!response.IsSuccessStatusCode)
         {
             if (logger.IsEnabled(LogLevel.Error))
-                logger.LogError("[ERROR] - CreateOrderEventHandler - Error creating order: {statusCode}, {content}, {reason}", response.StatusCode, response.Content.ReadAsStringAsync().Result, response.ReasonPhrase);
+                logger.LogError("[ERROR] - CreateOrderCommandHandler - Error creating order: {statusCode}, {content}, {reason}", response.StatusCode, response.Content.ReadAsStringAsync().Result, response.ReasonPhrase);
             throw new Exception();
         }
     }
@@ -27,14 +27,14 @@ public class OrderClient(
     public async Task PatchOrder(OrderUpdate order)
     {
         if (logger.IsEnabled(LogLevel.Information))
-            logger.LogInformation("[INFO] - UpdateOrderEventHandler - Updating Order From Id: {orderId}", order.OrderId);
+            logger.LogInformation("[INFO] - UpdateOrderCommandHandler - Updating Order From Id: {orderId}", order.OrderId);
 
         HttpResponseMessage response = await httpClient.PatchAsJsonAsync("Orders", order);
 
         if (!response.IsSuccessStatusCode)
         {
             if (logger.IsEnabled(LogLevel.Error))
-                logger.LogError("[ERROR] - UpdateOrderEventHandler - Error updating order({orderId}): {statusCode}, {content}, {reason}", order.OrderId, response.StatusCode, response.Content.ReadAsStringAsync().Result, response.ReasonPhrase);
+                logger.LogError("[ERROR] - UpdateOrderCommandHandler - Error updating order({orderId}): {statusCode}, {content}, {reason}", order.OrderId, response.StatusCode, response.Content.ReadAsStringAsync().Result, response.ReasonPhrase);
             throw new Exception();
         }
     }
