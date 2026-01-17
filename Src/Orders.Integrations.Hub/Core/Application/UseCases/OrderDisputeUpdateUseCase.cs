@@ -1,5 +1,5 @@
-﻿using Orders.Integrations.Hub.Core.Application.DTOs;
-using Orders.Integrations.Hub.Core.Application.Events;
+﻿using Orders.Integrations.Hub.Core.Application.Commands;
+using Orders.Integrations.Hub.Core.Application.DTOs;
 using Orders.Integrations.Hub.Core.Application.Ports.In.UseCases;
 using Orders.Integrations.Hub.Core.Application.Ports.Out.Clients;
 
@@ -8,13 +8,13 @@ namespace Orders.Integrations.Hub.Core.Application.UseCases;
 public class OrderDisputeUpdateUseCase(
     IOrderClient orderClient
 ) : IOrderDisputeUpdateUseCase {
-    public async Task ProcessDispute(ProcessOrderDisputeEvent orderDisputeEvent) {
+    public async Task ProcessDispute(ProcessOrderDisputeCommand orderDisputeCommand) {
         OrderUpdate orderUpdate = new(
-            OrderId: orderDisputeEvent.ExternalOrderId,
-            SourceAppId: orderDisputeEvent.Integration,
-            Type: orderDisputeEvent.Type,
+            OrderId: orderDisputeCommand.ExternalOrderId,
+            SourceAppId: orderDisputeCommand.Integration,
+            Type: orderDisputeCommand.Type,
             CreateAt: DateTime.UtcNow,
-            Dispute: orderDisputeEvent.OrderDispute,
+            Dispute: orderDisputeCommand.OrderDispute,
             FromIntegration: true
         );
 

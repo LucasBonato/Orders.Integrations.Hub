@@ -23,10 +23,12 @@ using Orders.Integrations.Hub.Core.Application.Ports.In.Integration;
 using Orders.Integrations.Hub.Core.Application.Ports.In.UseCases;
 using Orders.Integrations.Hub.Core.Application.Ports.Out.Cache;
 using Orders.Integrations.Hub.Core.Application.Ports.Out.Clients;
+using Orders.Integrations.Hub.Core.Application.Ports.Out.Messaging;
 using Orders.Integrations.Hub.Core.Application.Ports.Out.Serialization;
 using Orders.Integrations.Hub.Core.Application.UseCases;
 using Orders.Integrations.Hub.Core.Infrastructure.Extensions;
 using Orders.Integrations.Hub.Core.Infrastructure.Integration;
+using Orders.Integrations.Hub.Core.Infrastructure.Messaging;
 using Orders.Integrations.Hub.Core.Infrastructure.Middlewares;
 using Orders.Integrations.Hub.Core.Infrastructure.Serialization;
 
@@ -59,6 +61,8 @@ public static class CoreDependencyInjection
         services.AddSingleton<IAmazonS3>(_ => AwsConfigurationExtensions.SimpleStorageServiceConfiguration());
 
         services.AddSingleton<IObjectStorageClient, SimpleStorageServiceClient>();
+
+        services.AddSingleton<ICommandDispatcher, FastEndpointsCommandDispatcher>();
 
         services.AddScoped<IOrderUseCase, OrderUseCase>();
         services.AddScoped<IOrderDisputeUpdateUseCase, OrderDisputeUpdateUseCase>();

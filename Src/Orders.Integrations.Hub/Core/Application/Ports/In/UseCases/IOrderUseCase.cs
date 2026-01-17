@@ -1,9 +1,9 @@
-﻿using Orders.Integrations.Hub.Core.Application.Events;
+﻿using Orders.Integrations.Hub.Core.Application.Commands;
 
 namespace Orders.Integrations.Hub.Core.Application.Ports.In.UseCases;
 
 public interface IOrderUseCase
 {
-    Task CreateOrder(CreateOrderEvent order);
-    Task UpdateOrderStatus(UpdateOrderStatusEvent order);
+    Task CreateOrder(CreateOrderCommand order);
+    Task UpdateOrderStatus(UpdateOrderStatusCommand order);
 }
