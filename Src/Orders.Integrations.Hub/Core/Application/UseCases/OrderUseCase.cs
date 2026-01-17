@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 
-using Orders.Integrations.Hub.Core.Application.Events;
+using Orders.Integrations.Hub.Core.Application.Commands;
 using Orders.Integrations.Hub.Core.Application.Ports.In.UseCases;
 using Orders.Integrations.Hub.Core.Application.Ports.Out.Clients;
 
@@ -10,19 +10,19 @@ public class OrderUseCase(
     ILogger<OrderUseCase> logger,
     IOrderClient orderClient
 ) : IOrderUseCase {
-    public async Task CreateOrder(CreateOrderEvent order)
+    public async Task CreateOrder(CreateOrderCommand order)
     {
         if (logger.IsEnabled(LogLevel.Information)) {
-            logger.LogInformation("[INFO] - CreateOrderEventHandler - Creating Order From {salesChannel}", order.SalesChannel);
-            logger.LogInformation("[INFO] - CreateOrderEventHandler - Order: {order}", JsonSerializer.Serialize(order.Order));
+            logger.LogInformation("[INFO] - CreateOrderCommandHandler - Creating Order From {salesChannel}", order.Order.SalesChannel);
+            logger.LogInformation("[INFO] - CreateOrderCommandHandler - Order: {order}", JsonSerializer.Serialize(order.Order));
         }
         await orderClient.CreateOrder(order.Order);
     }
 
-    public async Task UpdateOrderStatus(UpdateOrderStatusEvent order)
+    public async Task UpdateOrderStatus(UpdateOrderStatusCommand order)
     {
         if (logger.IsEnabled(LogLevel.Information)) {
-            logger.LogInformation("[INFO] - UpdateOrderEventHandler - Updating Order From: {salesChannel}", order.SalesChannel);
+            logger.LogInformation("[INFO] - UpdateOrderCommandHandler - Updating Order From: {salesChannel}", order.SalesChannel);
         }
         await orderClient.PatchOrder(order.OrderUpdate);
     }
