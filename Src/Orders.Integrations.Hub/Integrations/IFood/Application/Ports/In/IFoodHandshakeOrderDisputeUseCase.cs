@@ -1,10 +1,9 @@
 ﻿using System.Text.Json;
 
-using FastEndpoints;
-
-using Orders.Integrations.Hub.Core.Application.Events;
+using Orders.Integrations.Hub.Core.Application.Commands;
+using Orders.Integrations.Hub.Core.Application.Ports.In.UseCases;
 using Orders.Integrations.Hub.Core.Application.Ports.Out.Clients;
-using Orders.Integrations.Hub.Core.Domain.Contracts.Ports.In;
+using Orders.Integrations.Hub.Core.Application.Ports.Out.Messaging;
 using Orders.Integrations.Hub.Core.Domain.Enums;
 using Orders.Integrations.Hub.Integrations.Common;
 using Orders.Integrations.Hub.Integrations.IFood.Application.Extensions;
@@ -17,6 +16,7 @@ namespace Orders.Integrations.Hub.Integrations.IFood.Application.Ports.In;
 
 public class IFoodHandshakeOrderDisputeUseCase(
     IObjectStorageClient objectStorageClient,
+    ICommandDispatcher dispatcher,
     IIFoodClient ifoodClient
 ) : IOrderDisputeUseCase<IFoodWebhookRequest> {
     public async Task<IFoodWebhookRequest> ExecuteAsync(IFoodWebhookRequest foodOrder)
@@ -72,12 +72,14 @@ public class IFoodHandshakeOrderDisputeUseCase(
         if (dispute is null)
             throw new Exception("Não foi possível converter disputa!");
 
-        await new ProcessOrderDisputeEvent(
-            ExternalOrderId: foodOrder.OrderId,
-            Integration: IFoodIntegrationKey.IFOOD,
-            OrderDispute: dispute.ToOrder(),
-            Type: type
-        ).PublishAsync();
+        await dispatcher.DispatchAsync(
+            new ProcessOrderDisputeCommand(
+                ExternalOrderId: foodOrder.OrderId,
+                Integration: IFoodIntegrationKey.IFOOD,
+                OrderDispute: dispute.ToOrder(),
+                Type: type
+            )
+        );
 
         return foodOrder;
     }
