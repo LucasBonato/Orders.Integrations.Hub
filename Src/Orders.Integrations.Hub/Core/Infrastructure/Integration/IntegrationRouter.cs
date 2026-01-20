@@ -1,5 +1,6 @@
 ﻿using Orders.Integrations.Hub.Core.Application.DTOs;
 using Orders.Integrations.Hub.Core.Application.Ports.In.Integration;
+using Orders.Integrations.Hub.Core.Domain.ValueObjects;
 using Orders.Integrations.Hub.Core.Infrastructure.Exceptions;
 
 namespace Orders.Integrations.Hub.Core.Infrastructure.Integration;

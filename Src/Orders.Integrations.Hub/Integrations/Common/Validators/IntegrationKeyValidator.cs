@@ -1,4 +1,5 @@
 ﻿using Orders.Integrations.Hub.Core.Application.DTOs;
+using Orders.Integrations.Hub.Core.Domain.ValueObjects;
 
 namespace Orders.Integrations.Hub.Integrations.Common.Validators;
 
