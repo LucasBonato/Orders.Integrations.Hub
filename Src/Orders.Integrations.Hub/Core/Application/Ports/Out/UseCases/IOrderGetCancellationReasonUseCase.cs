@@ -1,6 +1,6 @@
 ﻿using Orders.Integrations.Hub.Core.Application.DTOs.Response;
 
-namespace Orders.Integrations.Hub.Core.Domain.Contracts.Ports.Out;
+namespace Orders.Integrations.Hub.Core.Application.Ports.Out.UseCases;
 
 public interface IOrderGetCancellationReasonUseCase
 {

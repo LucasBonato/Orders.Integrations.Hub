@@ -1,4 +1,4 @@
-﻿namespace Orders.Integrations.Hub.Core.Domain.Contracts.Ports.In;
+﻿namespace Orders.Integrations.Hub.Core.Application.Ports.In.UseCases;
 
 public interface IOrderCreateUseCase<TOrder>
 {

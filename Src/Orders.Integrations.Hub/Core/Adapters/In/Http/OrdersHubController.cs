@@ -1,13 +1,12 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
-using Orders.Integrations.Hub.Core.Application.DTOs;
 using Orders.Integrations.Hub.Core.Application.DTOs.Request;
 using Orders.Integrations.Hub.Core.Application.DTOs.Response;
 using Orders.Integrations.Hub.Core.Application.Ports.In.Integration;
-using Orders.Integrations.Hub.Core.Domain.Contracts.Ports.Out;
+using Orders.Integrations.Hub.Core.Application.Ports.Out.UseCases;
+using Orders.Integrations.Hub.Core.Domain.ValueObjects;
 using Orders.Integrations.Hub.Core.Infrastructure.Extensions;
-
 
 using static Microsoft.AspNetCore.Http.TypedResults;
 
@@ -18,10 +17,10 @@ public class OrdersHubController
     public static async Task<Ok<List<CancellationReasonsResponse>>> GetIntegrationCancellationReason(
         ILogger<OrdersHubController> logger,
         [FromQuery] string? externalOrderId,
-        [FromQuery] IntegrationKey integration,
+        [FromQuery] string integration,
         [FromServices] IIntegrationRouter router
     ) {
-        var useCase = router.Resolve<IOrderGetCancellationReasonUseCase>(integration);
+        var useCase = router.Resolve<IOrderGetCancellationReasonUseCase>(IntegrationKey.From(integration));
         return Ok(await useCase.ExecuteAsync(externalOrderId));
     }
 

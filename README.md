@@ -378,7 +378,7 @@ cp .env.example .env
 
 | Layer               | Technology                   |
 |---------------------|------------------------------|
-| Framework           | .NET 9, Minimal API          |
+| Framework           | .NET 10, Minimal API         |
 | Architecture        | Hexagonal (Ports & Adapters) |
 | Docs                | Scalar                       |
 | Caching             | Memory + Distributed Cache   |

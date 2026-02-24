@@ -1,5 +1,5 @@
 ﻿using Orders.Integrations.Hub.Core.Application.DTOs.Response;
-using Orders.Integrations.Hub.Core.Domain.Contracts.Ports.Out;
+using Orders.Integrations.Hub.Core.Application.Ports.Out.UseCases;
 using Orders.Integrations.Hub.Integrations.Common.Extensions;
 
 namespace Orders.Integrations.Hub.Integrations.Common.Application;
