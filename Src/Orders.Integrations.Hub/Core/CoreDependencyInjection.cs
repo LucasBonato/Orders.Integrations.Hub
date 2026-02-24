@@ -51,132 +51,134 @@ public static class CoreDependencyInjection
         return app;
     }
 
-    private static IServiceCollection AddServices(this IServiceCollection services)
-    {
-        services.AddExceptionHandler<ExceptionHandlerMiddleware>();
+    extension(IServiceCollection services) {
+        private IServiceCollection AddServices()
+        {
+            services.AddExceptionHandler<ExceptionHandlerMiddleware>();
 
-        services.AddSingleton<IAmazonSimpleNotificationService>(_ => AwsConfigurationExtensions.SimpleNotificationServiceConfiguration());
-        services.AddSingleton<IAmazonS3>(_ => AwsConfigurationExtensions.SimpleStorageServiceConfiguration());
+            services.AddSingleton<IAmazonSimpleNotificationService>(_ => AwsConfigurationExtensions.SimpleNotificationServiceConfiguration());
+            services.AddSingleton<IAmazonS3>(_ => AwsConfigurationExtensions.SimpleStorageServiceConfiguration());
 
-        services.AddSingleton<IObjectStorageClient, SimpleStorageServiceClient>();
+            services.AddSingleton<IObjectStorageClient, SimpleStorageServiceClient>();
 
-        services.AddScoped<IOrderUseCase, OrderUseCase>();
-        services.AddScoped<IOrderDisputeUpdateUseCase, OrderDisputeUpdateUseCase>();
-        services.AddScoped<IIntegrationRouter, IntegrationRouter>();
+            services.AddScoped<IOrderUseCase, OrderUseCase>();
+            services.AddScoped<IOrderDisputeUpdateUseCase, OrderDisputeUpdateUseCase>();
+            services.AddScoped<IIntegrationRouter, IntegrationRouter>();
 
-        services.AddFastEndpoints(options => {
-            options.DisableAutoDiscovery = false;
-        });
+            services.AddFastEndpoints(options => {
+                options.DisableAutoDiscovery = false;
+            });
 
-        services
-            .AddCacheServices()
-            .AddSingleton<ICacheService, MemoryCacheService>()
-            .AddProblemDetails(options =>
-                options.CustomizeProblemDetails = context => {
-                    HttpContext httpContext = context.HttpContext;
-                    string traceId = Activity.Current?.TraceId.ToString()?? httpContext.TraceIdentifier;
-                    string traceParent = Activity.Current?.Id ?? httpContext.TraceIdentifier;
+            services
+                .AddCacheServices()
+                .AddSingleton<ICacheService, MemoryCacheService>()
+                .AddProblemDetails(options =>
+                    options.CustomizeProblemDetails = context => {
+                        HttpContext httpContext = context.HttpContext;
+                        string traceId = Activity.Current?.TraceId.ToString()?? httpContext.TraceIdentifier;
+                        string traceParent = Activity.Current?.Id ?? httpContext.TraceIdentifier;
 
-                    var logger = httpContext.RequestServices.GetRequiredService<ILogger<ExceptionHandlerMiddleware>>();
-                    if (context.Exception is not null)
-                        logger.LogStructuredException(context.Exception, httpContext, traceId, traceParent);
+                        var logger = httpContext.RequestServices.GetRequiredService<ILogger<ExceptionHandlerMiddleware>>();
+                        if (context.Exception is not null)
+                            logger.LogStructuredException(context.Exception, httpContext, traceId, traceParent);
 
-                    if (string.IsNullOrEmpty(context.ProblemDetails.Type)) {
-                        context.ProblemDetails.Type = "https://tools.ietf.org/html/rfc7231#section-6.6.1";
+                        if (string.IsNullOrEmpty(context.ProblemDetails.Type)) {
+                            context.ProblemDetails.Type = "https://tools.ietf.org/html/rfc7231#section-6.6.1";
+                        }
+
+                        context.ProblemDetails.Instance = httpContext.Request.Path;
+                        context.ProblemDetails.Extensions.TryAdd("method", httpContext.Request.Method);
+
+                        if (context.ProblemDetails.Extensions.ContainsKey("traceId"))
+                            context.ProblemDetails.Extensions["traceId"] = traceId;
+                        else
+                            context.ProblemDetails.Extensions.TryAdd("traceId", traceId);
+
+                        httpContext.Response.StatusCode = context.ProblemDetails.Status?? (int)HttpStatusCode.InternalServerError;
+                        httpContext.Response.Headers.TryAdd("traceparent", traceParent);
                     }
-
-                    context.ProblemDetails.Instance = httpContext.Request.Path;
-                    context.ProblemDetails.Extensions.TryAdd("method", httpContext.Request.Method);
-
-                    if (context.ProblemDetails.Extensions.ContainsKey("traceId"))
-                        context.ProblemDetails.Extensions["traceId"] = traceId;
-                    else
-                        context.ProblemDetails.Extensions.TryAdd("traceId", traceId);
-
-                    httpContext.Response.StatusCode = context.ProblemDetails.Status?? (int)HttpStatusCode.InternalServerError;
-                    httpContext.Response.Headers.TryAdd("traceparent", traceParent);
-                }
-            )
-            ;
-
-        services.AddSingleton<ICustomJsonSerializer, CoreJsonSerializer>();
-        services.Configure<JsonOptions>(options => {
-            options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-            options.JsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
-            options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
-            options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.SnakeCaseUpper));
-        });
-        services.ConfigureHttpJsonOptions(options => {
-            options.SerializerOptions.Converters.Add(new IntegrationKeyJsonConverter());
-        });
-        return services;
-    }
-
-    private static IServiceCollection AddClients(this IServiceCollection services)
-    {
-        services.AddHttpClient<IInternalClient, InternalClient>(client => {
-            client.BaseAddress = new Uri(AppEnv.INTERNAL.ENDPOINT.BASE_URL.NotNullEnv());
-        });
-        services.Decorate<IInternalClient, InternalCacheClient>();
-
-        services.AddHttpClient<IOrderClient, OrderClient>(client => {
-            client.BaseAddress = new Uri(AppEnv.ORDERS.ENDPOINT.BASE_URL.NotNullEnv());
-        });
-
-        return services;
-    }
-
-    private static IServiceCollection AddOpenTelemetryConfiguration(this IServiceCollection services)
-    {
-        string serviceName = AppEnv.OTEL_SERVICE_NAME.NotNullEnv();
-
-        services
-            .AddOpenTelemetry()
-            .UseOtlpExporter()
-            .ConfigureResource(resource => {
-                resource.AddService(serviceName: serviceName);
-            })
-            .WithTracing(tracing => {
-                tracing
-                    .AddSource(serviceName)
-                    .AddAspNetCoreInstrumentation()
-                    .AddAWSInstrumentation()
-                    .AddHttpClientInstrumentation()
+                )
                 ;
-            })
-            .WithMetrics(metrics =>
-            {
-                metrics
-                    .AddMeter(serviceName)
-                    .AddAspNetCoreInstrumentation()
-                    .AddAWSInstrumentation()
-                    .AddHttpClientInstrumentation()
-                    .AddView(instrument =>
-                        instrument.GetType().GetGenericTypeDefinition() == typeof(Histogram<>)
-                            ? new Base2ExponentialBucketHistogramConfiguration()
-                            : null
-                    )
-                ;
-            })
-        ;
 
-        services.AddLogging(options => {
-            options
-                .AddOpenTelemetry(logger => {
-                    logger.IncludeScopes = true;
-                    logger.ParseStateValues = true;
-                    logger.IncludeFormattedMessage = true;
+            services.AddSingleton<ICustomJsonSerializer, CoreJsonSerializer>();
+            services.Configure<JsonOptions>(options => {
+                options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+                options.JsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
+                options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.SnakeCaseUpper));
+            });
+            services.ConfigureHttpJsonOptions(options => {
+                options.SerializerOptions.Converters.Add(new IntegrationKeyJsonConverter());
+            });
+            return services;
+        }
+
+        private IServiceCollection AddClients()
+        {
+            services.AddHttpClient<IInternalClient, InternalClient>(client => {
+                client.BaseAddress = new Uri(AppEnv.INTERNAL.ENDPOINT.BASE_URL.NotNullEnv());
+            });
+            services.Decorate<IInternalClient, InternalCacheClient>();
+
+            services.AddHttpClient<IOrderClient, OrderClient>(client => {
+                client.BaseAddress = new Uri(AppEnv.ORDERS.ENDPOINT.BASE_URL.NotNullEnv());
+            });
+
+            return services;
+        }
+
+        private IServiceCollection AddOpenTelemetryConfiguration()
+        {
+            string serviceName = AppEnv.OTEL_SERVICE_NAME.NotNullEnv();
+
+            services
+                .AddOpenTelemetry()
+                .UseOtlpExporter()
+                .ConfigureResource(resource => {
+                    resource.AddService(serviceName: serviceName);
                 })
-            ;
-        });
+                .WithTracing(tracing => {
+                    tracing
+                        .AddSource(serviceName)
+                        .AddAspNetCoreInstrumentation()
+                        .AddAWSInstrumentation()
+                        .AddHttpClientInstrumentation()
+                        ;
+                })
+                .WithMetrics(metrics =>
+                {
+                    metrics
+                        .AddMeter(serviceName)
+                        .AddAspNetCoreInstrumentation()
+                        .AddAWSInstrumentation()
+                        .AddHttpClientInstrumentation()
+                        .AddView(instrument =>
+                            instrument.GetType().GetGenericTypeDefinition() == typeof(Histogram<>)
+                                ? new Base2ExponentialBucketHistogramConfiguration()
+                                : null
+                        )
+                        ;
+                })
+                ;
 
-        return services;
-    }
+            services.AddLogging(options => {
+                options
+                    .AddOpenTelemetry(logger => {
+                        logger.IncludeScopes = true;
+                        logger.ParseStateValues = true;
+                        logger.IncludeFormattedMessage = true;
+                    })
+                    ;
+            });
 
-    private static IServiceCollection AddCacheServices(this IServiceCollection services)
-    {
-        return services
-                .AddMemoryCache()
-            ;
+            return services;
+        }
+
+        private IServiceCollection AddCacheServices()
+        {
+            return services
+                    .AddMemoryCache()
+                ;
+        }
     }
 }
