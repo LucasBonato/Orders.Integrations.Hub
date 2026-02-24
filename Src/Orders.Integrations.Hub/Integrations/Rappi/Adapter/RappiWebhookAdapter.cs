@@ -2,9 +2,9 @@
 
 using Microsoft.AspNetCore.Mvc;
 
+using Orders.Integrations.Hub.Core.Application.Ports.In.UseCases;
 using Orders.Integrations.Hub.Core.Application.Ports.Out.Clients;
 using Orders.Integrations.Hub.Core.Application.Ports.Out.Serialization;
-using Orders.Integrations.Hub.Core.Domain.Contracts.Ports.In;
 using Orders.Integrations.Hub.Integrations.Common.Contracts;
 using Orders.Integrations.Hub.Integrations.Common.Extensions;
 using Orders.Integrations.Hub.Integrations.Common.Validators;

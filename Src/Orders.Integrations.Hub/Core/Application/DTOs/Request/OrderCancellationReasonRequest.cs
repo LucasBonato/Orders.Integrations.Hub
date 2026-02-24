@@ -1,4 +1,6 @@
-﻿namespace Orders.Integrations.Hub.Core.Application.DTOs.Request;
+﻿using Orders.Integrations.Hub.Core.Domain.ValueObjects;
+
+namespace Orders.Integrations.Hub.Core.Application.DTOs.Request;
 
 public record OrderCancellationReasonRequest(
     string OrderId,
