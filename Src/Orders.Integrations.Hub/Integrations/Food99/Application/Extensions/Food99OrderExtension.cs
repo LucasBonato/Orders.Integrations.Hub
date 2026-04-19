@@ -404,7 +404,7 @@ public static class Food99OrderExtension
             Food99Type.DeliveryStatus => deliveryStatus switch {
                 Food99DeliveryStatus.Assigned => OrderEventType.DISPATCHED,
                 Food99DeliveryStatus.ArrivedAtB => OrderEventType.DELIVERYMAN_IN_STORE,
-                Food99DeliveryStatus.Taken => OrderEventType.PICKUP_UP,
+                Food99DeliveryStatus.Taken => OrderEventType.PICKED_UP,
                 Food99DeliveryStatus.ArrivedAtC => OrderEventType.READY_FOR_PICKUP,
                 Food99DeliveryStatus.Finish => OrderEventType.DELIVERED,
                 Food99DeliveryStatus.Reassigned => OrderEventType.DELIVERYMAN_CHANGED,
