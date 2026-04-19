@@ -1,4 +1,6 @@
-﻿namespace Orders.Integrations.Hub.Integrations.Common.Contracts;
+﻿using Orders.Integrations.Hub.Integrations.Common.ValueObjects;
+
+namespace Orders.Integrations.Hub.Integrations.Common.Contracts;
 
 /// <summary>
 /// This is used to maintain the context of the integration for the request for multi-tenant level

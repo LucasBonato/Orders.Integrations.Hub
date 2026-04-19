@@ -1,6 +1,7 @@
 ﻿using Orders.Integrations.Hub.Core.Application.DTOs;
 using Orders.Integrations.Hub.Core.Domain.ValueObjects;
 using Orders.Integrations.Hub.Integrations.Common;
+using Orders.Integrations.Hub.Integrations.Common.Attributes;
 using Orders.Integrations.Hub.Integrations.Common.Validators;
 
 namespace Orders.Integrations.Hub.Integrations.Food99;
