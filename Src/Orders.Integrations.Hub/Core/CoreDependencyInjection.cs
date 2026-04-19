@@ -170,7 +170,7 @@ public static class CoreDependencyInjection
                         .AddHttpClientInstrumentation()
                         .AddView(instrument =>
                             instrument.GetType().GetGenericTypeDefinition() == typeof(Histogram<>)
-                                ? new Base2ExponentialBucketHistogramConfiguration()
+                                ? new ExplicitBucketHistogramConfiguration()
                                 : null
                         )
                         ;
