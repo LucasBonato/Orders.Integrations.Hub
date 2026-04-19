@@ -71,11 +71,6 @@ public static class AppEnv
             }
         }
     }
-    public static class MEMCACHED
-    {
-        public static readonly AnvEnv ADDRESS = new("MEMCACHED__ADDRESS");
-        public static readonly AnvEnv PORT = new("MEMCACHED__PORT");
-    }
     public static class PUB_SUB
     {
         public static class TOPICS
