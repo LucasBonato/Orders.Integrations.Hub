@@ -91,12 +91,12 @@ public static class AppEnv
             public static readonly AnvEnv NAME = new("OBJECT_STORAGE__BUCKET__NAME");
         }
     }
+    public static class AWS
+    {
+        public static readonly AnvEnv IS_LOCALSTACK = new("AWS__IS_LOCALSTACK");
+    }
     public static class LOCALSTACK
     {
-        public static class AWS
-        {
-            public static readonly AnvEnv IS_LOCALSTACK = new("LOCALSTACK__AWS__IS_LOCALSTACK");
-        }
         public static readonly AnvEnv ENDPOINT_URL = new("LOCALSTACK__ENDPOINT_URL");
     }
     public static readonly AnvEnv AWS_PROFILE = new("AWS_PROFILE");

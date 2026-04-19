@@ -57,8 +57,7 @@ public static class CoreDependencyInjection
         {
             services.AddExceptionHandler<ExceptionHandlerMiddleware>();
 
-            services.AddSingleton<IAmazonSimpleNotificationService>(_ =>
-                AwsConfigurationExtensions.SimpleNotificationServiceConfiguration());
+            services.AddSingleton<IAmazonSimpleNotificationService>(_ => AwsConfigurationExtensions.SimpleNotificationServiceConfiguration());
             services.AddSingleton<IAmazonS3>(_ => AwsConfigurationExtensions.SimpleStorageServiceConfiguration());
 
             services.AddSingleton<IObjectStorageClient, SimpleStorageServiceClient>();
@@ -82,30 +81,28 @@ public static class CoreDependencyInjection
                         string traceParent = Activity.Current?.Id ?? httpContext.TraceIdentifier;
 
                         var logger = httpContext.RequestServices.GetRequiredService<ILogger<ExceptionHandlerMiddleware>>();
+                        
                         if (context.Exception is not null)
-                            logger.LogStructuredException(context.Exception,
+                            logger.LogStructuredException(
+                                context.Exception,
                                 httpContext,
                                 traceId,
-                                traceParent);
+                                traceParent
+                            );
 
                         if (string.IsNullOrEmpty(context.ProblemDetails.Type))
-                        {
                             context.ProblemDetails.Type = "https://tools.ietf.org/html/rfc7231#section-6.6.1";
-                        }
 
                         context.ProblemDetails.Instance = httpContext.Request.Path;
-                        context.ProblemDetails.Extensions.TryAdd("method",
-                            httpContext.Request.Method);
+                        context.ProblemDetails.Extensions.TryAdd("method", httpContext.Request.Method);
 
                         if (context.ProblemDetails.Extensions.ContainsKey("traceId"))
                             context.ProblemDetails.Extensions["traceId"] = traceId;
                         else
-                            context.ProblemDetails.Extensions.TryAdd("traceId",
-                                traceId);
+                            context.ProblemDetails.Extensions.TryAdd("traceId", traceId);
 
                         httpContext.Response.StatusCode = context.ProblemDetails.Status ?? (int)HttpStatusCode.InternalServerError;
-                        httpContext.Response.Headers.TryAdd("traceparent",
-                            traceParent);
+                        httpContext.Response.Headers.TryAdd("traceparent", traceParent);
                     }
                 )
                 ;
