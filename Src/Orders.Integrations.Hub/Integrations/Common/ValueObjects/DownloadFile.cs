@@ -1,4 +1,4 @@
-﻿namespace Orders.Integrations.Hub.Integrations.Common;
+﻿namespace Orders.Integrations.Hub.Integrations.Common.ValueObjects;
 
 public record DownloadFile(
     byte[] Bytes,

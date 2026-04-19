@@ -1,4 +1,4 @@
-﻿namespace Orders.Integrations.Hub.Integrations.Common;
+﻿namespace Orders.Integrations.Hub.Integrations.Common.Attributes;
 
 /// <summary>
 /// Marker interface for integration key definition classes

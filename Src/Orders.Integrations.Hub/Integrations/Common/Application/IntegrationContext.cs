@@ -1,4 +1,5 @@
 ﻿using Orders.Integrations.Hub.Integrations.Common.Contracts;
+using Orders.Integrations.Hub.Integrations.Common.ValueObjects;
 
 namespace Orders.Integrations.Hub.Integrations.Common.Application;
 

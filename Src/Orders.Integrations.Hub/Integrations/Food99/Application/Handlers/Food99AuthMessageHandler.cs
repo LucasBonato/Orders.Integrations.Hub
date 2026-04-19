@@ -7,6 +7,7 @@ using Orders.Integrations.Hub.Core.Application.Ports.Out.Serialization;
 using Orders.Integrations.Hub.Integrations.Common;
 using Orders.Integrations.Hub.Integrations.Common.Contracts;
 using Orders.Integrations.Hub.Integrations.Common.Extensions;
+using Orders.Integrations.Hub.Integrations.Common.ValueObjects;
 using Orders.Integrations.Hub.Integrations.Food99.Domain.Contracts;
 using Orders.Integrations.Hub.Integrations.Food99.Domain.ValueObjects.DTOs.Request;
 using Orders.Integrations.Hub.Integrations.Food99.Domain.ValueObjects.DTOs.Response;
