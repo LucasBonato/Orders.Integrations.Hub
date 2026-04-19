@@ -20,7 +20,7 @@ public enum OrderEventType
     DELIVERYMAN_CHANGED = 16,
     PREPARATION_REQUESTED = 17,
     PREPARING = 18,
-    PICKUP_UP = 19,
+    PICKED_UP = 19,
     DISPUTE_STARTED = 20,
     DISPUTE_FINISH = 21,
 }
