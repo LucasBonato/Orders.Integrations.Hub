@@ -8,8 +8,9 @@ using Orders.Integrations.Hub.Integrations.IFood.Domain.ValueObjects.DTOs.Reques
 
 namespace Orders.Integrations.Hub.Integrations.IFood.Infrastructure;
 
-public class IFoodSignatureStrategy : IWebhookSignatureValidator, IWebhookSignatureResolver<IFoodWebhookRequest>
-{
+public class IFoodSignatureStrategy(
+    HmacSha256SignatureValidator signatureValidator
+) : IWebhookSignatureValidator, IWebhookSignatureResolver<IFoodWebhookRequest> {
     public string HeaderName => "X-IFood-Signature";
     public string IntegrationKey => IFoodIntegrationKey.IFOOD;
 
@@ -22,7 +23,7 @@ public class IFoodSignatureStrategy : IWebhookSignatureValidator, IWebhookSignat
         => request.MerchantId;
     
     public bool ValidateSignature(string signature, string body, string secret) 
-        => signature.IsSignatureValid(secret, body);
+        => signatureValidator.IsValid(signature, body, secret);
 
     public Integration ResolveIntegration(IntegrationResponse integration) 
         => integration.ResolveIFood();

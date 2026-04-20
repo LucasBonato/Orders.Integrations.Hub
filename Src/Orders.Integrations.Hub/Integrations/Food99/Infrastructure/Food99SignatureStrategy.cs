@@ -8,8 +8,9 @@ using Orders.Integrations.Hub.Integrations.Food99.Domain.Entity;
 
 namespace Orders.Integrations.Hub.Integrations.Food99.Infrastructure;
 
-public class Food99SignatureStrategy : IWebhookSignatureValidator, IWebhookSignatureResolver<Food99WebhookRequest>
-{
+public class Food99SignatureStrategy(
+    Md5SignatureValidator signatureValidator
+) : IWebhookSignatureValidator, IWebhookSignatureResolver<Food99WebhookRequest> {
     public string HeaderName => "didi-header-sign";
     public string IntegrationKey => Food99IntegrationKey.FOOD99;
 
@@ -22,7 +23,7 @@ public class Food99SignatureStrategy : IWebhookSignatureValidator, IWebhookSigna
         => request.AppShopId;
     
     public bool ValidateSignature(string signature, string body, string secret) 
-        => signature.IsValidMd5Signature(body, secret);
+        => signatureValidator.IsValid(signature, body, secret);
 
     public Integration ResolveIntegration(IntegrationResponse integration) 
         => integration.Resolve99Food();

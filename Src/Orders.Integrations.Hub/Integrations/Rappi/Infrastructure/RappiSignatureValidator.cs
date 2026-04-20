@@ -8,7 +8,8 @@ using Orders.Integrations.Hub.Integrations.Common.ValueObjects;
 namespace Orders.Integrations.Hub.Integrations.Rappi.Infrastructure;
 
 public class RappiSignatureValidator(
-    [FromKeyedServices(RappiIntegrationKey.Value)] ICustomJsonSerializer serializer
+    [FromKeyedServices(RappiIntegrationKey.Value)] ICustomJsonSerializer serializer,
+    HmacSha256SignatureValidator signatureValidator
 ) : IWebhookSignatureValidator {
     public string HeaderName => "Rappi-Signature";
     public string IntegrationKey => RappiIntegrationKey.RAPPI;
@@ -23,7 +24,7 @@ public class RappiSignatureValidator(
     }
     
     public bool ValidateSignature(string signature, string payload, string secret)
-        => ParseHeader(signature)["sign"].IsSignatureValid(secret, payload);
+        => signatureValidator.IsValid(ParseHeader(signature)["sign"], payload, secret);
     
     private static Dictionary<string, string> ParseHeader(string header)
         => header.Split(",")
