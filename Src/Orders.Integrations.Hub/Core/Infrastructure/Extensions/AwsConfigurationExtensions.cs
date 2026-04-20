@@ -40,10 +40,13 @@ public static class AwsConfigurationExtensions
 
         return new AmazonS3Client(LoadProfileCredentials(), config);
     }
+    
+    private static BasicAWSCredentials LoadLocalStackCredentials() 
+        => new(Profile, Profile);
 
     private static AWSCredentials LoadProfileCredentials() {
         if (!new CredentialProfileStoreChain().TryGetAWSCredentials(Profile, out var credentials) || credentials == null)
-            throw new InvalidOperationException($"Failed to load AWS credentials for profile '{Profile}'");
+            return LoadLocalStackCredentials();
 
         return credentials;
     }
