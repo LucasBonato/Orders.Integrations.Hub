@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Diagnostics.Metrics;
 using System.Net;
+using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -45,6 +46,7 @@ public static class CoreDependencyInjection
 
     public static WebApplication UseCore(this WebApplication app)
     {
+        app.MapEndpoints();
         app.UseExceptionHandler(_ => { });
         app.UseFastEndpoints();
         app.AddOrdersHubEndpoints();
@@ -55,6 +57,8 @@ public static class CoreDependencyInjection
     {
         private IServiceCollection AddServices()
         {
+            services.AddEndpoints(Assembly.GetExecutingAssembly());
+            
             services.AddExceptionHandler<ExceptionHandlerMiddleware>();
 
             services.AddSingleton<IAmazonSimpleNotificationService>(_ => AwsConfigurationExtensions.SimpleNotificationServiceConfiguration());
