@@ -1,6 +1,6 @@
 ﻿using NetArchTest.Rules;
 
-using Orders.Integrations.Hub.Core.Adapters.In.Http.Endpoint;
+using Orders.Integrations.Hub.Core.Application.Ports.In.Http;
 using Orders.Integrations.Hub.Integrations.Common.Contracts;
 using Orders.Integrations.Hub.Integrations.Common.Middleware;
 

@@ -2,7 +2,7 @@
 using Orders.Integrations.Hub.Integrations.Common.Attributes;
 using Orders.Integrations.Hub.Integrations.Common.Validators;
 
-namespace Orders.Integrations.Hub.Integrations.Rappi;
+namespace Orders.Integrations.Hub.Integrations.Rappi.Application.ValueObjects;
 
 [IntegrationKeyDefinition]
 public static class RappiIntegrationKey {

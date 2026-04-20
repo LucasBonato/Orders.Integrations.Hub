@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-using Orders.Integrations.Hub.Core.Adapters.In.Http.Endpoint;
+using Orders.Integrations.Hub.Core.Application.Ports.In.Http;
 using Orders.Integrations.Hub.Core.Application.Ports.In.Integration;
 using Orders.Integrations.Hub.Core.Application.Ports.Out.UseCases;
 using Orders.Integrations.Hub.Core.Domain.ValueObjects;

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-using Orders.Integrations.Hub.Core.Adapters.In.Http.Endpoint;
+using Orders.Integrations.Hub.Core.Application.Ports.In.Http;
 using Orders.Integrations.Hub.Core.Application.Ports.In.UseCases;
 using Orders.Integrations.Hub.Integrations.Common.Middleware;
 using Orders.Integrations.Hub.Integrations.Rappi.Domain.Entity;

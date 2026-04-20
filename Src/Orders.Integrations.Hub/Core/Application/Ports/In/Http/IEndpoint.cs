@@ -1,4 +1,4 @@
-﻿namespace Orders.Integrations.Hub.Core.Adapters.In.Http.Endpoint;
+﻿namespace Orders.Integrations.Hub.Core.Application.Ports.In.Http;
 
 public interface IEndpoint
 {

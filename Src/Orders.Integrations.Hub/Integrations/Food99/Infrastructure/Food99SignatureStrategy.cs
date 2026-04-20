@@ -4,6 +4,7 @@ using Orders.Integrations.Hub.Integrations.Common.Contracts;
 using Orders.Integrations.Hub.Integrations.Common.Extensions;
 using Orders.Integrations.Hub.Integrations.Common.Validators;
 using Orders.Integrations.Hub.Integrations.Common.ValueObjects;
+using Orders.Integrations.Hub.Integrations.Food99.Application.ValueObjects;
 using Orders.Integrations.Hub.Integrations.Food99.Domain.Entity;
 
 namespace Orders.Integrations.Hub.Integrations.Food99.Infrastructure;
