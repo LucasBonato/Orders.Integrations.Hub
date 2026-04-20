@@ -23,7 +23,7 @@ public class RappiAuthMessageHandler(
 
         IIntegrationContext integrationContext = request.GetIntegrationContext();
 
-        IntegrationResolved integration = integrationContext.Integration ?? throw new NullReferenceException("integrationContext.Integration");
+        Integration integration = integrationContext.Integration ?? throw new NullReferenceException("integrationContext.Integration");
 
         string cacheKey = $"rappi-token:{integration.TenantId}:{integration.MerchantId}";
 

@@ -5,14 +5,14 @@ namespace Orders.Integrations.Hub.Integrations.Common.Extensions;
 
 public static class IntegrationResolverExtension
 {
-    public static IntegrationResolved ResolveIFood(this IntegrationResponse integration)
+    public static Integration ResolveIFood(this IntegrationResponse integration)
     {
         string merchantId = integration.GetSettingValue("ifood_merchant_id");
         string clientId = integration.GetClientIdValue("ifood");
         string clientSecret = integration.GetClientSecretValue("ifood");
         bool autoAccept = integration.GetAutoAcceptProperty();
 
-        return new IntegrationResolved(
+        return new Integration(
             TenantId: integration.TenantId.ToString(),
             MerchantId: merchantId,
             ClientId: clientId,
@@ -21,14 +21,14 @@ public static class IntegrationResolverExtension
         );
     }
 
-    public static IntegrationResolved ResolveRappi(this IntegrationResponse integration)
+    public static Integration ResolveRappi(this IntegrationResponse integration)
     {
         string storeId = integration.GetSettingValue("rappi_store_id");
         string clientId = integration.GetClientIdValue("rappi");
         string clientSecret = integration.GetClientSecretValue("rappi");
         bool autoAccept = integration.GetAutoAcceptProperty();
 
-        return new IntegrationResolved(
+        return new Integration(
             TenantId: integration.TenantId.ToString(),
             MerchantId: storeId,
             ClientId: clientId,
@@ -37,14 +37,14 @@ public static class IntegrationResolverExtension
         );
     }
 
-    public static IntegrationResolved Resolve99Food(this IntegrationResponse integration)
+    public static Integration Resolve99Food(this IntegrationResponse integration)
     {
         string appShopId = integration.GetSettingValue("99food_app_shop_id");
         string clientId = integration.GetClientIdValue("99food");
         string clientSecret = integration.GetClientSecretValue("99food");
         bool autoAccept = integration.GetAutoAcceptProperty();
 
-        return new IntegrationResolved(
+        return new Integration(
             TenantId: integration.TenantId.ToString(),
             MerchantId: appShopId,
             ClientId: clientId,

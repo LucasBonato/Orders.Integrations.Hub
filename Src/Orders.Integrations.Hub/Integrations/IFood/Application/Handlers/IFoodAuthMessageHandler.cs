@@ -24,7 +24,7 @@ public class IFoodAuthMessageHandler(
 
         IIntegrationContext integrationContext = request.GetIntegrationContext();
 
-        IntegrationResolved integration = integrationContext.Integration ?? throw new NullReferenceException("integrationContext.Integration");
+        Integration integration = integrationContext.Integration ?? throw new NullReferenceException("integrationContext.Integration");
         string merchantId = integrationContext.MerchantId ?? throw new NullReferenceException("integrationContext.merchantId");
 
         string cacheKey = $"ifood-token:{integrationContext.TenantId}:{merchantId}";

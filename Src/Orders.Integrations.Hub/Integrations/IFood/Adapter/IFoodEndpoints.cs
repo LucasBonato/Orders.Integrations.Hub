@@ -1,4 +1,8 @@
-﻿namespace Orders.Integrations.Hub.Integrations.IFood.Adapter;
+﻿using Orders.Integrations.Hub.Integrations.Common.Middleware;
+using Orders.Integrations.Hub.Integrations.IFood.Domain.ValueObjects.DTOs.Request;
+using Orders.Integrations.Hub.Integrations.IFood.Infrastructure;
+
+namespace Orders.Integrations.Hub.Integrations.IFood.Adapter;
 
 public static class IFoodEndpoints
 {
@@ -12,7 +16,7 @@ public static class IFoodEndpoints
 
         routeGroup
             .MapPost("/Webhook", IFoodAdapter.Webhook)
-            // .AddEndpointFilter<IfoodSignatureValidator>()
+            .AddEndpointFilter<WebhookSignatureFilter<IFoodWebhookRequest, IFoodSignatureStrategy, IFoodSignatureStrategy>>()
         ;
 
         return app;

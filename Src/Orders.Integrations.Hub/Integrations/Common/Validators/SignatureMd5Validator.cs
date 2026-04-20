@@ -21,7 +21,7 @@ public static class SignatureMd5Validator
     /// generates the MD5 hash, and compares it to <paramref name="signature"/> in a
     /// case-insensitive manner.
     /// </remarks>
-    public static bool IsValidateMd5Signature(this string signature, string body, string secret)
+    public static bool IsValidMd5Signature(this string signature, string body, string secret)
     {
         string signedBody = $"{body}{secret}";
 

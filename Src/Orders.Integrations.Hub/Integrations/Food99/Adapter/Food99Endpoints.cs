@@ -1,4 +1,8 @@
-﻿namespace Orders.Integrations.Hub.Integrations.Food99.Adapter;
+﻿using Orders.Integrations.Hub.Integrations.Common.Middleware;
+using Orders.Integrations.Hub.Integrations.Food99.Domain.Entity;
+using Orders.Integrations.Hub.Integrations.Food99.Infrastructure;
+
+namespace Orders.Integrations.Hub.Integrations.Food99.Adapter;
 
 public static class Food99Endpoints
 {
@@ -16,7 +20,9 @@ public static class Food99Endpoints
                 .WithDescription("Food99 Webhook Endpoint")
             ;
 
-        webhook.MapPost("/", Food99WebhookAdapter.Webhook);
+        webhook
+            .MapPost("/", Food99WebhookAdapter.Webhook)
+            .AddEndpointFilter<WebhookSignatureFilter<Food99WebhookRequest, Food99SignatureStrategy, Food99SignatureStrategy>>();
 
         return app;
     }

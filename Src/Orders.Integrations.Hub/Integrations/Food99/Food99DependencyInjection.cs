@@ -8,6 +8,7 @@ using Orders.Integrations.Hub.Integrations.Food99.Application.Ports.In;
 using Orders.Integrations.Hub.Integrations.Food99.Application.Ports.Out;
 using Orders.Integrations.Hub.Integrations.Food99.Domain.Contracts;
 using Orders.Integrations.Hub.Integrations.Food99.Domain.Entity;
+using Orders.Integrations.Hub.Integrations.Food99.Infrastructure;
 
 namespace Orders.Integrations.Hub.Integrations.Food99;
 
@@ -24,6 +25,8 @@ public static class Food99DependencyInjection
         services.AddTransient<IOrderCreateUseCase<Food99WebhookRequest>, Food99OrderCreateUseCase>();
         services.AddTransient<IOrderUpdateUseCase<Food99WebhookRequest>, Food99OrderUpdateUseCase>();
         services.AddTransient<IOrderDisputeUseCase<Food99WebhookRequest>, Food99ApplyOrderDisputeUseCase>();
+
+        services.AddScoped<Food99SignatureStrategy>();
 
         services.AddKeyedScoped<IOrderChangeStatusUseCase, Food99OrderChangeStatusUseCase>(Food99IntegrationKey.Value);
         services.AddKeyedScoped<IOrderGetCancellationReasonUseCase, Food99OrderGetCancellationReasonUseCase>(Food99IntegrationKey.Value);

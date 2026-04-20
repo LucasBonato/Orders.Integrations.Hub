@@ -1,6 +1,6 @@
 ﻿namespace Orders.Integrations.Hub.Integrations.Common.ValueObjects;
 
-public record IntegrationResolved(
+public record Integration(
     string? TenantId,
     string MerchantId,
     string ClientId,

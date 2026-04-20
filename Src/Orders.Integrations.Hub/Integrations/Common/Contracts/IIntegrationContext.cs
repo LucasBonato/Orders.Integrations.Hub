@@ -8,5 +8,5 @@ namespace Orders.Integrations.Hub.Integrations.Common.Contracts;
 public interface IIntegrationContext {
     string? TenantId { get; set; }
     string? MerchantId { get; set; }
-    IntegrationResolved? Integration { get; set; }
+    Integration? Integration { get; set; }
 }
