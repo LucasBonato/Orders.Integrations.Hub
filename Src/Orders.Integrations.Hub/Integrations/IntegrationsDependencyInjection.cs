@@ -1,5 +1,6 @@
 ﻿using Orders.Integrations.Hub.Integrations.Common.Application;
 using Orders.Integrations.Hub.Integrations.Common.Contracts;
+using Orders.Integrations.Hub.Integrations.Common.Validators;
 using Orders.Integrations.Hub.Integrations.Food99;
 using Orders.Integrations.Hub.Integrations.IFood;
 using Orders.Integrations.Hub.Integrations.Rappi;
@@ -21,7 +22,9 @@ public static class IntegrationsDependencyInjection
     private static IServiceCollection AddServices(this IServiceCollection services)
     {
         return services
-            .AddScoped<IIntegrationContext, IntegrationContext>()
+                .AddScoped<IIntegrationContext, IntegrationContext>()
+                .AddSingleton<HmacSha256SignatureValidator>()
+                .AddSingleton<Md5SignatureValidator>()
             ;
     }
 }
