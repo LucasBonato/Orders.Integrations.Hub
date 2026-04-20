@@ -49,7 +49,6 @@ public static class CoreDependencyInjection
         app.MapEndpoints();
         app.UseExceptionHandler(_ => { });
         app.UseFastEndpoints();
-        app.AddOrdersHubEndpoints();
         return app;
     }
 
