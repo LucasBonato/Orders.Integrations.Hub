@@ -5,7 +5,8 @@ using Orders.Integrations.Hub.Core.Infrastructure.Extensions;
 namespace Orders.Integrations.Hub.Core.Adapters.Out.HttpClients;
 
 public class InternalClient(
-    ILogger<InternalClient> logger
+    ILogger<InternalClient> logger,
+    HttpClient httpClient
 ) : IInternalClient {
     public Task<IntegrationResponse> GetIntegrationByExternalId(string externalId) {
         if (logger.IsEnabled(LogLevel.Information)) {
