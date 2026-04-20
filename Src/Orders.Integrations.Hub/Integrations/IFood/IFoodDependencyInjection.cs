@@ -2,7 +2,6 @@
 using Orders.Integrations.Hub.Core.Application.Ports.Out.Serialization;
 using Orders.Integrations.Hub.Core.Application.Ports.Out.UseCases;
 using Orders.Integrations.Hub.Core.Infrastructure.Extensions;
-using Orders.Integrations.Hub.Integrations.Common;
 using Orders.Integrations.Hub.Integrations.Common.Serialization;
 using Orders.Integrations.Hub.Integrations.IFood.Application.Clients;
 using Orders.Integrations.Hub.Integrations.IFood.Application.Handlers;
@@ -10,6 +9,7 @@ using Orders.Integrations.Hub.Integrations.IFood.Application.Ports.In;
 using Orders.Integrations.Hub.Integrations.IFood.Application.Ports.Out;
 using Orders.Integrations.Hub.Integrations.IFood.Domain.Contracts;
 using Orders.Integrations.Hub.Integrations.IFood.Domain.ValueObjects.DTOs.Request;
+using Orders.Integrations.Hub.Integrations.IFood.Infrastructure;
 
 namespace Orders.Integrations.Hub.Integrations.IFood;
 
@@ -26,6 +26,8 @@ public static class IFoodDependencyInjection
         services.AddTransient<IOrderCreateUseCase<IFoodWebhookRequest>, IFoodOrderCreateUseCase>();
         services.AddTransient<IOrderUpdateUseCase<IFoodWebhookRequest>, IFoodOrderUpdateUseCase>();
         services.AddTransient<IOrderDisputeUseCase<IFoodWebhookRequest>, IFoodHandshakeOrderDisputeUseCase>();
+
+        services.AddScoped<IFoodSignatureStrategy>();
 
         services.AddKeyedScoped<IOrderChangeStatusUseCase, IFoodOrderChangeStatusUseCase>(IFoodIntegrationKey.Value);
         services.AddKeyedScoped<IOrderDisputeRespondUseCase, IFoodHandshakeOrderDisputeRespondUseCase>(IFoodIntegrationKey.Value);

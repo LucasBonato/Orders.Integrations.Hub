@@ -1,4 +1,9 @@
-﻿namespace Orders.Integrations.Hub.Integrations.Rappi.Adapter;
+﻿using Orders.Integrations.Hub.Integrations.Common.Middleware;
+using Orders.Integrations.Hub.Integrations.Rappi.Domain.Entity;
+using Orders.Integrations.Hub.Integrations.Rappi.Domain.ValueObjects.DTOs.Request;
+using Orders.Integrations.Hub.Integrations.Rappi.Infrastructure;
+
+namespace Orders.Integrations.Hub.Integrations.Rappi.Adapter;
 
 public static class RappiEndpoints
 {
@@ -16,10 +21,18 @@ public static class RappiEndpoints
                 .WithDescription("Rappi Webhook Endpoint")
             ;
 
-        webhook.MapPost("/", RappiWebhookAdapter.CreateOrder);
-        webhook.MapPost("/Cancel", RappiWebhookAdapter.CancelOrder);
-        webhook.MapPost("/Other", RappiWebhookAdapter.PatchOrder);
-        webhook.MapPost("/Ping", RappiWebhookAdapter.PingStore);
+        webhook
+            .MapPost("/", RappiWebhookAdapter.CreateOrder)
+            .AddEndpointFilter<WebhookSignatureFilter<RappiOrder, RappiSignatureValidator, RappiOrderResolver>>();
+        webhook
+            .MapPost("/Cancel", RappiWebhookAdapter.CancelOrder)
+            .AddEndpointFilter<WebhookSignatureFilter<RappiWebhookEventOrderRequest, RappiSignatureValidator, RappiOrderEventResolver>>();
+        webhook
+            .MapPost("/Other", RappiWebhookAdapter.PatchOrder)
+            .AddEndpointFilter<WebhookSignatureFilter<RappiWebhookEventOrderRequest, RappiSignatureValidator, RappiOrderEventResolver>>();
+        webhook
+            .MapPost("/Ping", RappiWebhookAdapter.PingStore)
+            .AddEndpointFilter<WebhookSignatureFilter<RappiWebhookPingRequest, RappiSignatureValidator, RappiPingResolver>>();
 
         return app;
     }

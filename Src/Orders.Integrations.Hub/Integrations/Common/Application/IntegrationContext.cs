@@ -7,5 +7,5 @@ namespace Orders.Integrations.Hub.Integrations.Common.Application;
 public class IntegrationContext : IIntegrationContext {
     public string? TenantId { get; set; }
     public string? MerchantId { get; set; }
-    public IntegrationResolved? Integration { get; set; }
+    public Integration? Integration { get; set; }
 }

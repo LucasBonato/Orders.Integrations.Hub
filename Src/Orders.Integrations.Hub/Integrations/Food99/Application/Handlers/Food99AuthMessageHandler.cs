@@ -28,7 +28,7 @@ public class Food99AuthMessageHandler(
 
         IIntegrationContext integrationContext = request.GetIntegrationContext();
 
-        IntegrationResolved integration = integrationContext.Integration ?? throw new NullReferenceException("integrationContext.Integration");
+        Integration integration = integrationContext.Integration ?? throw new NullReferenceException("integrationContext.Integration");
         string merchantId = integrationContext.MerchantId ?? throw new NullReferenceException("integrationContext.MerchantId");
 
         string cacheKey = $"food99-token:{integration.TenantId}:{merchantId}";
@@ -75,7 +75,7 @@ public class Food99AuthMessageHandler(
         return response;
     }
 
-    private async Task<(string AccessToken, TimeSpan Expiration)> RetrieveTokenAsync(IntegrationResolved integration)
+    private async Task<(string AccessToken, TimeSpan Expiration)> RetrieveTokenAsync(Integration integration)
     {
         string appId = integration.ClientId;
         string appSecret = integration.ClientSecret;
