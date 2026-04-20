@@ -6,7 +6,7 @@ using Orders.Integrations.Hub.Integrations.Rappi.Infrastructure;
 
 using static Microsoft.AspNetCore.Http.Results;
 
-namespace Orders.Integrations.Hub.Integrations.Rappi.Adapter;
+namespace Orders.Integrations.Hub.Integrations.Rappi.Adapters.In.Http;
 
 internal sealed class RappiWebhookPingEndpoint : IEndpoint
 {

@@ -9,7 +9,7 @@ using Orders.Integrations.Hub.Integrations.IFood.Infrastructure;
 
 using static Microsoft.AspNetCore.Http.Results;
 
-namespace Orders.Integrations.Hub.Integrations.IFood.Adapter;
+namespace Orders.Integrations.Hub.Integrations.IFood.Adapters.In.Http;
 
 internal sealed class IFoodWebhookEndpoint : IEndpoint
 {

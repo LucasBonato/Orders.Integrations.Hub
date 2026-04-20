@@ -10,7 +10,7 @@ using Orders.Integrations.Hub.Integrations.Food99.Infrastructure;
 
 using static Microsoft.AspNetCore.Http.Results;
 
-namespace Orders.Integrations.Hub.Integrations.Food99.Adapter;
+namespace Orders.Integrations.Hub.Integrations.Food99.Adapters.In.Http;
 
 internal sealed class Food99WebhookEndpoint : IEndpoint
 {
