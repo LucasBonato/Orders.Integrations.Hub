@@ -2,6 +2,7 @@
 using Orders.Integrations.Hub.Core.Application.Ports.In.UseCases;
 using Orders.Integrations.Hub.Core.Application.Ports.Out.Messaging;
 using Orders.Integrations.Hub.Integrations.IFood.Application.Extensions;
+using Orders.Integrations.Hub.Integrations.IFood.Application.ValueObjects;
 using Orders.Integrations.Hub.Integrations.IFood.Domain.ValueObjects.DTOs.Request;
 
 namespace Orders.Integrations.Hub.Integrations.IFood.Application.Ports.In;

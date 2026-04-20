@@ -2,7 +2,7 @@
 using Orders.Integrations.Hub.Integrations.Common.Attributes;
 using Orders.Integrations.Hub.Integrations.Common.Validators;
 
-namespace Orders.Integrations.Hub.Integrations.Food99;
+namespace Orders.Integrations.Hub.Integrations.Food99.Application.ValueObjects;
 
 [IntegrationKeyDefinition]
 public static class Food99IntegrationKey {

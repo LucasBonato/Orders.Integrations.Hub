@@ -1,4 +1,4 @@
-﻿using Orders.Integrations.Hub.Core.Adapters.In.Http.Endpoint;
+﻿using Orders.Integrations.Hub.Core.Application.Ports.In.Http;
 using Orders.Integrations.Hub.Integrations.Common.Middleware;
 using Orders.Integrations.Hub.Integrations.Rappi.Domain.ValueObjects.DTOs.Request;
 using Orders.Integrations.Hub.Integrations.Rappi.Domain.ValueObjects.DTOs.Response;

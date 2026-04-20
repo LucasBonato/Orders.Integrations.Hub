@@ -7,6 +7,7 @@ using Orders.Integrations.Hub.Integrations.Rappi.Application.Clients;
 using Orders.Integrations.Hub.Integrations.Rappi.Application.Handlers;
 using Orders.Integrations.Hub.Integrations.Rappi.Application.Ports.In;
 using Orders.Integrations.Hub.Integrations.Rappi.Application.Ports.Out;
+using Orders.Integrations.Hub.Integrations.Rappi.Application.ValueObjects;
 using Orders.Integrations.Hub.Integrations.Rappi.Domain.Contracts;
 using Orders.Integrations.Hub.Integrations.Rappi.Domain.Entity;
 using Orders.Integrations.Hub.Integrations.Rappi.Domain.ValueObjects.DTOs.Request;

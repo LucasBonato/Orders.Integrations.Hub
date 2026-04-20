@@ -7,6 +7,7 @@ using Orders.Integrations.Hub.Integrations.Common;
 using Orders.Integrations.Hub.Integrations.Common.Contracts;
 using Orders.Integrations.Hub.Integrations.Common.Extensions;
 using Orders.Integrations.Hub.Integrations.Common.ValueObjects;
+using Orders.Integrations.Hub.Integrations.IFood.Application.ValueObjects;
 using Orders.Integrations.Hub.Integrations.IFood.Domain.Contracts;
 using Orders.Integrations.Hub.Integrations.IFood.Domain.Entity.Order;
 using Orders.Integrations.Hub.Integrations.IFood.Domain.Entity.Order.MerchantDetails;

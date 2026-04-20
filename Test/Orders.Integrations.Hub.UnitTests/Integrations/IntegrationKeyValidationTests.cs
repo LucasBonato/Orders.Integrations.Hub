@@ -6,6 +6,7 @@ using Orders.Integrations.Hub.Integrations.Common;
 using Orders.Integrations.Hub.Integrations.Common.Attributes;
 using Orders.Integrations.Hub.Integrations.Common.Validators;
 using Orders.Integrations.Hub.Integrations.IFood;
+using Orders.Integrations.Hub.Integrations.IFood.Application.ValueObjects;
 
 namespace Orders.Integrations.Hub.UnitTests.Integrations;
 

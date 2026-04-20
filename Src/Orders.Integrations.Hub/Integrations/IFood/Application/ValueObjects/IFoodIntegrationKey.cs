@@ -2,7 +2,7 @@
 using Orders.Integrations.Hub.Integrations.Common.Attributes;
 using Orders.Integrations.Hub.Integrations.Common.Validators;
 
-namespace Orders.Integrations.Hub.Integrations.IFood;
+namespace Orders.Integrations.Hub.Integrations.IFood.Application.ValueObjects;
 
 [IntegrationKeyDefinition]
 public static class IFoodIntegrationKey {

@@ -7,6 +7,7 @@ using Orders.Integrations.Hub.Integrations.IFood.Application.Clients;
 using Orders.Integrations.Hub.Integrations.IFood.Application.Handlers;
 using Orders.Integrations.Hub.Integrations.IFood.Application.Ports.In;
 using Orders.Integrations.Hub.Integrations.IFood.Application.Ports.Out;
+using Orders.Integrations.Hub.Integrations.IFood.Application.ValueObjects;
 using Orders.Integrations.Hub.Integrations.IFood.Domain.Contracts;
 using Orders.Integrations.Hub.Integrations.IFood.Domain.ValueObjects.DTOs.Request;
 using Orders.Integrations.Hub.Integrations.IFood.Infrastructure;
