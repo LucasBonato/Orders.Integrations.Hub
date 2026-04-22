@@ -10,14 +10,14 @@ namespace Orders.Integrations.Hub.Core.Adapters.Out.HttpClients;
 public class SimpleStorageServiceClient(
     IAmazonS3 s3Client
 ) : IObjectStorageClient {
-    private readonly string BUCKET_NAME = AppEnv.OBJECT_STORAGE.BUCKET.NAME.NotNullEnv();
+    private readonly string _bucketName = AppEnv.OBJECT_STORAGE.BUCKET.NAME.NotNullEnv();
 
     public async Task<string> UploadFile(Stream file, string contentType, string key)
     {
         TransferUtility fileTransferUtility = new(s3Client);
 
-        TransferUtilityUploadRequest request = new() {
-            BucketName = BUCKET_NAME,
+        await fileTransferUtility.UploadAsync(new TransferUtilityUploadRequest {
+            BucketName = _bucketName,
             InputStream = file,
             ContentType = contentType,
             StorageClass = S3StorageClass.Standard,
@@ -25,56 +25,46 @@ public class SimpleStorageServiceClient(
             Headers = {
                 CacheControl = "max-age=0, must-revalidate"
             }
-        };
+        });
 
-        await fileTransferUtility.UploadAsync(request);
-
-        return GetSignedUrl(request.Key);
+        return key;
     }
 
     public async Task DeleteFile(string key)
     {
-        await s3Client.DeleteObjectAsync(BUCKET_NAME, key);
+        await s3Client.DeleteObjectAsync(_bucketName, key);
     }
 
     public async Task DeleteFolder(string pathKey)
     {
         ListObjectsV2Request listDeleteRequest = new() {
-            BucketName = BUCKET_NAME,
+            BucketName = _bucketName,
             Prefix = pathKey.EndsWith('/') ? pathKey : pathKey + "/",
         };
 
         ListObjectsV2Response response;
 
-        do
-        {
+        do {
             response = await s3Client.ListObjectsV2Async(listDeleteRequest);
 
             if (response.S3Objects.Count > 0)
-            {
-                DeleteObjectsRequest deleteObjectsRequest = new() {
-                    BucketName = BUCKET_NAME,
-                    Objects = response.S3Objects.Select(s3Object => new KeyVersion() { Key = s3Object.Key}).ToList()
-                };
-
-                await s3Client.DeleteObjectsAsync(deleteObjectsRequest);
-            }
+                await s3Client.DeleteObjectsAsync(new DeleteObjectsRequest {
+                    BucketName = _bucketName,
+                    Objects = response.S3Objects
+                        .Select(s3Object => new KeyVersion { Key = s3Object.Key})
+                        .ToList()
+                });
 
             listDeleteRequest.ContinuationToken = response.NextContinuationToken;
         } while (response.IsTruncated?? false);
     }
 
-    private string GetSignedUrl(string key)
-    {
-        GetPreSignedUrlRequest request = new() {
-            BucketName = BUCKET_NAME,
-            Key = key,
-            Expires = DateTime.Now.AddMinutes(30),
+    public string GetTemporaryUrl(string key, TimeSpan? expiry = null) {
+        return s3Client.GetPreSignedURL(new GetPreSignedUrlRequest {
+            BucketName = _bucketName, 
+            Key = key, 
+            Expires = DateTime.UtcNow.Add(expiry?? TimeSpan.FromMinutes(30)), 
             Verb = HttpVerb.GET,
-        };
-
-        // AWSConfigsS3.UseSignatureVersion4 = true;
-
-        return s3Client.GetPreSignedURL(request);
+        });
     }
 }
