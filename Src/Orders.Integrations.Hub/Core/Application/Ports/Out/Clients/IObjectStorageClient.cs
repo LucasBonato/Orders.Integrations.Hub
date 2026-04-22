@@ -4,4 +4,5 @@ public interface IObjectStorageClient {
     Task<string> UploadFile(Stream file, string contentType, string key);
     Task DeleteFile(string key);
     Task DeleteFolder(string pathKey);
+    string GetTemporaryUrl(string key, TimeSpan? expiry = null);
 }

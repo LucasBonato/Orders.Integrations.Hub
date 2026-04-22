@@ -2,13 +2,16 @@
 using Orders.Integrations.Hub.Core.Application.Ports.Out.Serialization;
 using Orders.Integrations.Hub.Core.Application.Ports.Out.UseCases;
 using Orders.Integrations.Hub.Core.Infrastructure.Extensions;
+using Orders.Integrations.Hub.Integrations.Common.Contracts;
 using Orders.Integrations.Hub.Integrations.Common.Serialization;
+using Orders.Integrations.Hub.Integrations.IFood.Application;
 using Orders.Integrations.Hub.Integrations.IFood.Application.Clients;
 using Orders.Integrations.Hub.Integrations.IFood.Application.Handlers;
 using Orders.Integrations.Hub.Integrations.IFood.Application.Ports.In;
 using Orders.Integrations.Hub.Integrations.IFood.Application.Ports.Out;
 using Orders.Integrations.Hub.Integrations.IFood.Application.ValueObjects;
 using Orders.Integrations.Hub.Integrations.IFood.Domain.Contracts;
+using Orders.Integrations.Hub.Integrations.IFood.Domain.Entity.Handshake;
 using Orders.Integrations.Hub.Integrations.IFood.Domain.ValueObjects.DTOs.Request;
 using Orders.Integrations.Hub.Integrations.IFood.Infrastructure;
 
@@ -35,6 +38,8 @@ public static class IFoodDependencyInjection
         services.AddKeyedScoped<IOrderChangeProductStatusUseCase, IFoodOrderChangeProductStatusUseCase>(IFoodIntegrationKey.Value);
         services.AddKeyedScoped<IOrderGetCancellationReasonUseCase, IFoodOrderGetCancellationReasonUseCase>(IFoodIntegrationKey.Value);
 
+        services.AddKeyedScoped<IOrderDisputeEvidenceStorage<Media>, IFoodDisputeEvidenceStorage>(IFoodIntegrationKey.Value);
+        
         services.AddKeyedSingleton<ICustomJsonSerializer, CommonJsonSerializer>(IFoodIntegrationKey.Value);
 
         return services;
