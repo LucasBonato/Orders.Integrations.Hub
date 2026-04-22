@@ -5,7 +5,6 @@ using Orders.Integrations.Hub.Core.Application.Ports.In.UseCases;
 using Orders.Integrations.Hub.Core.Application.Ports.Out.Clients;
 using Orders.Integrations.Hub.Core.Application.Ports.Out.Messaging;
 using Orders.Integrations.Hub.Core.Domain.Enums;
-using Orders.Integrations.Hub.Integrations.Common;
 using Orders.Integrations.Hub.Integrations.Common.ValueObjects;
 using Orders.Integrations.Hub.Integrations.IFood.Application.Extensions;
 using Orders.Integrations.Hub.Integrations.IFood.Application.ValueObjects;
@@ -21,21 +20,21 @@ public class IFoodHandshakeOrderDisputeUseCase(
     ICommandDispatcher dispatcher,
     IIFoodClient ifoodClient
 ) : IOrderDisputeUseCase<IFoodWebhookRequest> {
-    public async Task<IFoodWebhookRequest> ExecuteAsync(IFoodWebhookRequest foodOrder)
+    public async Task<IFoodWebhookRequest> ExecuteAsync(IFoodWebhookRequest ifoodOrder)
     {
-        OrderEventType type = foodOrder.FullCode is IFoodFullOrderStatus.HANDSHAKE_DISPUTE
+        OrderEventType type = ifoodOrder.FullCode is IFoodFullOrderStatus.HANDSHAKE_DISPUTE
             ? OrderEventType.DISPUTE_STARTED
             : OrderEventType.DISPUTE_FINISH;
 
         HandshakeDispute? dispute = null;
 
-        string json = JsonSerializer.Serialize(foodOrder.Metadata);
+        string json = JsonSerializer.Serialize(ifoodOrder.Metadata);
 
         if (type == OrderEventType.DISPUTE_STARTED) {
             dispute = JsonSerializer.Deserialize<HandshakeDispute>(json);
 
             if (dispute?.Metadata?.Evidences is not null) {
-                dispute.Metadata.Evidences = await UploadEvidencesToObjectStorage(foodOrder.OrderId, dispute);
+                dispute.Metadata.Evidences = await UploadEvidencesToObjectStorage(ifoodOrder.OrderId, dispute);
             }
         }
         else {
@@ -67,7 +66,7 @@ public class IFoodHandshakeOrderDisputeUseCase(
                     Metadata: null
                 );
 
-                await objectStorageClient.DeleteFolder(GenerateKeyUrlPath(foodOrder.OrderId, dispute.DisputeId));
+                await objectStorageClient.DeleteFolder(GenerateKeyUrlPath(ifoodOrder.OrderId, dispute.DisputeId));
             }
         }
 
@@ -76,14 +75,14 @@ public class IFoodHandshakeOrderDisputeUseCase(
 
         await dispatcher.DispatchAsync(
             new ProcessOrderDisputeCommand(
-                ExternalOrderId: foodOrder.OrderId,
+                ExternalOrderId: ifoodOrder.OrderId,
                 Integration: IFoodIntegrationKey.IFOOD,
                 OrderDispute: dispute.ToOrder(),
                 Type: type
             )
         );
 
-        return foodOrder;
+        return ifoodOrder;
     }
 
     private async Task<List<Media>> UploadEvidencesToObjectStorage(string orderId, HandshakeDispute dispute) {

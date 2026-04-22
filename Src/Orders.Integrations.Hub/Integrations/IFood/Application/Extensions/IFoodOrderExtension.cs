@@ -360,7 +360,7 @@ public static class IFoodOrderExtension
         );
     }
 
-    public static OrderUpdate FromIFood(this IFoodWebhookRequest request, OrderEventType? eventType)
+    public static OrderUpdate FromIFood(this IFoodWebhookRequest request, OrderEventType? eventType = null)
     {
         return new OrderUpdate(
             OrderId: request.OrderId,

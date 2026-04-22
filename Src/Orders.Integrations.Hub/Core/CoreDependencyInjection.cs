@@ -17,7 +17,6 @@ using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 
-using Orders.Integrations.Hub.Core.Adapters.In.Http;
 using Orders.Integrations.Hub.Core.Adapters.Out.Cache.Memory;
 using Orders.Integrations.Hub.Core.Adapters.Out.HttpClients;
 using Orders.Integrations.Hub.Core.Application.Ports.In.Integration;
