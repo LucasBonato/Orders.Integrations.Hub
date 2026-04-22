@@ -10,15 +10,15 @@ namespace Orders.Integrations.Hub.Integrations.IFood.Application.Ports.In;
 public class IFoodOrderUpdateUseCase(
     ICommandDispatcher dispatcher
 ) : IOrderUpdateUseCase<IFoodWebhookRequest> {
-    public async Task<IFoodWebhookRequest> ExecuteAsync(IFoodWebhookRequest foodOrder)
+    public async Task<IFoodWebhookRequest> ExecuteAsync(IFoodWebhookRequest ifoodOrder)
     {
         await dispatcher.DispatchAsync(
             new UpdateOrderStatusCommand(
-                OrderUpdate: foodOrder.FromIFood(null),
+                OrderUpdate: ifoodOrder.FromIFood(),
                 SalesChannel: IFoodIntegrationKey.IFOOD
             )
         );
 
-        return await Task.FromResult(foodOrder);
+        return await Task.FromResult(ifoodOrder);
     }
 }
