@@ -1,6 +1,6 @@
 ﻿using Orders.Integrations.Hub.Core.Application.DTOs.Request;
-using Orders.Integrations.Hub.Integrations.Common;
 using Orders.Integrations.Hub.Integrations.Common.Contracts;
+using Orders.Integrations.Hub.Integrations.Common.ValueObjects;
 using Orders.Integrations.Hub.Integrations.IFood.Domain.Entity.Order;
 using Orders.Integrations.Hub.Integrations.IFood.Domain.Entity.Order.MerchantDetails;
 using Orders.Integrations.Hub.Integrations.IFood.Domain.ValueObjects.DTOs.Request;

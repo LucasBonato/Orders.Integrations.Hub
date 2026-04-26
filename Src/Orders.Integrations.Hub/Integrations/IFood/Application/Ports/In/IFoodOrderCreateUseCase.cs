@@ -17,13 +17,13 @@ public class IFoodOrderCreateUseCase(
 ) : IOrderCreateUseCase<IFoodWebhookRequest> {
     public async Task<IFoodWebhookRequest> ExecuteAsync(IFoodWebhookRequest requestOrder)
     {
-        IFoodOrder foodOrder = await iFoodClient.GetOrderDetails(requestOrder.OrderId);
+        IFoodOrder ifoodOrder = await iFoodClient.GetOrderDetails(requestOrder.OrderId);
 
         string tenantId = integrationContext.Integration!.TenantId?? string.Empty;
 
         await dispatcher.DispatchAsync(
             new CreateOrderCommand(
-                Order: foodOrder.ToOrder(tenantId)
+                Order: ifoodOrder.ToOrder(tenantId)
             )
         );
 

@@ -8,6 +8,7 @@ using Orders.Integrations.Hub.Core.Domain.Entity.Item;
 using Orders.Integrations.Hub.Core.Domain.Entity.Merchant;
 using Orders.Integrations.Hub.Core.Domain.Entity.Payment;
 using Orders.Integrations.Hub.Core.Domain.Enums;
+using Orders.Integrations.Hub.Integrations.IFood.Application.ValueObjects;
 using Orders.Integrations.Hub.Integrations.IFood.Domain.Entity.Handshake;
 using Orders.Integrations.Hub.Integrations.IFood.Domain.Entity.Order;
 using Orders.Integrations.Hub.Integrations.IFood.Domain.ValueObjects.DTOs.Request;
@@ -359,7 +360,7 @@ public static class IFoodOrderExtension
         );
     }
 
-    public static OrderUpdate FromIFood(this IFoodWebhookRequest request, OrderEventType? eventType)
+    public static OrderUpdate FromIFood(this IFoodWebhookRequest request, OrderEventType? eventType = null)
     {
         return new OrderUpdate(
             OrderId: request.OrderId,

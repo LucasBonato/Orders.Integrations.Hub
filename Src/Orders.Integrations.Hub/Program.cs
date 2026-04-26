@@ -22,7 +22,6 @@ if (app.Environment.IsDevelopment()) {
     app.MapScalarApiReference();
 }
 
-app
+await app
     .UseCore()
-    .UseIntegrationsModule()
-    .Run();
+    .RunAsync();
