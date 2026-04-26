@@ -4,9 +4,10 @@ using System.Web;
 
 using Orders.Integrations.Hub.Core.Application.Ports.Out.Cache;
 using Orders.Integrations.Hub.Core.Application.Ports.Out.Serialization;
-using Orders.Integrations.Hub.Integrations.Common;
 using Orders.Integrations.Hub.Integrations.Common.Contracts;
 using Orders.Integrations.Hub.Integrations.Common.Extensions;
+using Orders.Integrations.Hub.Integrations.Common.ValueObjects;
+using Orders.Integrations.Hub.Integrations.Food99.Application.ValueObjects;
 using Orders.Integrations.Hub.Integrations.Food99.Domain.Contracts;
 using Orders.Integrations.Hub.Integrations.Food99.Domain.ValueObjects.DTOs.Request;
 using Orders.Integrations.Hub.Integrations.Food99.Domain.ValueObjects.DTOs.Response;
@@ -27,7 +28,7 @@ public class Food99AuthMessageHandler(
 
         IIntegrationContext integrationContext = request.GetIntegrationContext();
 
-        IntegrationResolved integration = integrationContext.Integration ?? throw new NullReferenceException("integrationContext.Integration");
+        Integration integration = integrationContext.Integration ?? throw new NullReferenceException("integrationContext.Integration");
         string merchantId = integrationContext.MerchantId ?? throw new NullReferenceException("integrationContext.MerchantId");
 
         string cacheKey = $"food99-token:{integration.TenantId}:{merchantId}";
@@ -74,7 +75,7 @@ public class Food99AuthMessageHandler(
         return response;
     }
 
-    private async Task<(string AccessToken, TimeSpan Expiration)> RetrieveTokenAsync(IntegrationResolved integration)
+    private async Task<(string AccessToken, TimeSpan Expiration)> RetrieveTokenAsync(Integration integration)
     {
         string appId = integration.ClientId;
         string appSecret = integration.ClientSecret;

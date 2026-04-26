@@ -1,5 +1,4 @@
-﻿using Orders.Integrations.Hub.Core.Application.DTOs;
-using Orders.Integrations.Hub.Core.Domain.ValueObjects;
+﻿using Orders.Integrations.Hub.Core.Domain.ValueObjects;
 
 namespace Orders.Integrations.Hub.Core.Application.Ports.In.Integration;
 

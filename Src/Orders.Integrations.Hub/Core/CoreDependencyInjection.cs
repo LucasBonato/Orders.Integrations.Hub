@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Diagnostics.Metrics;
 using System.Net;
+using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -16,7 +17,6 @@ using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 
-using Orders.Integrations.Hub.Core.Adapters.In.Http;
 using Orders.Integrations.Hub.Core.Adapters.Out.Cache.Memory;
 using Orders.Integrations.Hub.Core.Adapters.Out.HttpClients;
 using Orders.Integrations.Hub.Core.Application.Ports.In.Integration;
@@ -45,9 +45,9 @@ public static class CoreDependencyInjection
 
     public static WebApplication UseCore(this WebApplication app)
     {
+        app.MapEndpoints();
         app.UseExceptionHandler(_ => { });
         app.UseFastEndpoints();
-        app.AddOrdersHubEndpoints();
         return app;
     }
 
@@ -55,6 +55,8 @@ public static class CoreDependencyInjection
     {
         private IServiceCollection AddServices()
         {
+            services.AddEndpoints(Assembly.GetExecutingAssembly());
+            
             services.AddExceptionHandler<ExceptionHandlerMiddleware>();
 
             services.AddSingleton<IAmazonSimpleNotificationService>(_ => AwsConfigurationExtensions.SimpleNotificationServiceConfiguration());

@@ -1,9 +1,9 @@
 ﻿using System.Net.Http.Headers;
 
 using Orders.Integrations.Hub.Core.Application.Ports.Out.Cache;
-using Orders.Integrations.Hub.Integrations.Common;
 using Orders.Integrations.Hub.Integrations.Common.Contracts;
 using Orders.Integrations.Hub.Integrations.Common.Extensions;
+using Orders.Integrations.Hub.Integrations.Common.ValueObjects;
 using Orders.Integrations.Hub.Integrations.IFood.Domain.Contracts;
 using Orders.Integrations.Hub.Integrations.IFood.Domain.ValueObjects.DTOs.Request;
 using Orders.Integrations.Hub.Integrations.IFood.Domain.ValueObjects.DTOs.Response;
@@ -23,7 +23,7 @@ public class IFoodAuthMessageHandler(
 
         IIntegrationContext integrationContext = request.GetIntegrationContext();
 
-        IntegrationResolved integration = integrationContext.Integration ?? throw new NullReferenceException("integrationContext.Integration");
+        Integration integration = integrationContext.Integration ?? throw new NullReferenceException("integrationContext.Integration");
         string merchantId = integrationContext.MerchantId ?? throw new NullReferenceException("integrationContext.merchantId");
 
         string cacheKey = $"ifood-token:{integrationContext.TenantId}:{merchantId}";

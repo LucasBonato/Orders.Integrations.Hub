@@ -5,7 +5,8 @@ using Orders.Integrations.Hub.Core.Infrastructure.Extensions;
 namespace Orders.Integrations.Hub.Core.Adapters.Out.HttpClients;
 
 public class InternalClient(
-    ILogger<InternalClient> logger
+    ILogger<InternalClient> logger,
+    HttpClient httpClient
 ) : IInternalClient {
     public Task<IntegrationResponse> GetIntegrationByExternalId(string externalId) {
         if (logger.IsEnabled(LogLevel.Information)) {
@@ -29,6 +30,32 @@ public class InternalClient(
                     new IntegrationSetting(
                         Name: "ifood_client_secret",
                         Value: AppEnv.INTEGRATIONS.IFOOD.CLIENT.SECRET.NotNullEnv()
+                    ),
+                    
+                    new IntegrationSetting(
+                        Name: "rappi_merchant_id",
+                        Value: "dd2aad76-35aa-4816-952c-9194822155f8"
+                    ),
+                    new IntegrationSetting(
+                        Name: "rappi_client_id",
+                        Value: AppEnv.INTEGRATIONS.RAPPI.CLIENT.ID.NotNullEnv()
+                    ),
+                    new IntegrationSetting(
+                        Name: "rappi_client_secret",
+                        Value: AppEnv.INTEGRATIONS.RAPPI.CLIENT.SECRET.NotNullEnv()
+                    ),
+                    
+                    new IntegrationSetting(
+                        Name: "food99_merchant_id",
+                        Value: "dd2aad76-35aa-4816-952c-9194822155f8"
+                    ),
+                    new IntegrationSetting(
+                        Name: "food99_client_id",
+                        Value: AppEnv.INTEGRATIONS.FOOD99.CLIENT.ID.NotNullEnv()
+                    ),
+                    new IntegrationSetting(
+                        Name: "food99_client_secret",
+                        Value: AppEnv.INTEGRATIONS.FOOD99.CLIENT.SECRET.NotNullEnv()
                     )
                 ]
             )

@@ -2,6 +2,7 @@
 using Orders.Integrations.Hub.Core.Application.Ports.In.UseCases;
 using Orders.Integrations.Hub.Core.Application.Ports.Out.Messaging;
 using Orders.Integrations.Hub.Integrations.Food99.Application.Extensions;
+using Orders.Integrations.Hub.Integrations.Food99.Application.ValueObjects;
 using Orders.Integrations.Hub.Integrations.Food99.Domain.Entity;
 
 namespace Orders.Integrations.Hub.Integrations.Food99.Application.Ports.In;

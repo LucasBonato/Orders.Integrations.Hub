@@ -2,6 +2,7 @@
 using Orders.Integrations.Hub.Core.Application.Ports.In.UseCases;
 using Orders.Integrations.Hub.Core.Application.Ports.Out.Messaging;
 using Orders.Integrations.Hub.Integrations.Rappi.Application.Extensions;
+using Orders.Integrations.Hub.Integrations.Rappi.Application.ValueObjects;
 using Orders.Integrations.Hub.Integrations.Rappi.Domain.ValueObjects.DTOs.Request;
 
 namespace Orders.Integrations.Hub.Integrations.Rappi.Application.Ports.In;
