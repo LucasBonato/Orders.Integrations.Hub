@@ -6,6 +6,8 @@ using Orders.Integrations.Hub.Core.Application.Ports.In.Http;
 using Orders.Integrations.Hub.Integrations.Common.Contracts;
 using Orders.Integrations.Hub.Integrations.Common.Middleware;
 
+using TestResult = NetArchTest.Rules.TestResult;
+
 namespace Orders.Integrations.Hub.ArchTests;
 
 public class IntegrationsArchitectureTests

@@ -25,6 +25,9 @@
         <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.14.0"/>
         <PackageReference Include="OpenTelemetry.Instrumentation.Runtime" Version="1.14.0"/>
         <PackageReference Include="Scalar.AspNetCore" Version="2.12.8"/>
+        <PackageReference Include="Microsoft.Extensions.Caching.Hybrid" Version="10.5.0" />
+        <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="10.0.7" />
+        <PackageReference Include="OpenTelemetry.Instrumentation.StackExchangeRedis" Version="1.15.1-beta.1" />
         <PackageReference Include="Scrutor" Version="7.0.0"/>
     </ItemGroup>
 
