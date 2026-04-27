@@ -17,6 +17,8 @@ using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 
+using Orders.Integrations.Hub.Core.Adapters.Out.Cache.Distributed;
+using Orders.Integrations.Hub.Core.Adapters.Out.Cache.Hybrid;
 using Orders.Integrations.Hub.Core.Adapters.Out.Cache.Memory;
 using Orders.Integrations.Hub.Core.Adapters.Out.HttpClients;
 using Orders.Integrations.Hub.Core.Application.Ports.In.Integration;
@@ -158,6 +160,7 @@ public static class CoreDependencyInjection
                         .AddAspNetCoreInstrumentation()
                         .AddAWSInstrumentation()
                         .AddHttpClientInstrumentation()
+                        .AddRedisInstrumentation()
                         ;
                 })
                 .WithMetrics(metrics =>
@@ -193,10 +196,32 @@ public static class CoreDependencyInjection
 
         private IServiceCollection AddCacheServices()
         {
-            return services
+            string cacheMode = AppEnv.CACHE.MODE.NotNullEnv();
+
+            return cacheMode switch {
+                "Memory" => services
                     .AddMemoryCache()
-                    .AddSingleton<ICacheService, MemoryCacheService>()
-                ;
+                    .AddSingleton<ICacheService, MemoryCacheService>(),
+                
+                "Distributed" => services
+                    .AddStackExchangeRedisCache(options => {
+                        options.Configuration = AppEnv.CACHE.CONFIGURATIONS.CONNECTION_STRING.NotNullEnv();
+                        options.InstanceName = "redis-only-instance";
+                    })
+                    .AddSingleton<ICacheService, RedisCacheService>(),
+                
+                "Hybrid" => services
+                    .AddMemoryCache()
+                    .AddStackExchangeRedisCache(options => {
+                        options.Configuration = AppEnv.CACHE.CONFIGURATIONS.CONNECTION_STRING.NotNullEnv();
+                        options.InstanceName = "redis-hybrid-instance";
+                    })
+                    .AddHybridCache()
+                    .Services
+                    .AddSingleton<ICacheService, HybridCacheService>(),
+                
+                _ => throw new InvalidOperationException("Invalid cache mode!")
+            };
         }
     }
 }

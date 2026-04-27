@@ -15,11 +15,10 @@ public class InternalCacheClient(
     ICacheService cacheService,
     IInternalClient inner
 ) : IInternalClient {
-    public async Task<IntegrationResponse> GetIntegrationByExternalId(string externalId)
-    {
+    public async Task<IntegrationResponse> GetIntegrationByExternalId(string externalId) {
         string cacheKey = $"integration:{externalId}";
 
-        IntegrationResponse? integrationCached = cacheService.TryGet<IntegrationResponse>(cacheKey);
+        IntegrationResponse? integrationCached = await cacheService.GetAsync<IntegrationResponse>(cacheKey);
 
         if (integrationCached is not null)
             return integrationCached;

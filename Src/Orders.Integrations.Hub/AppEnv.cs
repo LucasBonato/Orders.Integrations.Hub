@@ -31,10 +31,6 @@ public static class AppEnv
             {
                 public static readonly AnvEnv BASE_URL = new("INTEGRATIONS__IFOOD__ENDPOINT__BASE_URL");
             }
-            public static class CACHE
-            {
-                public static readonly AnvEnv KEY = new("INTEGRATIONS__IFOOD__CACHE__KEY");
-            }
         }
         public static class RAPPI
         {
@@ -49,10 +45,6 @@ public static class AppEnv
                 public static readonly AnvEnv BASE_URL = new("INTEGRATIONS__RAPPI__ENDPOINT__BASE_URL");
                 public static readonly AnvEnv AUTH = new("INTEGRATIONS__RAPPI__ENDPOINT__AUTH");
             }
-            public static class CACHE
-            {
-                public static readonly AnvEnv KEY = new("INTEGRATIONS__RAPPI__CACHE__KEY");
-            }
         }
         public static class FOOD99
         {
@@ -65,10 +57,16 @@ public static class AppEnv
             {
                 public static readonly AnvEnv BASE_URL = new("INTEGRATIONS__FOOD99__ENDPOINT__BASE_URL");
             }
-            public static class CACHE
-            {
-                public static readonly AnvEnv KEY = new("INTEGRATIONS__FOOD99__CACHE__KEY");
-            }
+        }
+    }
+
+    public static class CACHE
+    {
+        public static readonly AnvEnv MODE = new("CACHE__MODE");
+
+        public static class CONFIGURATIONS
+        {
+            public static readonly AnvEnv CONNECTION_STRING = new("CACHE__CONFIGURATIONS__CONNECTION_STRING");
         }
     }
     public static class PUB_SUB

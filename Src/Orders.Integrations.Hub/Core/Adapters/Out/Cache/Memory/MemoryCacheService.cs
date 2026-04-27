@@ -1,14 +1,19 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
 
+using Orders.Integrations.Hub.Core.Application.Ports.Out.Cache;
+
 namespace Orders.Integrations.Hub.Core.Adapters.Out.Cache.Memory;
 
 public sealed class MemoryCacheService(
     IMemoryCache memoryCache
-) : BaseCacheService {
-    public override T? TryGet<T>(string key) where T : default
-        => memoryCache.TryGetValue(key, out T? value) ? value : default;
+) : ICacheService {
+    public ValueTask<T?> GetAsync<T>(string key)
+    {
+        memoryCache.TryGetValue(key, out T? value);
+        return ValueTask.FromResult(value);
+    }
 
-    public override ValueTask SetAsync<T>(string key, T value, TimeSpan expiration) {
+    public ValueTask SetAsync<T>(string key, T value, TimeSpan expiration) {
         memoryCache.Set(key, value, expiration);
         return ValueTask.CompletedTask;
     }
