@@ -39,12 +39,23 @@ public class WebhookSignatureFilter<TRequest, TValidator, TResolver>(
         httpContext.Items["WebhookRequest"] = request;
 
         string merchantId = resolver.GetMerchantId(request);
-        IntegrationResponse rawIntegration = await internalClient.GetIntegrationByExternalId(merchantId);
-        integrationContext.MerchantId = merchantId;
-        integrationContext.Integration = validator.ResolveIntegration(rawIntegration);
+
+        if (!string.IsNullOrWhiteSpace(merchantId)) {
+            IntegrationResponse rawIntegration = await internalClient.GetIntegrationByExternalId(merchantId);
+            integrationContext.MerchantId = merchantId;
+            integrationContext.Integration = validator.ResolveIntegration(rawIntegration);
+        }
+        else {
+            IntegrationResponse rawIntegration = await internalClient.TryGetAppLevelIntegration(validator.IntegrationKey)
+                                                 ?? throw new InvalidOperationException("Integration not found");
+            
+            integrationContext.Integration = validator.ResolveIntegration(rawIntegration);
+            integrationContext.MerchantId = integrationContext.Integration.MerchantId;
+        }
+        
+        string secret = integrationContext.Integration.ClientSecret;
 
         string payload = validator.PrepareSignaturePayload(signature, body);
-        string secret = integrationContext.Integration.ClientSecret;
         
         if (!validator.ValidateSignature(signature, payload, secret)) {
             logger.LogWarning("[WARN] - {Validator} - Invalid signature.", typeof(TValidator).Name);
