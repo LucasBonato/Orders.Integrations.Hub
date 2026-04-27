@@ -5,5 +5,6 @@ public record Integration(
     string MerchantId,
     string ClientId,
     string ClientSecret,
-    bool AutoAccept
+    bool AutoAccept,
+    IntegrationMode Mode
 );

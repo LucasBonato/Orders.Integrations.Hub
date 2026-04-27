@@ -103,6 +103,25 @@ public class InternalClient(
             integration
         );
     }
-}
 
-\ No newline at end of file
+    public Task<IntegrationResponse?> TryGetAppLevelIntegration(string integrationKey)
+    {
+        if (logger.IsEnabled(LogLevel.Information)) {
+            logger.LogInformation("Getting integration level by integration key {integrationKey}", integrationKey);
+            logger.LogInformation("Mocked integration settings");
+        }
+        
+        IntegrationResponse? integration = null;
+        foreach (IntegrationResponse response in _responses) {
+            bool hasExternalId = response.Settings.Any(setting => setting.Name.Contains(integrationKey, StringComparison.InvariantCultureIgnoreCase));
+
+            if (!hasExternalId)
+                continue;
+
+            integration = response;
+            break;
+        }
+        
+        return Task.FromResult(integration);
+    }
+}
