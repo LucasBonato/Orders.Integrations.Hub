@@ -15,12 +15,10 @@ public class RappiOrderChangeProductStatusUseCase(
         List<string> turnOn = [];
 
         if (stores.Length is 0)
-        {
             throw new Exception();
-        }
 
         Task[] requests = stores
-            .Select(store => new RappiAvailabilityUpdateItemsRequest(
+            .Select(_ => new RappiAvailabilityUpdateItemsRequest(
                 StoreIntegrationId: storeId,
                 Items: new RappiAvailabilityItem(
                     TurnOn: turnOn,
@@ -42,12 +40,10 @@ public class RappiOrderChangeProductStatusUseCase(
         List<string> turnOff = [];
 
         if (stores.Length is 0)
-        {
             throw new Exception();
-        }
 
         Task[] requests = stores
-            .Select(store => new RappiAvailabilityUpdateItemsRequest(
+            .Select(_ => new RappiAvailabilityUpdateItemsRequest(
                 StoreIntegrationId: storeId,
                 Items: new RappiAvailabilityItem(
                     TurnOn: [],

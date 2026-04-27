@@ -1,2 +1,13 @@
-﻿- Fix Events in Core/Application/Events
-- 
+﻿- [X] Fix Events in Core/Application/Events
+- [X] IntegrationKey should be in a ValueObjects
+- [ ] Remove FastEndpoints complete from the application
+- [ ] Make a way to have memory events and queue events using a external provider
+- [ ] Implement Keeta
+- [ ] Implement Zé Delivery
+- [ ] Implement DoorDash
+- [X] Fix the Integrations Architecture
+- [X] Implement Architecture Tests
+- [X] Memory cache as local and fallback of distributed cache
+- [X] Better change for centralized and distributed integrations
+  - [X] Centralized (Use the envs from .env)
+  - [X] Distributed (Use the IntegrationResponse)
