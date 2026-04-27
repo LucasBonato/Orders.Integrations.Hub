@@ -32,4 +32,23 @@ public class InternalCacheClient(
 
         return integration;
     }
+
+    public async Task<IntegrationResponse?> TryGetAppLevelIntegration(string integrationKey)
+    {
+        string cacheKey = $"integration:mode:{integrationKey}";
+
+        IntegrationResponse? integrationResponse = await cacheService.GetAsync<IntegrationResponse>(cacheKey);
+
+        if (integrationResponse is not null)
+            return integrationResponse;
+        
+        if (logger.IsEnabled(LogLevel.Information))
+            logger.LogInformation("[INFO] - {context} - Getting integration mode by integration key: {integrationKey}", nameof(InternalCacheClient), integrationKey);
+        
+        IntegrationResponse? integration = await inner.TryGetAppLevelIntegration(integrationKey);
+        
+        await cacheService.SetAsync(cacheKey, integration, TimeSpan.FromDays(1));
+        
+        return integration;
+    }
 }
