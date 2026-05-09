@@ -8,7 +8,6 @@ using System.Text.Json.Serialization;
 using Amazon.S3;
 using Amazon.SimpleNotificationService;
 
-using FastEndpoints;
 
 using Microsoft.AspNetCore.Mvc;
 
@@ -49,7 +48,6 @@ public static class CoreDependencyInjection
     {
         app.MapEndpoints();
         app.UseExceptionHandler(_ => { });
-        app.UseFastEndpoints();
         return app;
     }
 
@@ -66,20 +64,11 @@ public static class CoreDependencyInjection
 
             services.AddSingleton<IObjectStorageClient, SimpleStorageServiceClient>();
 
-            services.AddSingleton<ICommandDispatcher, FastEndpointsCommandDispatcher>();
-
             services.AddScoped<IIntegrationRouter, IntegrationRouter>();
-
-            services.AddFastEndpoints(options =>
-            {
-                options.DisableAutoDiscovery = false;
-            });
-
             services
                 .AddCacheServices()
                 .AddProblemDetails(options =>
-                    options.CustomizeProblemDetails = context =>
-                    {
+                    options.CustomizeProblemDetails = context => {
                         HttpContext httpContext = context.HttpContext;
                         string traceId = Activity.Current?.TraceId.ToString() ?? httpContext.TraceIdentifier;
                         string traceParent = Activity.Current?.Id ?? httpContext.TraceIdentifier;

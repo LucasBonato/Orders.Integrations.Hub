@@ -3,11 +3,9 @@
 using Amazon.SimpleNotificationService;
 using Amazon.SimpleNotificationService.Model;
 
-using FastEndpoints;
 
 using Orders.Integrations.Hub.Core.Application.Commands;
 using Orders.Integrations.Hub.Core.Infrastructure.Extensions;
-using Orders.Integrations.Hub.Core.Infrastructure.Messaging;
 
 namespace Orders.Integrations.Hub.Core.Adapters.In.Messaging.EventHandlers;
 
