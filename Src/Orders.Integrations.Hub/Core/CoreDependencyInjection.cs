@@ -8,6 +8,7 @@ using System.Text.Json.Serialization;
 using Amazon.S3;
 using Amazon.SimpleNotificationService;
 
+using MassTransit;
 
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,6 +17,7 @@ using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 
+using Orders.Integrations.Hub.Core.Adapters.In.Messaging.EventHandlers;
 using Orders.Integrations.Hub.Core.Adapters.Out.Cache.Distributed;
 using Orders.Integrations.Hub.Core.Adapters.Out.Cache.Hybrid;
 using Orders.Integrations.Hub.Core.Adapters.Out.Cache.Memory;
@@ -65,7 +67,9 @@ public static class CoreDependencyInjection
             services.AddSingleton<IObjectStorageClient, SimpleStorageServiceClient>();
 
             services.AddScoped<IIntegrationRouter, IntegrationRouter>();
+            
             services
+                .AddMessageBroker()
                 .AddCacheServices()
                 .AddProblemDetails(options =>
                     options.CustomizeProblemDetails = context => {
@@ -145,7 +149,10 @@ public static class CoreDependencyInjection
                 .WithTracing(tracing =>
                 {
                     tracing
-                        .AddSource(serviceName)
+                        .AddSource(
+                            serviceName,
+                            nameof(MassTransit)
+                        )
                         .AddAspNetCoreInstrumentation()
                         .AddAWSInstrumentation()
                         .AddHttpClientInstrumentation()
@@ -155,7 +162,10 @@ public static class CoreDependencyInjection
                 .WithMetrics(metrics =>
                 {
                     metrics
-                        .AddMeter(serviceName)
+                        .AddMeter(
+                            serviceName,
+                            nameof(MassTransit)
+                        )
                         .AddAspNetCoreInstrumentation()
                         .AddAWSInstrumentation()
                         .AddHttpClientInstrumentation()
@@ -211,6 +221,28 @@ public static class CoreDependencyInjection
                 
                 _ => throw new InvalidOperationException("Invalid cache mode!")
             };
+        }
+
+        private IServiceCollection AddMessageBroker() {
+            
+            services.AddSingleton<ICommandDispatcher, MassTransitCommandDispatcher>();
+            
+            services.AddMassTransit(busConfigurator => {
+                busConfigurator.SetKebabCaseEndpointNameFormatter();
+
+                busConfigurator.AddConsumer<UpdateOrderCommandHandler>();
+                busConfigurator.AddConsumer<CreateOrderCommandHandler>();
+                busConfigurator.AddConsumer<PubSubCommandHandler>();
+                busConfigurator.AddConsumer<ProcessOrderDisputeCommandHandler>();
+                
+                busConfigurator.UsingInMemory((context, configurator) => {
+                    configurator.UseMessageRetry(retry => retry.Interval(5, TimeSpan.FromSeconds(5)));
+                    configurator.UseInMemoryOutbox(context);
+                    configurator.ConfigureEndpoints(context);
+                });
+            });
+            
+            return services;
         }
     }
 }
