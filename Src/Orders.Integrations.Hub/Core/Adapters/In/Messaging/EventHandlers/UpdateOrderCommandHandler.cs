@@ -1,16 +1,17 @@
+﻿using MassTransit;
 
 using Orders.Integrations.Hub.Core.Application.Commands;
 using Orders.Integrations.Hub.Core.Application.Ports.Out.Clients;
 
 namespace Orders.Integrations.Hub.Core.Adapters.In.Messaging.EventHandlers;
 
-public class UpdateOrderCommandHandler(
+public sealed class UpdateOrderCommandHandler(
     ILogger<UpdateOrderCommandHandler> logger,
     IOrderClient orderClient
-) : IEventHandler<FastEndpointsCommandEnvelope<UpdateOrderStatusCommand>> {
-    public async Task HandleAsync(FastEndpointsCommandEnvelope<UpdateOrderStatusCommand> envelope, CancellationToken cancellationToken)
+) : IConsumer<UpdateOrderStatusCommand> {
+    public async Task Consume(ConsumeContext<UpdateOrderStatusCommand> context)
     {
-        UpdateOrderStatusCommand command = envelope.Command;
+        UpdateOrderStatusCommand command = context.Message;
 
         if (logger.IsEnabled(LogLevel.Information)) {
             logger.LogInformation("[INFO] - UpdateOrderCommandHandler - Updating Order From: {salesChannel}", command.SalesChannel);
