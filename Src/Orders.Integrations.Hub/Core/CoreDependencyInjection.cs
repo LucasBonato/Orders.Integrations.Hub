@@ -225,6 +225,8 @@ public static class CoreDependencyInjection
 
         private IServiceCollection AddMessageBroker() {
             
+            string brokerMode = AppEnv.MESSAGE_BROKER.MODE.NotNullEnv();
+            
             services.AddSingleton<ICommandDispatcher, MassTransitCommandDispatcher>();
             
             services.AddMassTransit(busConfigurator => {
@@ -234,12 +236,40 @@ public static class CoreDependencyInjection
                 busConfigurator.AddConsumer<CreateOrderCommandHandler>();
                 busConfigurator.AddConsumer<PubSubCommandHandler>();
                 busConfigurator.AddConsumer<ProcessOrderDisputeCommandHandler>();
-                
-                busConfigurator.UsingInMemory((context, configurator) => {
-                    configurator.UseMessageRetry(retry => retry.Interval(5, TimeSpan.FromSeconds(5)));
+
+                if (brokerMode == "Memory") {
+                    busConfigurator.UsingInMemory((context, configurator) => {
+                        configurator.UseMessageRetry(retry => retry.Interval(5, TimeSpan.FromSeconds(5)));
+                        configurator.UseInMemoryOutbox(context);
+                        configurator.ConfigureEndpoints(context);
+                    });
+                    return;
+                }
+
+                busConfigurator.UsingRabbitMq((context, configurator) =>
+                {
+                    configurator.Host(AppEnv.MESSAGE_BROKER.CONFIGURATIONS.CONNECTION_STRING.NotNullEnv());
+                    
+                    configurator.UseCircuitBreaker(circuitBreaker => {
+                        circuitBreaker.TrackingPeriod = TimeSpan.FromMinutes(1);
+                        circuitBreaker.TripThreshold = 15;
+                        circuitBreaker.ActiveThreshold = 10;
+                        circuitBreaker.ResetInterval = TimeSpan.FromMinutes(5);
+                    });
+                    
+                    configurator.UseMessageRetry(retry => {
+                        retry.Exponential(
+                            retryLimit: 5, 
+                            minInterval: TimeSpan.FromSeconds(1), 
+                            maxInterval: TimeSpan.FromMinutes(2), 
+                            intervalDelta: TimeSpan.FromSeconds(5)
+                        );
+                    });
+                    
                     configurator.UseInMemoryOutbox(context);
                     configurator.ConfigureEndpoints(context);
                 });
+
             });
             
             return services;

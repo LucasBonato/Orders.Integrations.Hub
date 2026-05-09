@@ -69,6 +69,17 @@ public static class AppEnv
             public static readonly AnvEnv CONNECTION_STRING = new("CACHE__CONFIGURATIONS__CONNECTION_STRING");
         }
     }
+
+    public static class MESSAGE_BROKER
+    {
+        public static readonly AnvEnv MODE = new("MESSAGE_BROKER__MODE");
+        
+        public static class CONFIGURATIONS
+        {
+            public static readonly AnvEnv CONNECTION_STRING = new("MESSAGE_BROKER__CONFIGURATIONS__CONNECTION_STRING");
+        }
+    }
+    
     public static class PUB_SUB
     {
         public static class TOPICS
