@@ -39,18 +39,20 @@ jobs:
         run: dotnet restore Orders.Integrations.Hub.slnx
 
       - name: Build
-        run: dotnet build Orders.Integrations.Hub.slnx \
-          -c Release \
-          --no-restore
+        run: | 
+          dotnet build Orders.Integrations.Hub.slnx \
+            -c Release \
+            --no-restore
 
       - name: Run Unit Tests
-        run: dotnet test Test/Orders.Integrations.Hub.UnitTests \
-          -c Release \
-          --no-build \
-          --logger "console;verbosity=detailed" \
-          --logger trx \
-          --collect:"XPlat Code Coverage" \
-          -- RunConfiguration.DisableAppDomain=true
+        run: | 
+          dotnet test Test/Orders.Integrations.Hub.UnitTests \
+            -c Release \
+            --no-build \
+            --logger "console;verbosity=detailed" \
+            --logger trx \
+            --collect:"XPlat Code Coverage" \
+            -- RunConfiguration.DisableAppDomain=true
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
@@ -95,17 +97,19 @@ jobs:
         run: dotnet restore Orders.Integrations.Hub.slnx
 
       - name: Build
-        run: dotnet build Orders.Integrations.Hub.slnx \
-          -c Release \
-          --no-restore
+        run: | 
+          dotnet build Orders.Integrations.Hub.slnx \
+            -c Release \
+            --no-restore
 
       - name: Run Integration Tests
-        run: dotnet test Test/Orders.Integrations.Hub.IntegrationTests \
-          -c Release \
-          --no-build \
-          --logger "console;verbosity=detailed" \
-          --logger trx \
-          --collect:"XPlat Code Coverage"
+        run: |
+          dotnet test Test/Orders.Integrations.Hub.IntegrationTests \
+            -c Release \
+            --no-build \
+            --logger "console;verbosity=detailed" \
+            --logger trx \
+            --collect:"XPlat Code Coverage"
         env:
           CACHE__MODE: "Memory"
           MESSAGE_BROKER__MODE: "Memory"
@@ -142,16 +146,18 @@ jobs:
         run: dotnet restore Orders.Integrations.Hub.slnx
 
       - name: Build
-        run: dotnet build Orders.Integrations.Hub.slnx \
-          -c Release \
-          --no-restore
+        run: |
+          dotnet build Orders.Integrations.Hub.slnx \
+            -c Release \
+            --no-restore
 
       - name: Run Architecture Tests
-        run: dotnet test Test/Orders.Integrations.Hub.ArchTests \
-          -c Release \
-          --no-build \
-          --logger "console;verbosity=detailed" \
-          --logger trx
+        run: | 
+          dotnet test Test/Orders.Integrations.Hub.ArchTests \
+            -c Release \
+            --no-build \
+            --logger "console;verbosity=detailed" \
+            --logger trx
 
       - name: Upload test results
         if: always()

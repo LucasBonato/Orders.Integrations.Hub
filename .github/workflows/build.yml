@@ -37,24 +37,27 @@ jobs:
           NUGET_XMLDOC_MODE: skip
 
       - name: Build Release
-        run: dotnet build Orders.Integrations.Hub.slnx \
-          -c Release \
-          --no-restore \
-          -p:ContinuousIntegrationBuild=true \
-          -p:DeterministicBuild=true
+        run: |
+          dotnet build Orders.Integrations.Hub.slnx \
+            -c Release \
+            --no-restore \
+            -p:ContinuousIntegrationBuild=true \
+            -p:DeterministicBuild=true
 
       - name: Run all tests
-        run: dotnet test Orders.Integrations.Hub.slnx \
-          -c Release \
-          --no-build \
-          --logger "console;verbosity=minimal" \
-          --logger trx
+        run: | 
+          dotnet test Orders.Integrations.Hub.slnx \
+            -c Release \
+            --no-build \
+            --logger "console;verbosity=minimal" \
+            --logger trx
 
       - name: Publish application
-        run: dotnet publish Orders.Integrations.Hub.slnx \
-          -c Release \
-          --no-build \
-          -o ./publish
+        run: | 
+          dotnet publish Orders.Integrations.Hub.slnx \
+            -c Release \
+            --no-build \
+            -o ./publish
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
