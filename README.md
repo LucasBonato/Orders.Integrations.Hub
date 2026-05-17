@@ -36,7 +36,7 @@ This project serves as a central entry point for receiving and processing extern
 
 - 🌐 **Minimal APIs**
 - 📃 **Scalar** (OpenAPI alternative) for documentation
-- 🔄 **Event-driven** internal communication using **FastEndpoints**
+- 🔄 **Command-driven** internal communication using **MassTransit** message bus
 - 🔌 **Pluggable integrations** (e.g., Rappi, iFood, **99Food**)
 - 🔑 **Type-safe integration routing** with `IntegrationKey` value objects
 - 🏪 **Multi-tenant support** (per-merchant credentials via internal API + caching)
@@ -44,7 +44,7 @@ This project serves as a central entry point for receiving and processing extern
 - 📦 **Memory and Distributed Caching**
 - 📊 **Observability** with OpenTelemetry
 - ☁️ **Infrastructure as Code** with Terraform and LocalStack
-- 🧪 **Comprehensive Test Suite**: Unit and Architecture tests
+- 🧪 **Comprehensive Test Suite**: Unit, Architecture, and Integration tests with MassTransit test harness
 
 ---
 
@@ -72,17 +72,23 @@ Orders.Integrations.Hub/
 │       ├── Core/
 │       │   ├── Adapter/        # HTTP endpoints (Minimal APIs)
 │       │   ├── Application/    # Middlewares, Extensions, Use Cases
-│       │   └── Domain/         # Contracts, Entities, Value Objects
+│       │   ├── Domain/         # Contracts, Entities, Value Objects
+│       │   └── Infrastructure/ # Implementations, Extensions, Handlers 
 │       │
 │       └── Integrations/       # Modular integrations: Ifood, Rappi, 99Food, etc.
 │           ├── Common/         # Shared utilities across integrations
 │           ├── IFood/          # IFood integration
 │           ├── Rappi/          # Rappi integration
-│           └── Food99/         # 99Food integration
+│           ├── Food99/         # 99Food integration
+│           └── .../            # More integrations
 │
 ├── Test/
-│   ├── Orders.Integrations.Hub.UnitTests/
-│   └── Orders.Integrations.Hub.ArchTests/
+│   ├── Directory.Build.props                       # Build properties for tests
+│   ├── Directory.Packages.props                    # Packages used on the tests 
+│   ├── Orders.Integrations.Hub.UnitTests/          # Unit tests
+│   ├── Orders.Integrations.Hub.IntegrationTests/   # Integrations tests
+│   ├── Orders.Integrations.Hub.TestCommon/         # Shared utilities across tests
+│   └── Orders.Integrations.Hub.ArchTests/          # Architecture tests
 │
 ├── Infra/
 │   └── terraform/              # Infrastructure code using Terraform
@@ -290,19 +296,112 @@ This decouples payload shapes per partner and avoids leaking partner-specific ca
 
 ## 🔄 Communication Flow
 
-- External platforms (**iFood**, **Rappi**, **99Food**, etc.) send data via webhooks or pulling.
-- Requests hit the corresponding endpoint/controller (e.g., `IfoodController`).
-- Adapter translates the request into the internal format.
-- Use cases send orders via the `UseCases.Out` contracts to the internal Orders system.
-- Events are dispatched using `Core.Domain.ValueObjects.Events`.
+### High-Level Flow
+
+1. **Inbound**: External platforms (**iFood**, **Rappi**, **99Food**, etc.) send data via webhooks or pulling
+2. **Adapter**: Requests hit the corresponding endpoint (e.g., `IfoodController`)
+3. **Translation**: Adapter translates the request into internal format
+4. **Command Creation**: The use case creates a **Command** (e.g., `CreateOrderCommand`)
+5. **Dispatch**: Command is dispatched via `ICommandDispatcher` to the message bus
+6. **Message Queue**: Command is queued (in-memory for dev, RabbitMQ for production)
+7. **Handler**: `CommandHandler` consumes and processes the command asynchronously
+8. **Outbound**: Use cases send data via `UseCases.Out` contracts to internal systems
+
+### Command Flow Diagram
+
+```mermaid
+graph TB
+    A["External Platform<br/>(iFood, Rappi, 99Food)"] -->|"Webhook / Polling"| B["HTTP Endpoint<br/>(Controller)"]
+    
+    B -->|"Translate"| C["Adapter<br/>(Request → Internal)"]
+    
+    C -->|"Create"| D["Command<br/>(CreateOrderCommand)"]
+    
+    D -->|"Dispatch"| E["ICommandDispatcher<br/>(Infrastructure Layer)"]
+    
+    E -->|"Route & Enqueue"| F["Message Provider<br/>(In-Memory / RabbitMQ)"]
+    
+    F -->|"Queue"| G["Message Queue<br/>(Async Processing)"]
+    
+    G -->|"Consume"| H["CommandHandler<br/>(IConsumer Implementation)"]
+    
+    H -->|"Process"| I["Business Logic<br/>(Use Cases)"]
+    
+    I -->|"Send"| J["Outbound<br/>(Internal API / Services)"]
+    
+    style A fill:#e1f5ff
+    style B fill:#fff3e0
+    style C fill:#f3e5f5
+    style D fill:#e8f5e9
+    style E fill:#fce4ec
+    style F fill:#fff8e1
+    style G fill:#f1f8e9
+    style H fill:#e0f2f1
+    style I fill:#ede7f6
+    style J fill:#e1bee7
+```
+
+### Creating New Consumers
+
+To add a new consumer for a command type, implement the MassTransit `IConsumer<T>` interface:
+
+```csharp
+// Core/Adapters/In/Messaging/EventHandlers/MyCommandHandler.cs
+public class MyCommandHandler(
+    IMyUseCase useCase
+) : IConsumer<MyCommand> {
+    public async Task Consume(ConsumeContext<MyCommand> context)
+    {
+        // Process the command
+        await useCase.ExecuteAsync(context.Message);
+    }
+}
+```
+
+Register the consumer in the MassTransit configuration:
+
+```csharp
+// Core/CoreDependencyInjection.cs
+services.AddMassTransit(x =>
+{
+    x.AddConsumer<MyCommandHandler>();
+    // ... other consumers
+});
+```
+
+MassTransit automatically discovers and registers all consumers from assemblies, making new handlers plug-and-play.
 
 ---
 
 ## 🧪 Testing
 
-- ✅ **Unit Tests** for application logic.
-- ✅ **Integration Key Validation Tests** to ensure all keys are properly normalized and validated at startup.
-- 🧱 **Architecture Tests** using ArchUnit.NET to enforce domain boundaries and modularity.
+### Unit Tests
+- **Location**: `Test/Orders.Integrations.Hub.UnitTests/`
+- **Framework**: xUnit
+- **Coverage**: Business logic, caching, validations, integrations
+- **Example**: `Integrations/IntegrationKeyValidationTests.cs`
+
+### Integration Tests (NEW)
+- **Location**: `Test/Orders.Integrations.Hub.IntegrationTests/`
+- **Framework**: xUnit + **MassTransit TestFramework**
+- **Purpose**: Verify command dispatch, message routing, and handler execution
+- **Key Test Files**:
+  - `CommandHandlers/CommandDispatcherTests.cs` — Direct dispatcher functionality and message routing
+  - `CommandHandlers/CreateOrderCommandHandlerTests.cs` — Order creation command flow
+  - `CommandHandlers/UpdateOrderCommandHandlerTests.cs` — Order status update scenarios
+  - `CommandHandlers/ProcessOrderDisputeCommandHandlerTests.cs` — Dispute handling logic
+  - `CommandHandlers/PubSubCommandHandlerTests.cs` — Publish/Subscribe patterns
+  - `Extensions/MassTransitTestHarnessExtensions.cs` — Reusable test setup utilities
+
+### Architecture Tests
+- **Location**: `Test/Orders.Integrations.Hub.ArchTests/`
+- **Framework**: **NetArchTest**
+- **Coverage**: 
+  - Domain independence from infrastructure
+  - Application layer isolation
+  - Dependency direction correctness
+  - Naming conventions enforcement
+  - Serialization rules validation
 
 ---
 
@@ -365,6 +464,12 @@ cp .env.example .env
 | 99Food     | `INTEGRATIONS__FOOD99__ENDPOINT__BASE_URL`, `INTEGRATIONS__FOOD99__CACHE__KEY`, <br>`INTEGRATIONS__FOOD99__CLIENT__ID`, `INTEGRATIONS__FOOD99__CLIENT__SECRET` *(centralized)*                      |
 | Cache      | `MEMCACHED__ADDRESS`, `MEMCACHED__PORT` *(Distributed Cache)*                                                                                                                                       |
 | Pub/Sub    | `PUB_SUB__TOPICS__ACCEPT_ORDER`, `PUB_SUB__IS_LOCAL`                                                                                                                                                |
+| Messaging  | `MASSTRANSIT__TRANSPORT` — Transport mode: `InMemory` (development) or `RabbitMQ` (production)                                                                                                      |
+| RabbitMQ   | `RABBITMQ__HOST` — RabbitMQ server hostname (default: `localhost`)                                                                                                                                   |
+| RabbitMQ   | `RABBITMQ__PORT` — RabbitMQ port (default: `5672`)                                                                                                                                                  |
+| RabbitMQ   | `RABBITMQ__USERNAME` — Authentication username (default: `guest`)                                                                                                                                    |
+| RabbitMQ   | `RABBITMQ__PASSWORD` — Authentication password (default: `guest`)                                                                                                                                    |
+| RabbitMQ   | `RABBITMQ__VHOST` — Virtual host (default: `/`)                                                                                                                                                     |
 | Storage    | `OBJECT_STORAGE__BUCKET__NAME`                                                                                                                                                                      |
 | LocalStack | `LOCALSTACK__AWS__IS_LOCALSTACK`, `LOCALSTACK__ENDPOINT_URL`                                                                                                                                        |
 | AWS        | `AWS_PROFILE`, `AWS_REGION`                                                                                                                                                                         |
@@ -372,34 +477,132 @@ cp .env.example .env
 
 📁 For local development, most values can be left blank or set to local/test equivalents.
 
+#### 🐰 RabbitMQ Configuration (Production)
+
+For production environments using RabbitMQ as the message bus transport:
+
+```bash
+# .env or environment variables
+MASSTRANSIT__TRANSPORT=RabbitMQ
+RABBITMQ__HOST=rabbitmq.yourdomain.com
+RABBITMQ__PORT=5672
+RABBITMQ__USERNAME=your_username
+RABBITMQ__PASSWORD=your_password
+RABBITMQ__VHOST=/your_vhost
+```
+
+**In-Memory Configuration (Development)**
+
+For local development, MassTransit uses in-memory transport by default:
+
+```bash
+MASSTRANSIT__TRANSPORT=InMemory
+```
+
+No additional configuration needed — all commands and messages stay in memory for fast iteration.
+
+---
+
+## 📦 Test Dependencies & Installation
+
+Test projects use centralized package management via `Directory.Packages.props` for consistency and easy upgrades.
+
+### Shared Test Packages
+File: `Test/Directory.Packages.props`
+
+```xml
+<ItemGroup>
+  <!-- Testing Framework -->
+  <PackageReference Include="xunit" Version="2.x.x" />
+  <PackageReference Include="xunit.runner.visualstudio" Version="2.x.x" />
+  
+  <!-- Test Data Generation -->
+  <PackageReference Include="Bogus" Version="37.x.x" />
+  
+  <!-- Assertions -->
+  <PackageReference Include="Shouldly" Version="4.x.x" />
+  
+  <!-- Mocking -->
+  <PackageReference Include="NSubstitute" Version="5.x.x" />
+</ItemGroup>
+```
+
+### Project-Specific Packages
+
+**Integration Tests** (`Orders.Integrations.Hub.IntegrationTests.csproj`)
+```xml
+<ItemGroup>
+  <PackageReference Include="MassTransit.TestFramework" Version="8.x.x" />
+  <!-- Inherits all common test packages -->
+</ItemGroup>
+```
+
+**Architecture Tests** (`Orders.Integrations.Hub.ArchTests.csproj`)
+```xml
+<ItemGroup>
+  <PackageReference Include="NetArchTest.Rules" Version="1.x.x" />
+  <!-- Inherits all common test packages -->
+</ItemGroup>
+```
+
+### Running Tests
+
+```bash
+# Restore all dependencies (including test packages)
+dotnet restore
+
+# Run all tests in the solution
+dotnet test
+
+# Run specific test project
+dotnet test Test/Orders.Integrations.Hub.IntegrationTests
+
+# Run specific test with filter
+dotnet test --filter "FullyQualifiedName~CommandDispatcherTests"
+
+# Run tests with coverage
+dotnet test /p:CollectCoverage=true
+```
+
+### Adding New Test Projects
+
+When adding a new test project:
+
+1. **Create the project** referencing the test framework
+2. **Add project reference** to `Orders.Integrations.Hub.TestCommon` (if using Fakers)
+3. **Packages are inherited** from `Directory.Packages.props` — no duplication needed
+4. **For integration tests**: Add `MassTransit.TestFramework` to the `.csproj` only if needed
+
 ---
 
 ## 🔧 Tech Stack
 
-| Layer               | Technology                   |
-|---------------------|------------------------------|
-| Framework           | .NET 10, Minimal API         |
-| Architecture        | Hexagonal (Ports & Adapters) |
-| Docs                | Scalar                       |
-| Caching             | Memory + Distributed Cache   |
-| Multi-Tenancy       | IntegrationContext + Cache   |
-| JSON Serialization  | Per-integration serializers  |
-| Events              | FastEndpoints.Events         |
-| Tracing/Telemetry   | OpenTelemetry                |
-| Monitoring          | Grafana, Aspire              |
-| Infra as Code       | Terraform + LocalStack       |
-| Containers          | Docker Compose               |
-| Testing             | xUnit, ArchUnit.NET          |
+| Layer               | Technology                              |
+|---------------------|----------------------------------------|
+| Framework           | .NET 10, Minimal API                   |
+| Architecture        | Hexagonal (Ports & Adapters)           |
+| Docs                | Scalar                                 |
+| Caching             | Memory + Distributed Cache             |
+| Multi-Tenancy       | IntegrationContext + Cache             |
+| JSON Serialization  | Per-integration serializers            |
+| **Messaging**       | **MassTransit (in-memory & RabbitMQ)** |
+| Tracing/Telemetry   | OpenTelemetry                          |
+| Monitoring          | Grafana, Aspire                        |
+| Infra as Code       | Terraform + LocalStack                 |
+| Containers          | Docker Compose                         |
+| **Message Testing** | **MassTransit.TestFramework**          |
+| **Testing**         | **xUnit, NetArchTest, Bogus, Shouldly, NSubstitute** |
 
 ---
 
 ## 🧠 Future Improvements
 
-- Architecture testing for **Core** and **each integration**.
-- Backpressure with queue-based ingestion.
-- Expand Integration SDK Generator from Core contracts.
-- Improve observability dashboards per integration.
-- Add integration tests.
+- Saga pattern for distributed transactions
+- Backpressure with queue-based ingestion
+- Circuit breaker patterns with MassTransit policy configuration
+- Expand Integration SDK Generator from Core contracts
+- Improve observability dashboards per integration with MassTransit metrics
+- Distributed tracing across message boundaries
 
 ---
 
