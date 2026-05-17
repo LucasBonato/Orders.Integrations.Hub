@@ -1,0 +1,8 @@
+﻿<Project>
+    <PropertyGroup>
+        <IsTestProject>true</IsTestProject>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <IsPackable>false</IsPackable>
+    </PropertyGroup>
+</Project>

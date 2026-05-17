@@ -8,7 +8,11 @@
     <Project Path="Src/Orders.Integrations.Hub/Orders.Integrations.Hub.csproj" />
   </Folder>
   <Folder Name="/Test/">
+    <File Path="Test/Directory.Build.props" />
+    <File Path="Test/Directory.Packages.props" />
     <Project Path="Test/Orders.Integrations.Hub.ArchTests/Orders.Integrations.Hub.ArchTests.csproj" />
+    <Project Path="Test/Orders.Integrations.Hub.IntegrationTests/Orders.Integrations.Hub.IntegrationTests.csproj" />
+    <Project Path="Test/Orders.Integrations.Hub.TestCommon/Orders.Integrations.Hub.TestCommon.csproj" />
     <Project Path="Test/Orders.Integrations.Hub.UnitTests/Orders.Integrations.Hub.UnitTests.csproj" />
   </Folder>
 </Solution>
