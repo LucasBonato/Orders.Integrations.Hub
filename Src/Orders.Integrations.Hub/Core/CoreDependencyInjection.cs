@@ -8,7 +8,7 @@ using System.Text.Json.Serialization;
 using Amazon.S3;
 using Amazon.SimpleNotificationService;
 
-using FastEndpoints;
+using MassTransit;
 
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,6 +17,7 @@ using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 
+using Orders.Integrations.Hub.Core.Adapters.In.Messaging.EventHandlers;
 using Orders.Integrations.Hub.Core.Adapters.Out.Cache.Distributed;
 using Orders.Integrations.Hub.Core.Adapters.Out.Cache.Hybrid;
 using Orders.Integrations.Hub.Core.Adapters.Out.Cache.Memory;
@@ -49,7 +50,6 @@ public static class CoreDependencyInjection
     {
         app.MapEndpoints();
         app.UseExceptionHandler(_ => { });
-        app.UseFastEndpoints();
         return app;
     }
 
@@ -66,20 +66,13 @@ public static class CoreDependencyInjection
 
             services.AddSingleton<IObjectStorageClient, SimpleStorageServiceClient>();
 
-            services.AddSingleton<ICommandDispatcher, FastEndpointsCommandDispatcher>();
-
             services.AddScoped<IIntegrationRouter, IntegrationRouter>();
-
-            services.AddFastEndpoints(options =>
-            {
-                options.DisableAutoDiscovery = false;
-            });
-
+            
             services
+                .AddMessageBroker()
                 .AddCacheServices()
                 .AddProblemDetails(options =>
-                    options.CustomizeProblemDetails = context =>
-                    {
+                    options.CustomizeProblemDetails = context => {
                         HttpContext httpContext = context.HttpContext;
                         string traceId = Activity.Current?.TraceId.ToString() ?? httpContext.TraceIdentifier;
                         string traceParent = Activity.Current?.Id ?? httpContext.TraceIdentifier;
@@ -156,7 +149,10 @@ public static class CoreDependencyInjection
                 .WithTracing(tracing =>
                 {
                     tracing
-                        .AddSource(serviceName)
+                        .AddSource(
+                            serviceName,
+                            nameof(MassTransit)
+                        )
                         .AddAspNetCoreInstrumentation()
                         .AddAWSInstrumentation()
                         .AddHttpClientInstrumentation()
@@ -166,7 +162,10 @@ public static class CoreDependencyInjection
                 .WithMetrics(metrics =>
                 {
                     metrics
-                        .AddMeter(serviceName)
+                        .AddMeter(
+                            serviceName,
+                            nameof(MassTransit)
+                        )
                         .AddAspNetCoreInstrumentation()
                         .AddAWSInstrumentation()
                         .AddHttpClientInstrumentation()
@@ -222,6 +221,68 @@ public static class CoreDependencyInjection
                 
                 _ => throw new InvalidOperationException("Invalid cache mode!")
             };
+        }
+
+        private IServiceCollection AddMessageBroker() {
+            
+            string brokerMode = AppEnv.MESSAGE_BROKER.MODE.NotNullEnv();
+            
+            services.AddSingleton<ICommandDispatcher, MassTransitCommandDispatcher>();
+            
+            services.AddMassTransit(busConfigurator => {
+                busConfigurator.SetKebabCaseEndpointNameFormatter();
+
+                busConfigurator.AddConsumer<UpdateOrderCommandHandler>();
+                busConfigurator.AddConsumer<CreateOrderCommandHandler>();
+                busConfigurator.AddConsumer<PubSubCommandHandler>();
+                busConfigurator.AddConsumer<ProcessOrderDisputeCommandHandler>();
+
+                if (brokerMode == "Memory") {
+                    busConfigurator.UsingInMemory((context, configurator) => {
+                        configurator.UseMessageRetry(retry => retry.Interval(5, TimeSpan.FromSeconds(5)));
+                        configurator.UseInMemoryOutbox(context);
+                        configurator.ConfigureJsonSerializerOptions(options => {
+                            options.Converters.Add(new IntegrationKeyJsonConverter());
+                            return options;
+                        });
+                        configurator.ConfigureEndpoints(context);
+                    });
+                    
+                    
+                    return;
+                }
+
+                busConfigurator.UsingRabbitMq((context, configurator) =>
+                {
+                    configurator.Host(AppEnv.MESSAGE_BROKER.CONFIGURATIONS.CONNECTION_STRING.NotNullEnv());
+                    
+                    configurator.UseCircuitBreaker(circuitBreaker => {
+                        circuitBreaker.TrackingPeriod = TimeSpan.FromMinutes(1);
+                        circuitBreaker.TripThreshold = 15;
+                        circuitBreaker.ActiveThreshold = 10;
+                        circuitBreaker.ResetInterval = TimeSpan.FromMinutes(5);
+                    });
+                    
+                    configurator.UseMessageRetry(retry => {
+                        retry.Exponential(
+                            retryLimit: 5, 
+                            minInterval: TimeSpan.FromSeconds(1), 
+                            maxInterval: TimeSpan.FromMinutes(2), 
+                            intervalDelta: TimeSpan.FromSeconds(5)
+                        );
+                    });
+                    
+                    configurator.UseInMemoryOutbox(context);
+                    configurator.ConfigureJsonSerializerOptions(options => {
+                        options.Converters.Add(new IntegrationKeyJsonConverter());
+                        return options;
+                    });
+                    configurator.ConfigureEndpoints(context);
+                });
+
+            });
+            
+            return services;
         }
     }
 }

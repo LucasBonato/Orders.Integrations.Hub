@@ -5,9 +5,9 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="MassTransit.TestFramework" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" />
         <PackageReference Include="NSubstitute" />
-        <PackageReference Include="xunit.runner.visualstudio" />
         <PackageReference Include="xunit.v3" />
         <PackageReference Include="xunit.v3.extensibility.core" />
     </ItemGroup>
@@ -18,5 +18,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\Src\Orders.Integrations.Hub\Orders.Integrations.Hub.csproj" />
+      <ProjectReference Include="..\Orders.Integrations.Hub.TestCommon\Orders.Integrations.Hub.TestCommon.csproj" />
     </ItemGroup>
+
 </Project>

@@ -1,19 +1,18 @@
-﻿using FastEndpoints;
+﻿using MassTransit;
 
 using Orders.Integrations.Hub.Core.Application.Commands;
 using Orders.Integrations.Hub.Core.Application.DTOs;
 using Orders.Integrations.Hub.Core.Application.Ports.Out.Clients;
 using Orders.Integrations.Hub.Core.Domain.ValueObjects;
-using Orders.Integrations.Hub.Core.Infrastructure.Messaging;
 
 namespace Orders.Integrations.Hub.Core.Adapters.In.Messaging.EventHandlers;
 
-public class ProcessOrderDisputeCommandHandler(
+public sealed class ProcessOrderDisputeCommandHandler(
     IOrderClient orderClient
-) : IEventHandler<FastEndpointsCommandEnvelope<ProcessOrderDisputeCommand>> {
-    public async Task HandleAsync(FastEndpointsCommandEnvelope<ProcessOrderDisputeCommand> envelope, CancellationToken ct)
+) : IConsumer<ProcessOrderDisputeCommand> {
+    public async Task Consume(ConsumeContext<ProcessOrderDisputeCommand> context)
     {
-        ProcessOrderDisputeCommand command = envelope.Command;
+        ProcessOrderDisputeCommand command = context.Message;
 
         OrderUpdate orderUpdate = new(
             OrderId: command.ExternalOrderId,
