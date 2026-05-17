@@ -29,7 +29,7 @@ public class CommandDispatcherTests : IAsyncLifetime
             .BuildServiceProvider(true);
 
         _harness = provider.GetRequiredService<ITestHarness>();
-        _dispatcher = new CommandDispatcher(_harness.Bus);
+        _dispatcher = new MassTransitCommandDispatcher(_harness.Bus);
     }
 
     public async ValueTask InitializeAsync() => await _harness.Start();
