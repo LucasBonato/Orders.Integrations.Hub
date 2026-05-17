@@ -2,20 +2,17 @@
 
     <PropertyGroup>
         <TargetFramework>net10.0</TargetFramework>
-        <IsTestProject>true</IsTestProject>
-        <Nullable>enable</Nullable>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <IsPackable>false</IsPackable>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" />
-        <PackageReference Include="NetArchTest.Rules" />
-        <PackageReference Include="xunit.runner.visualstudio">
+        <PackageReference Include="Bogus" />
+        <PackageReference Include="coverlet.collector">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" />
         <PackageReference Include="xunit.v3" />
+        <PackageReference Include="xunit.runner.visualstudio" />
         <PackageReference Include="xunit.v3.extensibility.core" />
     </ItemGroup>
 
@@ -24,6 +21,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\Src\Orders.Integrations.Hub\Orders.Integrations.Hub.csproj"/>
+      <ProjectReference Include="..\..\Src\Orders.Integrations.Hub\Orders.Integrations.Hub.csproj" />
     </ItemGroup>
+
 </Project>

@@ -3,21 +3,20 @@
 using Amazon.SimpleNotificationService;
 using Amazon.SimpleNotificationService.Model;
 
-using FastEndpoints;
+using MassTransit;
 
 using Orders.Integrations.Hub.Core.Application.Commands;
 using Orders.Integrations.Hub.Core.Infrastructure.Extensions;
-using Orders.Integrations.Hub.Core.Infrastructure.Messaging;
 
 namespace Orders.Integrations.Hub.Core.Adapters.In.Messaging.EventHandlers;
 
-public class PubSubCommandHandler(
+public sealed class PubSubCommandHandler(
     ILogger<PubSubCommandHandler> logger,
     IAmazonSimpleNotificationService simpleNotificationService
-) : IEventHandler<FastEndpointsCommandEnvelope<SendNotificationCommand>> {
-    public async Task HandleAsync(FastEndpointsCommandEnvelope<SendNotificationCommand> envelope, CancellationToken ct)
+) : IConsumer<SendNotificationCommand> {
+    public async Task Consume(ConsumeContext<SendNotificationCommand> context)
     {
-        SendNotificationCommand command = envelope.Command;
+        SendNotificationCommand command = context.Message;
 
         string shareConfirmOrderTopicArn = command.TopicArn ?? AppEnv.PUB_SUB.TOPICS.ACCEPT_ORDER.NotNullEnv();
 
@@ -26,7 +25,11 @@ public class PubSubCommandHandler(
         if (logger.IsEnabled(LogLevel.Information))
             logger.LogInformation("Publishing payload {payload} to topic {topicArn}", message, shareConfirmOrderTopicArn);
 
-        PublishResponse? messageId = await simpleNotificationService.PublishAsync(shareConfirmOrderTopicArn, message, ct);
+        PublishResponse? messageId = await simpleNotificationService.PublishAsync(
+            shareConfirmOrderTopicArn, 
+            message, 
+            context.CancellationToken
+        );
 
         if (logger.IsEnabled(LogLevel.Information))
             logger.LogInformation("Message [{messageId}] sent to topic [{topicArn}] for order [{orderId}]",
