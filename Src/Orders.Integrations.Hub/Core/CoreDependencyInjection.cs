@@ -241,8 +241,14 @@ public static class CoreDependencyInjection
                     busConfigurator.UsingInMemory((context, configurator) => {
                         configurator.UseMessageRetry(retry => retry.Interval(5, TimeSpan.FromSeconds(5)));
                         configurator.UseInMemoryOutbox(context);
+                        configurator.ConfigureJsonSerializerOptions(options => {
+                            options.Converters.Add(new IntegrationKeyJsonConverter());
+                            return options;
+                        });
                         configurator.ConfigureEndpoints(context);
                     });
+                    
+                    
                     return;
                 }
 
@@ -267,6 +273,10 @@ public static class CoreDependencyInjection
                     });
                     
                     configurator.UseInMemoryOutbox(context);
+                    configurator.ConfigureJsonSerializerOptions(options => {
+                        options.Converters.Add(new IntegrationKeyJsonConverter());
+                        return options;
+                    });
                     configurator.ConfigureEndpoints(context);
                 });
 
