@@ -41,7 +41,7 @@ This project serves as a central entry point for receiving and processing extern
 - 🔑 **Type-safe integration routing** with `IntegrationKey` value objects
 - 🏪 **Multi-tenant support** (per-merchant credentials via internal API + caching)
 - 🧾 **Custom JSON serialization per integration** (no `JsonPropertyName` attributes)
-- 📦 **Memory and Distributed Caching**
+- 📦 **Flexible Caching** — in-memory (L1), Redis (L2), or hybrid L1/L2 modes
 - 📊 **Observability** with OpenTelemetry
 - ☁️ **Infrastructure as Code** with Terraform and LocalStack
 - 🧪 **Comprehensive Test Suite**: Unit, Architecture, and Integration tests with MassTransit test harness
@@ -449,6 +449,30 @@ Copy the example env file and fill in the required values:
 cp .env.example .env
 ```
 
+#### 🧬 Caching Modes
+
+The hub supports three cache modes via `CACHE__MODE` environment variable:
+
+- **Memory** — In-process caching using `MemoryCache`. Suitable for development or single-instance deployments. No external dependencies.
+- **Distributed** — Redis-only caching using `StackExchange.Redis`. Use for multi-instance deployments requiring shared cache across instances.
+- **Hybrid** — Two-tier caching: in-memory (L1) + Redis (L2). Best for latency-sensitive workloads with cache sharing; reads hit L1 first, misses fetch from L2 (Redis).
+
+**Example:**
+```bash
+# Development (in-process)
+CACHE__MODE=Memory
+
+# Production with Redis
+CACHE__MODE=Distributed
+CACHE__CONFIGURATIONS__CONNECTION_STRING=redis.example.com:6379,password=secret
+
+# Hybrid (local fast + shared)
+CACHE__MODE=Hybrid
+CACHE__CONFIGURATIONS__CONNECTION_STRING=redis.example.com:6379
+```
+
+For local testing of Distributed/Hybrid modes, bring up Redis via `docker-compose up redis` and use `CACHE__CONFIGURATIONS__CONNECTION_STRING=redis:6379`.
+
 #### 🔑 Environment Variables Overview
 
 > The exact keys used depend on whether an integration is **multi-tenant** or **centralized**.  
@@ -459,10 +483,11 @@ cp .env.example .env
 |------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Internal   | `ORDERS__ENDPOINT__BASE_URL` — Internal Orders API endpoint                                                                                                                                         |
 | Internal   | `INTERNAL__ENDPOINT__BASE_URL` — Internal API endpoint                                                                                                                                              |
-| iFood      | `INTEGRATIONS__IFOOD__ENDPOINT__BASE_URL`, `INTEGRATIONS__IFOOD__CACHE__KEY`, <br>`INTEGRATIONS__IFOOD__CLIENT__ID`, `INTEGRATIONS__IFOOD__CLIENT__SECRET` *(centralized)*                          |
-| Rappi      | `INTEGRATIONS__RAPPI__ENDPOINT__BASE_URL`, `INTEGRATIONS__RAPPI__CACHE__KEY`, <br>`INTEGRATIONS__RAPPI__CLIENT__ID`, `INTEGRATIONS__RAPPI__SECRET`, `INTEGRATIONS__RAPPI__AUDIENCE` *(centralized)* |
-| 99Food     | `INTEGRATIONS__FOOD99__ENDPOINT__BASE_URL`, `INTEGRATIONS__FOOD99__CACHE__KEY`, <br>`INTEGRATIONS__FOOD99__CLIENT__ID`, `INTEGRATIONS__FOOD99__CLIENT__SECRET` *(centralized)*                      |
-| Cache      | `MEMCACHED__ADDRESS`, `MEMCACHED__PORT` *(Distributed Cache)*                                                                                                                                       |
+| iFood      | `INTEGRATIONS__IFOOD__ENDPOINT__BASE_URL`, <br>`INTEGRATIONS__IFOOD__CLIENT__ID`, `INTEGRATIONS__IFOOD__CLIENT__SECRET` *(centralized)*                          |
+| Rappi      | `INTEGRATIONS__RAPPI__ENDPOINT__BASE_URL`, <br>`INTEGRATIONS__RAPPI__CLIENT__ID`, `INTEGRATIONS__RAPPI__SECRET`, `INTEGRATIONS__RAPPI__AUDIENCE` *(centralized)* |
+| 99Food     | `INTEGRATIONS__FOOD99__ENDPOINT__BASE_URL`, <br>`INTEGRATIONS__FOOD99__CLIENT__ID`, `INTEGRATIONS__FOOD99__CLIENT__SECRET` *(centralized)*                      |
+| Cache      | `CACHE__MODE` — one of: Memory, Distributed, Hybrid |
+| Cache      | `CACHE__CONFIGURATIONS__CONNECTION_STRING` — Redis connection string (e.g., `redis:6379` or `localhost:6379,password=abc123`) |
 | Pub/Sub    | `PUB_SUB__TOPICS__ACCEPT_ORDER`, `PUB_SUB__IS_LOCAL`                                                                                                                                                |
 | Messaging  | `MASSTRANSIT__TRANSPORT` — Transport mode: `InMemory` (development) or `RabbitMQ` (production)                                                                                                      |
 | RabbitMQ   | `RABBITMQ__HOST` — RabbitMQ server hostname (default: `localhost`)                                                                                                                                   |
@@ -582,7 +607,7 @@ When adding a new test project:
 | Framework           | .NET 10, Minimal API                   |
 | Architecture        | Hexagonal (Ports & Adapters)           |
 | Docs                | Scalar                                 |
-| Caching             | Memory + Distributed Cache             |
+| Caching             | Memory (L1), Redis (L2) — supports Memory-only, Redis Distributed, or Hybrid L1/L2 |
 | Multi-Tenancy       | IntegrationContext + Cache             |
 | JSON Serialization  | Per-integration serializers            |
 | **Messaging**       | **MassTransit (in-memory & RabbitMQ)** |
