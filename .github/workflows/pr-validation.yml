@@ -79,16 +79,18 @@ jobs:
         run: dotnet restore Orders.Integrations.Hub.slnx
 
       - name: Build
-        run: dotnet build Orders.Integrations.Hub.slnx \
-          -c Release \
-          --no-restore
+        run: |
+          dotnet build Orders.Integrations.Hub.slnx \
+            -c Release \
+            --no-restore
 
       - name: Run Unit Tests
-        run: dotnet test Test/Orders.Integrations.Hub.UnitTests \
-          -c Release \
-          --no-build \
-          --logger trx \
-          --collect:"XPlat Code Coverage"
+        run: |
+          dotnet test Test/Orders.Integrations.Hub.UnitTests \
+            -c Release \
+            --no-build \
+            --logger trx \
+            --collect:"XPlat Code Coverage"
 
       - name: Upload test results
         if: always()
@@ -115,11 +117,12 @@ jobs:
         run: dotnet restore Orders.Integrations.Hub.slnx
 
       - name: Check nullable reference types
-        run: dotnet build Orders.Integrations.Hub.slnx \
-          -c Release \
-          --no-restore \
-          -p:Nullable=enable \
-          -p:TreatWarningsAsErrors=true
+        run: |
+          dotnet build Orders.Integrations.Hub.slnx \
+            -c Release \
+            --no-restore \
+            -p:Nullable=enable \
+            -p:TreatWarningsAsErrors=true
 
   summary:
     name: PR Validation Summary
