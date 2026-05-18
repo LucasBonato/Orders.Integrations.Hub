@@ -1,5 +1,4 @@
 ﻿version: 2
-
 updates:
   - package-ecosystem: "nuget"
     directory: "/"
@@ -13,8 +12,6 @@ updates:
       prefix: "chore(deps):"
       prefix-development: "chore(deps-dev):"
       include: "scope"
-
-  # GitHub Actions - weekly checks, keep tools updated
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
@@ -25,8 +22,6 @@ updates:
     commit-message:
       prefix: "ci(actions):"
       include: "scope"
-
-  # Docker base images - weekly checks, important for security
   - package-ecosystem: "docker"
     directory: "/"
     schedule:
