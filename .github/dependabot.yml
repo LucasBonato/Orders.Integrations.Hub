@@ -1,6 +1,7 @@
 ﻿version: 2
 
 updates:
+  # NuGet packages - daily checks, manual review required
   - package-ecosystem: "nuget"
     directory: "/"
     schedule:

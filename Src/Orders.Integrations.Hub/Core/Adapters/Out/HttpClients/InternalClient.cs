@@ -88,6 +88,8 @@ public class InternalClient(
             logger.LogInformation("Mocked integration settings");
         }
 
+        string? _ = httpClient.BaseAddress?.AbsolutePath;
+
         IntegrationResponse integration = _responses.First();
         foreach (IntegrationResponse response in _responses) {
             bool hasExternalId = response.Settings.Any(setting => setting.Value == externalId);
