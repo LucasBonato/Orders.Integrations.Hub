@@ -172,8 +172,6 @@ jobs:
         with:
           script: |
             const comment = `
-## 🔐 Code Quality & Security Report
-
 | Check | Status |
 |-------|--------|
 | 🔍 SAST Scan | ${{ needs.sast-scan.result == 'success' ? '✅' : '⚠️' }} |
