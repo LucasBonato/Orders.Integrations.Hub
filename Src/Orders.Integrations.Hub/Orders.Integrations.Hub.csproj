@@ -11,7 +11,7 @@
 
     <ItemGroup>
         <PackageReference Include="Anv" Version="1.0.0"/>
-        <PackageReference Include="AWSSDK.Core" Version="4.0.7.1" />
+        <PackageReference Include="AWSSDK.Core" Version="4.0.7.4" />
         <PackageReference Include="AWSSDK.SimpleNotificationService" Version="4.0.2.33" />
         <PackageReference Include="AWSSDK.S3" Version="4.0.23.3" />
         <PackageReference Include="AWSSDK.SQS" Version="4.0.2.28" />
