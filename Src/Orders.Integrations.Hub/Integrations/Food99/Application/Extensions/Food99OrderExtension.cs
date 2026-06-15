@@ -1,12 +1,13 @@
-﻿using Orders.Integrations.Hub.Core.Domain.Entity;
+﻿using Orders.Integrations.Hub.Core.Application.DTOs;
+using Orders.Integrations.Hub.Core.Domain.Entity;
 using Orders.Integrations.Hub.Core.Domain.Entity.Address;
 using Orders.Integrations.Hub.Core.Domain.Entity.Discount;
 using Orders.Integrations.Hub.Core.Domain.Entity.Dispute;
 using Orders.Integrations.Hub.Core.Domain.Entity.Item;
 using Orders.Integrations.Hub.Core.Domain.Entity.Merchant;
 using Orders.Integrations.Hub.Core.Domain.Entity.Payment;
-using Orders.Integrations.Hub.Core.Domain.ValueObjects.DTOs;
-using Orders.Integrations.Hub.Core.Domain.ValueObjects.Enums;
+using Orders.Integrations.Hub.Core.Domain.Enums;
+using Orders.Integrations.Hub.Integrations.Food99.Application.ValueObjects;
 using Orders.Integrations.Hub.Integrations.Food99.Domain.Entity;
 using Orders.Integrations.Hub.Integrations.Food99.Domain.ValueObjects.Enums;
 
@@ -139,8 +140,8 @@ public static class Food99OrderExtension
             OrderId: order.Data.OrderId.ToString(),
             Type: OrderType.DELIVERY,
             DisplayId: Guid.NewGuid().ToString()[..5],
-            SourceAppId: nameof(OrderSalesChannel.FOOD99),
-            SalesChannel: nameof(OrderSalesChannel.FOOD99),
+            SourceAppId: Food99IntegrationKey.FOOD99,
+            SalesChannel: Food99IntegrationKey.FOOD99,
             VirtualBrand: order.AppShopId,
             CreatedAt: order.Timestamp.ToDateTime(),
             LastEvent: OrderEventType.CREATED,
@@ -404,7 +405,7 @@ public static class Food99OrderExtension
             Food99Type.DeliveryStatus => deliveryStatus switch {
                 Food99DeliveryStatus.Assigned => OrderEventType.DISPATCHED,
                 Food99DeliveryStatus.ArrivedAtB => OrderEventType.DELIVERYMAN_IN_STORE,
-                Food99DeliveryStatus.Taken => OrderEventType.PICKUP_UP,
+                Food99DeliveryStatus.Taken => OrderEventType.PICKED_UP,
                 Food99DeliveryStatus.ArrivedAtC => OrderEventType.READY_FOR_PICKUP,
                 Food99DeliveryStatus.Finish => OrderEventType.DELIVERED,
                 Food99DeliveryStatus.Reassigned => OrderEventType.DELIVERYMAN_CHANGED,
@@ -420,7 +421,7 @@ public static class Food99OrderExtension
     {
         return new OrderUpdate(
             OrderId: request.Data.OrderId.ToString(),
-            SourceAppId: OrderIntegration.FOOD99,
+            SourceAppId: Food99IntegrationKey.FOOD99,
             Type: eventType?? request.Type.ToOrderEvent(request.Data.DeliveryStatus),
             CreateAt: request.Timestamp.ToDateTime(),
             Dispute: null,

@@ -1,8 +1,7 @@
-﻿using FastEndpoints;
-
-using Orders.Integrations.Hub.Core.Application.Events;
-using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases.Integrations.In;
-using Orders.Integrations.Hub.Core.Domain.ValueObjects.Enums;
+﻿using Orders.Integrations.Hub.Core.Application.Commands;
+using Orders.Integrations.Hub.Core.Application.Ports.In.UseCases;
+using Orders.Integrations.Hub.Core.Application.Ports.Out.Messaging;
+using Orders.Integrations.Hub.Core.Domain.Enums;
 using Orders.Integrations.Hub.Integrations.Common.Contracts;
 using Orders.Integrations.Hub.Integrations.IFood.Application.Extensions;
 using Orders.Integrations.Hub.Integrations.IFood.Domain.Contracts;
@@ -13,25 +12,29 @@ namespace Orders.Integrations.Hub.Integrations.IFood.Application.Ports.In;
 
 public class IFoodOrderCreateUseCase(
     IIntegrationContext integrationContext,
+    ICommandDispatcher dispatcher,
     IIFoodClient iFoodClient
 ) : IOrderCreateUseCase<IFoodWebhookRequest> {
     public async Task<IFoodWebhookRequest> ExecuteAsync(IFoodWebhookRequest requestOrder)
     {
-        IFoodOrder foodOrder = await iFoodClient.GetOrderDetails(requestOrder.OrderId);
+        IFoodOrder ifoodOrder = await iFoodClient.GetOrderDetails(requestOrder.OrderId);
 
         string tenantId = integrationContext.Integration!.TenantId?? string.Empty;
 
-        await new CreateOrderEvent(
-            Order: foodOrder.ToOrder(tenantId),
-            SalesChannel: OrderSalesChannel.IFOOD
-        ).PublishAsync();
+        await dispatcher.DispatchAsync(
+            new CreateOrderCommand(
+                Order: ifoodOrder.ToOrder(tenantId)
+            )
+        );
 
         if (integrationContext.Integration.AutoAccept)
         {
-            await new SendNotificationEvent(
-                Message: requestOrder.FromIFood(OrderEventType.CONFIRMED),
-                TopicArn: null
-            ).PublishAsync();
+            await dispatcher.DispatchAsync(
+                new SendNotificationCommand(
+                    Message: requestOrder.FromIFood(OrderEventType.CONFIRMED),
+                    TopicArn: null
+                )
+            );
         }
 
         return requestOrder;

@@ -1,4 +1,4 @@
-﻿using Orders.Integrations.Hub.Core.Domain.ValueObjects.Enums;
+﻿using Orders.Integrations.Hub.Core.Domain.Enums;
 
 namespace Orders.Integrations.Hub.Core.Domain.Entity.Payment;
 

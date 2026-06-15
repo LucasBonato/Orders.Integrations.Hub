@@ -31,10 +31,6 @@ public static class AppEnv
             {
                 public static readonly AnvEnv BASE_URL = new("INTEGRATIONS__IFOOD__ENDPOINT__BASE_URL");
             }
-            public static class CACHE
-            {
-                public static readonly AnvEnv KEY = new("INTEGRATIONS__IFOOD__CACHE__KEY");
-            }
         }
         public static class RAPPI
         {
@@ -49,10 +45,6 @@ public static class AppEnv
                 public static readonly AnvEnv BASE_URL = new("INTEGRATIONS__RAPPI__ENDPOINT__BASE_URL");
                 public static readonly AnvEnv AUTH = new("INTEGRATIONS__RAPPI__ENDPOINT__AUTH");
             }
-            public static class CACHE
-            {
-                public static readonly AnvEnv KEY = new("INTEGRATIONS__RAPPI__CACHE__KEY");
-            }
         }
         public static class FOOD99
         {
@@ -65,17 +57,29 @@ public static class AppEnv
             {
                 public static readonly AnvEnv BASE_URL = new("INTEGRATIONS__FOOD99__ENDPOINT__BASE_URL");
             }
-            public static class CACHE
-            {
-                public static readonly AnvEnv KEY = new("INTEGRATIONS__FOOD99__CACHE__KEY");
-            }
         }
     }
-    public static class MEMCACHED
+
+    public static class CACHE
     {
-        public static readonly AnvEnv ADDRESS = new("MEMCACHED__ADDRESS");
-        public static readonly AnvEnv PORT = new("MEMCACHED__PORT");
+        public static readonly AnvEnv MODE = new("CACHE__MODE");
+
+        public static class CONFIGURATIONS
+        {
+            public static readonly AnvEnv CONNECTION_STRING = new("CACHE__CONFIGURATIONS__CONNECTION_STRING");
+        }
     }
+
+    public static class MESSAGE_BROKER
+    {
+        public static readonly AnvEnv MODE = new("MESSAGE_BROKER__MODE");
+        
+        public static class CONFIGURATIONS
+        {
+            public static readonly AnvEnv CONNECTION_STRING = new("MESSAGE_BROKER__CONFIGURATIONS__CONNECTION_STRING");
+        }
+    }
+    
     public static class PUB_SUB
     {
         public static class TOPICS
@@ -91,12 +95,12 @@ public static class AppEnv
             public static readonly AnvEnv NAME = new("OBJECT_STORAGE__BUCKET__NAME");
         }
     }
+    public static class AWS
+    {
+        public static readonly AnvEnv IS_LOCALSTACK = new("AWS__IS_LOCALSTACK");
+    }
     public static class LOCALSTACK
     {
-        public static class AWS
-        {
-            public static readonly AnvEnv IS_LOCALSTACK = new("LOCALSTACK__AWS__IS_LOCALSTACK");
-        }
         public static readonly AnvEnv ENDPOINT_URL = new("LOCALSTACK__ENDPOINT_URL");
     }
     public static readonly AnvEnv AWS_PROFILE = new("AWS_PROFILE");

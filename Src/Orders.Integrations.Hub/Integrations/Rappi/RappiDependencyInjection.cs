@@ -1,15 +1,17 @@
-﻿using Orders.Integrations.Hub.Core.Application.Extensions;
-using Orders.Integrations.Hub.Core.Domain.Contracts;
-using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases.Integrations.In;
-using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases.Integrations.Out;
-using Orders.Integrations.Hub.Core.Domain.ValueObjects.Enums;
+﻿using Orders.Integrations.Hub.Core.Application.Ports.In.UseCases;
+using Orders.Integrations.Hub.Core.Application.Ports.Out.Serialization;
+using Orders.Integrations.Hub.Core.Application.Ports.Out.UseCases;
+using Orders.Integrations.Hub.Core.Infrastructure.Extensions;
+using Orders.Integrations.Hub.Integrations.Common.Contracts;
 using Orders.Integrations.Hub.Integrations.Rappi.Application.Clients;
 using Orders.Integrations.Hub.Integrations.Rappi.Application.Handlers;
 using Orders.Integrations.Hub.Integrations.Rappi.Application.Ports.In;
 using Orders.Integrations.Hub.Integrations.Rappi.Application.Ports.Out;
+using Orders.Integrations.Hub.Integrations.Rappi.Application.ValueObjects;
 using Orders.Integrations.Hub.Integrations.Rappi.Domain.Contracts;
 using Orders.Integrations.Hub.Integrations.Rappi.Domain.Entity;
 using Orders.Integrations.Hub.Integrations.Rappi.Domain.ValueObjects.DTOs.Request;
+using Orders.Integrations.Hub.Integrations.Rappi.Infrastructure;
 
 namespace Orders.Integrations.Hub.Integrations.Rappi;
 
@@ -26,11 +28,16 @@ public static class RappiDependencyInjection
         services.AddTransient<IOrderCreateUseCase<RappiOrder>, RappiOrderCreateUseCase>();
         services.AddTransient<IOrderUpdateUseCase<RappiWebhookEventOrderRequest>, RappiOrderUpdateUseCase>();
 
-        services.AddKeyedScoped<IOrderChangeStatusUseCase, RappiOrderChangeStatusUseCase>(OrderIntegration.RAPPI);
-        services.AddKeyedScoped<IOrderChangeProductStatusUseCase, RappiOrderChangeProductStatusUseCase>(OrderIntegration.RAPPI);
-        services.AddKeyedScoped<IOrderGetCancellationReasonUseCase, RappiOrderGetCancellationReasonUseCase>(OrderIntegration.RAPPI);
+        services.AddScoped<IWebhookSignatureValidator, RappiSignatureValidator>();
+        services.AddScoped<IWebhookSignatureResolver<RappiOrder>, RappiOrderResolver>();
+        services.AddScoped<IWebhookSignatureResolver<RappiWebhookEventOrderRequest>, RappiOrderEventResolver>();
+        services.AddScoped<IWebhookSignatureResolver<RappiWebhookPingRequest>, RappiPingResolver>();
 
-        services.AddKeyedSingleton<ICustomJsonSerializer, RappiJsonSerializer>(OrderIntegration.RAPPI);
+        services.AddKeyedScoped<IOrderChangeStatusUseCase, RappiOrderChangeStatusUseCase>(RappiIntegrationKey.Value);
+        services.AddKeyedScoped<IOrderChangeProductStatusUseCase, RappiOrderChangeProductStatusUseCase>(RappiIntegrationKey.Value);
+        services.AddKeyedScoped<IOrderGetCancellationReasonUseCase, RappiOrderGetCancellationReasonUseCase>(RappiIntegrationKey.Value);
+
+        services.AddKeyedSingleton<ICustomJsonSerializer, RappiJsonSerializer>(RappiIntegrationKey.Value);
 
         return services;
     }

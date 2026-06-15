@@ -1,5 +1,5 @@
-﻿using Orders.Integrations.Hub.Core.Domain.Contracts;
-using Orders.Integrations.Hub.Core.Domain.ValueObjects.Enums;
+﻿using Orders.Integrations.Hub.Core.Application.Ports.Out.Serialization;
+using Orders.Integrations.Hub.Integrations.Food99.Application.ValueObjects;
 using Orders.Integrations.Hub.Integrations.Food99.Domain.Contracts;
 using Orders.Integrations.Hub.Integrations.Food99.Domain.ValueObjects.DTOs.Request;
 using Orders.Integrations.Hub.Integrations.Food99.Domain.ValueObjects.DTOs.Response;
@@ -7,7 +7,7 @@ using Orders.Integrations.Hub.Integrations.Food99.Domain.ValueObjects.DTOs.Respo
 namespace Orders.Integrations.Hub.Integrations.Food99.Application.Clients;
 
 public class Food99AuthClient(
-    [FromKeyedServices(OrderIntegration.FOOD99)]
+    [FromKeyedServices(Food99IntegrationKey.Value)]
     ICustomJsonSerializer jsonSerializer,
     ILogger<Food99AuthClient> logger,
     HttpClient httpClient

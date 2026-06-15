@@ -1,4 +1,4 @@
-﻿using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases.Integrations.Out;
+﻿using Orders.Integrations.Hub.Core.Application.Ports.Out.UseCases;
 using Orders.Integrations.Hub.Integrations.Rappi.Domain.Contracts;
 using Orders.Integrations.Hub.Integrations.Rappi.Domain.ValueObjects.DTOs;
 using Orders.Integrations.Hub.Integrations.Rappi.Domain.ValueObjects.DTOs.Request;
@@ -15,12 +15,10 @@ public class RappiOrderChangeProductStatusUseCase(
         List<string> turnOn = [];
 
         if (stores.Length is 0)
-        {
             throw new Exception();
-        }
 
         Task[] requests = stores
-            .Select(store => new RappiAvailabilityUpdateItemsRequest(
+            .Select(_ => new RappiAvailabilityUpdateItemsRequest(
                 StoreIntegrationId: storeId,
                 Items: new RappiAvailabilityItem(
                     TurnOn: turnOn,
@@ -42,12 +40,10 @@ public class RappiOrderChangeProductStatusUseCase(
         List<string> turnOff = [];
 
         if (stores.Length is 0)
-        {
             throw new Exception();
-        }
 
         Task[] requests = stores
-            .Select(store => new RappiAvailabilityUpdateItemsRequest(
+            .Select(_ => new RappiAvailabilityUpdateItemsRequest(
                 StoreIntegrationId: storeId,
                 Items: new RappiAvailabilityItem(
                     TurnOn: [],

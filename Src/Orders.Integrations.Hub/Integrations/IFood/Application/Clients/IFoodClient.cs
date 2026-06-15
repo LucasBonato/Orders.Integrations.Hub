@@ -1,12 +1,12 @@
 ﻿using System.Net.Http.Headers;
 using System.Text;
 
-using Orders.Integrations.Hub.Core.Domain.Contracts;
-using Orders.Integrations.Hub.Core.Domain.ValueObjects.DTOs.Request;
-using Orders.Integrations.Hub.Core.Domain.ValueObjects.Enums;
-using Orders.Integrations.Hub.Integrations.Common;
+using Orders.Integrations.Hub.Core.Application.DTOs.Request;
+using Orders.Integrations.Hub.Core.Application.Ports.Out.Serialization;
 using Orders.Integrations.Hub.Integrations.Common.Contracts;
 using Orders.Integrations.Hub.Integrations.Common.Extensions;
+using Orders.Integrations.Hub.Integrations.Common.ValueObjects;
+using Orders.Integrations.Hub.Integrations.IFood.Application.ValueObjects;
 using Orders.Integrations.Hub.Integrations.IFood.Domain.Contracts;
 using Orders.Integrations.Hub.Integrations.IFood.Domain.Entity.Order;
 using Orders.Integrations.Hub.Integrations.IFood.Domain.Entity.Order.MerchantDetails;
@@ -16,7 +16,7 @@ using Orders.Integrations.Hub.Integrations.IFood.Domain.ValueObjects.DTOs.Respon
 namespace Orders.Integrations.Hub.Integrations.IFood.Application.Clients;
 
 public class IFoodClient(
-    [FromKeyedServices(OrderIntegration.IFOOD)] ICustomJsonSerializer jsonSerializer,
+    [FromKeyedServices(IFoodIntegrationKey.Value)] ICustomJsonSerializer jsonSerializer,
     IIntegrationContext integrationContext,
     ILogger<IFoodClient> logger,
     HttpClient httpClient

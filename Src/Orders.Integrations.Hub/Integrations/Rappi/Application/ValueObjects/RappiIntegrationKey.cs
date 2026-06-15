@@ -1,0 +1,15 @@
+﻿using Orders.Integrations.Hub.Core.Domain.ValueObjects;
+using Orders.Integrations.Hub.Integrations.Common.Attributes;
+using Orders.Integrations.Hub.Integrations.Common.Validators;
+
+namespace Orders.Integrations.Hub.Integrations.Rappi.Application.ValueObjects;
+
+[IntegrationKeyDefinition]
+public static class RappiIntegrationKey {
+    public const string Value = "RAPPI";
+    public static readonly IntegrationKey RAPPI = IntegrationKey.From(Value);
+
+    static RappiIntegrationKey() {
+        IntegrationKeyValidator.ValidateRawValue(Value);
+    }
+}

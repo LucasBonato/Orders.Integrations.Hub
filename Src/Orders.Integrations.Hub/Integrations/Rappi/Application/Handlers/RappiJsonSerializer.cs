@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 
-using Orders.Integrations.Hub.Core.Domain.Contracts;
+using Orders.Integrations.Hub.Core.Application.Ports.Out.Serialization;
 
 namespace Orders.Integrations.Hub.Integrations.Rappi.Application.Handlers;
 
