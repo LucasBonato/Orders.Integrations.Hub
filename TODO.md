@@ -4,6 +4,7 @@
 - [X] Make a way to have memory events and queue events using a external provider
 - [ ] Implement Keeta
 - [ ] Implement Zé Delivery
+  - [ ] Support to Polling
 - [ ] Implement DoorDash
 - [ ] Workflow to verify and test the PR blocking merge
 - [X] Fix the Integrations Architecture
