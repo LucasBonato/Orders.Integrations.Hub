@@ -1,14 +1,15 @@
-﻿using Orders.Integrations.Hub.Core.Application.Extensions;
-using Orders.Integrations.Hub.Core.Domain.Contracts;
-using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases.Integrations.In;
-using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases.Integrations.Out;
-using Orders.Integrations.Hub.Core.Domain.ValueObjects.Enums;
+﻿using Orders.Integrations.Hub.Core.Application.Ports.In.UseCases;
+using Orders.Integrations.Hub.Core.Application.Ports.Out.Serialization;
+using Orders.Integrations.Hub.Core.Application.Ports.Out.UseCases;
+using Orders.Integrations.Hub.Core.Infrastructure.Extensions;
 using Orders.Integrations.Hub.Integrations.Food99.Application.Clients;
 using Orders.Integrations.Hub.Integrations.Food99.Application.Handlers;
 using Orders.Integrations.Hub.Integrations.Food99.Application.Ports.In;
 using Orders.Integrations.Hub.Integrations.Food99.Application.Ports.Out;
+using Orders.Integrations.Hub.Integrations.Food99.Application.ValueObjects;
 using Orders.Integrations.Hub.Integrations.Food99.Domain.Contracts;
 using Orders.Integrations.Hub.Integrations.Food99.Domain.Entity;
+using Orders.Integrations.Hub.Integrations.Food99.Infrastructure;
 
 namespace Orders.Integrations.Hub.Integrations.Food99;
 
@@ -26,10 +27,12 @@ public static class Food99DependencyInjection
         services.AddTransient<IOrderUpdateUseCase<Food99WebhookRequest>, Food99OrderUpdateUseCase>();
         services.AddTransient<IOrderDisputeUseCase<Food99WebhookRequest>, Food99ApplyOrderDisputeUseCase>();
 
-        services.AddKeyedScoped<IOrderChangeStatusUseCase, Food99OrderChangeStatusUseCase>(OrderIntegration.FOOD99); 
-        services.AddKeyedScoped<IOrderGetCancellationReasonUseCase, Food99OrderGetCancellationReasonUseCase>(OrderIntegration.FOOD99);        
+        services.AddScoped<Food99SignatureStrategy>();
 
-        services.AddKeyedSingleton<ICustomJsonSerializer, Food99JsonSerializer>(OrderIntegration.FOOD99);
+        services.AddKeyedScoped<IOrderChangeStatusUseCase, Food99OrderChangeStatusUseCase>(Food99IntegrationKey.Value);
+        services.AddKeyedScoped<IOrderGetCancellationReasonUseCase, Food99OrderGetCancellationReasonUseCase>(Food99IntegrationKey.Value);
+
+        services.AddKeyedSingleton<ICustomJsonSerializer, Food99JsonSerializer>(Food99IntegrationKey.Value);
 
         return services;
     }

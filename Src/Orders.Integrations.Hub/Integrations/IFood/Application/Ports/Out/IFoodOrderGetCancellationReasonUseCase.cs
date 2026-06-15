@@ -1,5 +1,5 @@
-﻿using Orders.Integrations.Hub.Core.Domain.Contracts.UseCases.Integrations.Out;
-using Orders.Integrations.Hub.Core.Domain.ValueObjects.DTOs.Response;
+﻿using Orders.Integrations.Hub.Core.Application.DTOs.Response;
+using Orders.Integrations.Hub.Core.Application.Ports.Out.UseCases;
 using Orders.Integrations.Hub.Integrations.IFood.Domain.Contracts;
 using Orders.Integrations.Hub.Integrations.IFood.Domain.ValueObjects.Enums;
 
@@ -10,9 +10,8 @@ public class IFoodOrderGetCancellationReasonUseCase(
 ) : IOrderGetCancellationReasonUseCase {
     public async Task<List<CancellationReasonsResponse>> ExecuteAsync(string? externalOrderId)
     {
-        if (string.IsNullOrEmpty(externalOrderId)) {
+        if (string.IsNullOrEmpty(externalOrderId))
             throw new ArgumentNullException(nameof(externalOrderId));
-        }
 
         var ifoodCancellationReasons = await iFoodClient.GetCancellationReasons(externalOrderId);
 

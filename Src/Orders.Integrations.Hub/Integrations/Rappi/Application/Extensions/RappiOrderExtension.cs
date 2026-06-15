@@ -1,11 +1,12 @@
-﻿using Orders.Integrations.Hub.Core.Domain.Entity;
+﻿using Orders.Integrations.Hub.Core.Application.DTOs;
+using Orders.Integrations.Hub.Core.Domain.Entity;
 using Orders.Integrations.Hub.Core.Domain.Entity.Address;
 using Orders.Integrations.Hub.Core.Domain.Entity.Discount;
 using Orders.Integrations.Hub.Core.Domain.Entity.Item;
 using Orders.Integrations.Hub.Core.Domain.Entity.Merchant;
 using Orders.Integrations.Hub.Core.Domain.Entity.Payment;
-using Orders.Integrations.Hub.Core.Domain.ValueObjects.DTOs;
-using Orders.Integrations.Hub.Core.Domain.ValueObjects.Enums;
+using Orders.Integrations.Hub.Core.Domain.Enums;
+using Orders.Integrations.Hub.Integrations.Rappi.Application.ValueObjects;
 using Orders.Integrations.Hub.Integrations.Rappi.Domain.Entity;
 using Orders.Integrations.Hub.Integrations.Rappi.Domain.ValueObjects.DTOs.Request;
 using Orders.Integrations.Hub.Integrations.Rappi.Domain.ValueObjects.Enums;
@@ -111,8 +112,8 @@ public static class RappiOrderExtension
             OrderId: order.OrderDetail.OrderId,
             Type: OrderType.DELIVERY,
             DisplayId: Guid.NewGuid().ToString()[..5],
-            SourceAppId: nameof(OrderSalesChannel.RAPPI),
-            SalesChannel: nameof(OrderSalesChannel.RAPPI),
+            SourceAppId: RappiIntegrationKey.RAPPI,
+            SalesChannel: RappiIntegrationKey.RAPPI,
             VirtualBrand: order.Store.InternalId,
             CreatedAt: order.OrderDetail.CreatedAt,
             LastEvent: OrderEventType.CREATED,
@@ -282,7 +283,7 @@ public static class RappiOrderExtension
     {
         return new OrderUpdate(
             OrderId: request.OrderId,
-            SourceAppId: OrderIntegration.RAPPI,
+            SourceAppId: RappiIntegrationKey.RAPPI,
             Type: request.OrderEvent.ToOrderEvent(),
             CreateAt: request.EventTime?? DateTime.UtcNow,
             Dispute: null,
@@ -294,7 +295,7 @@ public static class RappiOrderExtension
     {
         return new OrderUpdate(
             OrderId: request.OrderDetail.OrderId,
-            SourceAppId: OrderIntegration.RAPPI,
+            SourceAppId: RappiIntegrationKey.RAPPI,
             Type: eventType,
             CreateAt: request.OrderDetail.CreatedAt,
             Dispute: null,

@@ -483,3 +483,31 @@ $RECYCLE.BIN/
 # Vim temporary swap files
 *.swp
 volume
+
+# Graphify
+graphify-out/manifest.json
+graphify-out/cost.json
+
+# Tools that use agents
+.opencode/
+.claude/
+.aider*
+.codex/
+.devin/
+.cline/
+.roo/
+
+# AI editors & IDEs
+.cursor/
+.windsurf/
+.github/copilot-instructions.md
+.zed/
+.void/
+
+# Other AI tools
+.continue/
+.sweep/
+.tabnine/
+.supermaven/
+.llm-cache/
+graphify-out
