@@ -1,5 +1,5 @@
 ﻿using Orders.Integrations.Hub.Core.Application.Ports.Out.UseCases;
-using Orders.Integrations.Hub.Integrations.Rappi.Domain.Contracts;
+using Orders.Integrations.Hub.Integrations.Rappi.Application.Clients;
 using Orders.Integrations.Hub.Integrations.Rappi.Domain.ValueObjects.DTOs;
 using Orders.Integrations.Hub.Integrations.Rappi.Domain.ValueObjects.DTOs.Request;
 
@@ -10,34 +10,24 @@ public class RappiOrderChangeProductStatusUseCase(
 ) : IOrderChangeProductStatusUseCase {
     public Task Enable(object productEvent)
     {
-        object[] stores = [];
-        string storeId = string.Empty;
-        List<string> turnOn = [];
-
-        if (stores.Length is 0)
-            throw new Exception();
-
-        Task[] requests = stores
-            .Select(_ => new RappiAvailabilityUpdateItemsRequest(
-                StoreIntegrationId: storeId,
-                Items: new RappiAvailabilityItem(
-                    TurnOn: turnOn,
-                    TurnOff: []
-                )
-            ))
-            .Select((Func<RappiAvailabilityUpdateItemsRequest, Task>)MakeUpdateProductRequest)
-            .ToArray();
-
-        Task.WaitAll(requests);
-
-        return Task.CompletedTask;
+        return TurnProductsOnOrOff(
+            turnOn: [],    
+            turnOff: []
+        );
     }
 
     public Task Disable(object productEvent)
     {
+        return TurnProductsOnOrOff(
+            turnOn: [],    
+            turnOff: []
+        );
+    }
+
+    private Task TurnProductsOnOrOff(List<string> turnOn, List<string> turnOff)
+    {
         object[] stores = [];
         string storeId = string.Empty;
-        List<string> turnOff = [];
 
         if (stores.Length is 0)
             throw new Exception();
@@ -50,7 +40,7 @@ public class RappiOrderChangeProductStatusUseCase(
                     TurnOff: turnOff
                 )
             ))
-            .Select((Func<RappiAvailabilityUpdateItemsRequest, Task>)MakeUpdateProductRequest)
+            .Select(MakeUpdateProductRequest)
             .ToArray();
 
         Task.WaitAll(requests);
