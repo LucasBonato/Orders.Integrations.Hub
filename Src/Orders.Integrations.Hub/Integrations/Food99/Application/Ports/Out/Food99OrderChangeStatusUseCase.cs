@@ -2,7 +2,8 @@
 using Orders.Integrations.Hub.Core.Application.Ports.Out.UseCases;
 using Orders.Integrations.Hub.Core.Domain.Enums;
 using Orders.Integrations.Hub.Integrations.Common.Contracts;
-using Orders.Integrations.Hub.Integrations.Food99.Domain.Contracts;
+using Orders.Integrations.Hub.Integrations.Food99.Application.Clients;
+using Orders.Integrations.Hub.Integrations.Food99.Domain.ValueObjects.DTOs.Request;
 using Orders.Integrations.Hub.Integrations.Food99.Domain.ValueObjects.Enums;
 
 namespace Orders.Integrations.Hub.Integrations.Food99.Application.Ports.Out;
@@ -14,7 +15,6 @@ public class Food99OrderChangeStatusUseCase(
 ) : IOrderChangeStatusUseCase {
     public async Task ExecuteAsync(ChangeOrderStatusRequest request)
     {
-        // integrationContext.Integration = await internalClient.GetIntegrationByExternalId(request.MerchantId);
         integrationContext.MerchantId = request.MerchantId;
 
         logger.LogInformation(
@@ -25,21 +25,29 @@ public class Food99OrderChangeStatusUseCase(
         );
 
         Task changeStatusTask = (request.Status) switch {
-            OrderEventType.CONFIRMED => food99Client.ConfirmOrder(integrationContext.MerchantId, request.ExternalId),
+            OrderEventType.CONFIRMED => food99Client.ConfirmOrder(
+                new Food99StatusChangeRequest(request.ExternalId, null, null, null)
+            ),
 
             OrderEventType.DISPATCHED or
-            OrderEventType.READY_FOR_PICKUP => food99Client.ReadyToPickupOrder(integrationContext.MerchantId, request.ExternalId),
+            OrderEventType.READY_FOR_PICKUP => food99Client.ReadyToPickupOrder(
+                new Food99StatusChangeRequest(request.ExternalId, null, null, null)
+            ),
 
             OrderEventType.DELIVERED or
-            OrderEventType.CONCLUDED => food99Client.DeliveredOrder(integrationContext.MerchantId, request.ExternalId),
+            OrderEventType.CONCLUDED => food99Client.DeliveredOrder(
+                new Food99StatusChangeRequest(request.ExternalId, null, null, null)
+            ),
 
             OrderEventType.CANCELLED or
             OrderEventType.CANCELLATION_REQUESTED or
             OrderEventType.ORDER_CANCELLATION_REQUEST => food99Client.CancelOrder(
-                appShopId: integrationContext.MerchantId,
-                orderId: request.ExternalId,
-                reason: request.CancellationReason!,
-                reasonId: (int)Enum.Parse<Food99OrderCancelType>(request.CancellationReason!)
+                new Food99StatusChangeRequest(
+                    OrderId: request.ExternalId,
+                    AuthToken: null,
+                    ReasonId: (int)Enum.Parse<Food99OrderCancelType>(request.CancellationReason!),
+                    Reason: request.CancellationReason!
+                )
             ),
 
             _ => throw new ArgumentOutOfRangeException()
