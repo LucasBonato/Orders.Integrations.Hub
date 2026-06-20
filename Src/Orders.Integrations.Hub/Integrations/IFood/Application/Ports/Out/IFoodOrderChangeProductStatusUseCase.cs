@@ -1,5 +1,5 @@
 ﻿using Orders.Integrations.Hub.Core.Application.Ports.Out.UseCases;
-using Orders.Integrations.Hub.Integrations.IFood.Domain.Contracts;
+using Orders.Integrations.Hub.Integrations.IFood.Application.Clients;
 using Orders.Integrations.Hub.Integrations.IFood.Domain.ValueObjects.DTOs.Request;
 
 namespace Orders.Integrations.Hub.Integrations.IFood.Application.Ports.Out;
@@ -12,7 +12,6 @@ public class IFoodOrderChangeProductStatusUseCase(
         IEnumerable<string> skus = [];
         string merchantId = string.Empty;
         foreach (var payload in skus.Select(sku => IFoodPatchProductStatusRequest.Enable(itemId: sku, statusByCatalog: []))) {
-            // Don't throw on failed requests
             await ifoodClient.PatchProductStatus(
                 merchantId,
                 payload
@@ -25,7 +24,6 @@ public class IFoodOrderChangeProductStatusUseCase(
         IEnumerable<string> skus = [];
         string merchantId = string.Empty;
         foreach (var payload in skus.Select(sku => IFoodPatchProductStatusRequest.Disable(itemId: sku, statusByCatalog: []))) {
-            // Don't throw on failed requests
             await ifoodClient.PatchProductStatus(
                 merchantId,
                 payload

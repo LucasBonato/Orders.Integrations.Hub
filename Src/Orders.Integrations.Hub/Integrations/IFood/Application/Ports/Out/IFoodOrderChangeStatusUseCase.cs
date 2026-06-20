@@ -1,7 +1,7 @@
 ﻿using Orders.Integrations.Hub.Core.Application.DTOs.Request;
 using Orders.Integrations.Hub.Core.Application.Ports.Out.UseCases;
 using Orders.Integrations.Hub.Core.Domain.Enums;
-using Orders.Integrations.Hub.Integrations.IFood.Domain.Contracts;
+using Orders.Integrations.Hub.Integrations.IFood.Application.Clients;
 using Orders.Integrations.Hub.Integrations.IFood.Domain.ValueObjects.DTOs.Request;
 
 namespace Orders.Integrations.Hub.Integrations.IFood.Application.Ports.Out;
