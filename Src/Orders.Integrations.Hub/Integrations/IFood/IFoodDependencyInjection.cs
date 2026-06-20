@@ -1,7 +1,8 @@
-﻿using Orders.Integrations.Hub.Core.Application.Ports.In.UseCases;
+using Orders.Integrations.Hub.Core.Application.Ports.In.UseCases;
 using Orders.Integrations.Hub.Core.Application.Ports.Out.Serialization;
 using Orders.Integrations.Hub.Core.Application.Ports.Out.UseCases;
 using Orders.Integrations.Hub.Core.Infrastructure.Extensions;
+using Orders.Integrations.Hub.Integrations.Common.Application.Handlers;
 using Orders.Integrations.Hub.Integrations.Common.Contracts;
 using Orders.Integrations.Hub.Integrations.Common.Serialization;
 using Orders.Integrations.Hub.Integrations.IFood.Application;
@@ -15,50 +16,62 @@ using Orders.Integrations.Hub.Integrations.IFood.Domain.Entity.Handshake;
 using Orders.Integrations.Hub.Integrations.IFood.Domain.ValueObjects.DTOs.Request;
 using Orders.Integrations.Hub.Integrations.IFood.Infrastructure;
 
+using Refit;
+
 namespace Orders.Integrations.Hub.Integrations.IFood;
 
 public static class IFoodDependencyInjection
 {
-    public static IServiceCollection AddIFood(this IServiceCollection services)
-        => services
-            .AddIFoodServices()
-            .AddIFoodClients()
-    ;
-
-    private static IServiceCollection AddIFoodServices(this IServiceCollection services)
+    extension(IServiceCollection services)
     {
-        services.AddTransient<IOrderCreateUseCase<IFoodWebhookRequest>, IFoodOrderCreateUseCase>();
-        services.AddTransient<IOrderUpdateUseCase<IFoodWebhookRequest>, IFoodOrderUpdateUseCase>();
-        services.AddTransient<IOrderDisputeUseCase<IFoodWebhookRequest>, IFoodHandshakeOrderDisputeUseCase>();
+        public IServiceCollection AddIFood()
+            => services
+                .AddIFoodServices()
+                .AddIFoodClients()
+        ;
 
-        services.AddScoped<IFoodSignatureStrategy>();
+        private IServiceCollection AddIFoodServices()
+        {
+            services.AddTransient<IOrderCreateUseCase<IFoodWebhookRequest>, IFoodOrderCreateUseCase>();
+            services.AddTransient<IOrderUpdateUseCase<IFoodWebhookRequest>, IFoodOrderUpdateUseCase>();
+            services.AddTransient<IOrderDisputeUseCase<IFoodWebhookRequest>, IFoodHandshakeOrderDisputeUseCase>();
 
-        services.AddKeyedScoped<IOrderChangeStatusUseCase, IFoodOrderChangeStatusUseCase>(IFoodIntegrationKey.Value);
-        services.AddKeyedScoped<IOrderDisputeRespondUseCase, IFoodHandshakeOrderDisputeRespondUseCase>(IFoodIntegrationKey.Value);
-        services.AddKeyedScoped<IOrderChangeProductStatusUseCase, IFoodOrderChangeProductStatusUseCase>(IFoodIntegrationKey.Value);
-        services.AddKeyedScoped<IOrderGetCancellationReasonUseCase, IFoodOrderGetCancellationReasonUseCase>(IFoodIntegrationKey.Value);
+            services.AddScoped<IFoodSignatureStrategy>();
 
-        services.AddKeyedScoped<IOrderDisputeEvidenceStorage<Media>, IFoodDisputeEvidenceStorage>(IFoodIntegrationKey.Value);
-        
-        services.AddKeyedSingleton<ICustomJsonSerializer, CommonJsonSerializer>(IFoodIntegrationKey.Value);
+            services.AddKeyedScoped<IOrderChangeStatusUseCase, IFoodOrderChangeStatusUseCase>(IFoodIntegrationKey.Value);
+            services.AddKeyedScoped<IOrderDisputeRespondUseCase, IFoodHandshakeOrderDisputeRespondUseCase>(IFoodIntegrationKey.Value);
+            services.AddKeyedScoped<IOrderChangeProductStatusUseCase, IFoodOrderChangeProductStatusUseCase>(IFoodIntegrationKey.Value);
+            services.AddKeyedScoped<IOrderGetCancellationReasonUseCase, IFoodOrderGetCancellationReasonUseCase>(IFoodIntegrationKey.Value);
 
-        return services;
-    }
+            services.AddKeyedScoped<IOrderDisputeEvidenceStorage<Media>, IFoodDisputeEvidenceStorage>(IFoodIntegrationKey.Value);
 
-    private static IServiceCollection AddIFoodClients(this IServiceCollection services)
-    {
-        string baseUrl = AppEnv.INTEGRATIONS.IFOOD.ENDPOINT.BASE_URL.NotNullEnv();
+            services.AddKeyedSingleton<ICustomJsonSerializer, CommonJsonSerializer>(IFoodIntegrationKey.Value);
 
-        services.AddHttpClient<IIFoodAuthClient, IFoodAuthClient>(client => {
-            client.BaseAddress = new Uri(baseUrl);
-        });
+            return services;
+        }
 
-        services.AddScoped<IFoodAuthMessageHandler>();
+        private IServiceCollection AddIFoodClients()
+        {
+            string baseUrl = AppEnv.INTEGRATIONS.IFOOD.ENDPOINT.BASE_URL.NotNullEnv();
 
-        services.AddHttpClient<IIFoodClient, IFoodClient>(client => {
-            client.BaseAddress = new Uri(baseUrl);
-        }).AddHttpMessageHandler<IFoodAuthMessageHandler>();
+            services.AddHttpClient<IIFoodAuthClient, IFoodAuthClient>(client => {
+                client.BaseAddress = new Uri(baseUrl);
+            });
 
-        return services;
+            services.AddScoped<IFoodAuthMessageHandler>();
+
+            services.AddRefitClient<IIFoodClient>(serviceProvider => new RefitSettings {
+                    ContentSerializer = new CustomJsonContentSerializer(
+                        serviceProvider.GetRequiredKeyedService<ICustomJsonSerializer>(IFoodIntegrationKey.Value)
+                    )
+                })
+                .ConfigureHttpClient(client => {
+                    client.BaseAddress = new Uri(baseUrl);
+                })
+                .AddHttpMessageHandler<IntegrationContextHandler>()
+                .AddHttpMessageHandler<IFoodAuthMessageHandler>();
+
+            return services;
+        }
     }
 }

@@ -3,7 +3,7 @@ using Orders.Integrations.Hub.Core.Infrastructure.Extensions;
 using Orders.Integrations.Hub.Integrations.Common.Contracts;
 using Orders.Integrations.Hub.Integrations.Common.Extensions;
 using Orders.Integrations.Hub.Integrations.Common.ValueObjects;
-using Orders.Integrations.Hub.Integrations.Rappi.Application.Clients;
+using Orders.Integrations.Hub.Integrations.Rappi.Domain.Contracts;
 using Orders.Integrations.Hub.Integrations.Rappi.Domain.ValueObjects.DTOs.Request;
 using Orders.Integrations.Hub.Integrations.Rappi.Domain.ValueObjects.DTOs.Response;
 
@@ -11,7 +11,7 @@ namespace Orders.Integrations.Hub.Integrations.Rappi.Application.Handlers;
 
 public class RappiAuthMessageHandler(
     ILogger<RappiAuthMessageHandler> logger,
-    RappiAuthClient rappiAuthClient,
+    IRappiAuthClient rappiAuthClient,
     ICacheService cacheService
 ) : DelegatingHandler {
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)

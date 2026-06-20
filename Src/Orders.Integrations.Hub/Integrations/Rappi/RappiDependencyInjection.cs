@@ -2,7 +2,9 @@
 using Orders.Integrations.Hub.Core.Application.Ports.Out.Serialization;
 using Orders.Integrations.Hub.Core.Application.Ports.Out.UseCases;
 using Orders.Integrations.Hub.Core.Infrastructure.Extensions;
+using Orders.Integrations.Hub.Integrations.Common.Application.Handlers;
 using Orders.Integrations.Hub.Integrations.Common.Contracts;
+using Orders.Integrations.Hub.Integrations.Common.Serialization;
 using Orders.Integrations.Hub.Integrations.Rappi.Application.Clients;
 using Orders.Integrations.Hub.Integrations.Rappi.Application.Handlers;
 using Orders.Integrations.Hub.Integrations.Rappi.Application.Ports.In;
@@ -13,50 +15,62 @@ using Orders.Integrations.Hub.Integrations.Rappi.Domain.Entity;
 using Orders.Integrations.Hub.Integrations.Rappi.Domain.ValueObjects.DTOs.Request;
 using Orders.Integrations.Hub.Integrations.Rappi.Infrastructure;
 
+using Refit;
+
 namespace Orders.Integrations.Hub.Integrations.Rappi;
 
 public static class RappiDependencyInjection
 {
-    public static IServiceCollection AddRappi(this IServiceCollection services)
-        => services
-            .AddRappiServices()
-            .AddRappiClients()
+    extension(IServiceCollection services)
+    {
+        public IServiceCollection AddRappi()
+            => services
+                .AddRappiServices()
+                .AddRappiClients()
         ;
 
-    private static IServiceCollection AddRappiServices(this IServiceCollection services)
-    {
-        services.AddTransient<IOrderCreateUseCase<RappiOrder>, RappiOrderCreateUseCase>();
-        services.AddTransient<IOrderUpdateUseCase<RappiWebhookEventOrderRequest>, RappiOrderUpdateUseCase>();
+        private IServiceCollection AddRappiServices()
+        {
+            services.AddTransient<IOrderCreateUseCase<RappiOrder>, RappiOrderCreateUseCase>();
+            services.AddTransient<IOrderUpdateUseCase<RappiWebhookEventOrderRequest>, RappiOrderUpdateUseCase>();
 
-        services.AddScoped<IWebhookSignatureValidator, RappiSignatureValidator>();
-        services.AddScoped<IWebhookSignatureResolver<RappiOrder>, RappiOrderResolver>();
-        services.AddScoped<IWebhookSignatureResolver<RappiWebhookEventOrderRequest>, RappiOrderEventResolver>();
-        services.AddScoped<IWebhookSignatureResolver<RappiWebhookPingRequest>, RappiPingResolver>();
+            services.AddScoped<IWebhookSignatureValidator, RappiSignatureValidator>();
+            services.AddScoped<IWebhookSignatureResolver<RappiOrder>, RappiOrderResolver>();
+            services.AddScoped<IWebhookSignatureResolver<RappiWebhookEventOrderRequest>, RappiOrderEventResolver>();
+            services.AddScoped<IWebhookSignatureResolver<RappiWebhookPingRequest>, RappiPingResolver>();
 
-        services.AddKeyedScoped<IOrderChangeStatusUseCase, RappiOrderChangeStatusUseCase>(RappiIntegrationKey.Value);
-        services.AddKeyedScoped<IOrderChangeProductStatusUseCase, RappiOrderChangeProductStatusUseCase>(RappiIntegrationKey.Value);
-        services.AddKeyedScoped<IOrderGetCancellationReasonUseCase, RappiOrderGetCancellationReasonUseCase>(RappiIntegrationKey.Value);
+            services.AddKeyedScoped<IOrderChangeStatusUseCase, RappiOrderChangeStatusUseCase>(RappiIntegrationKey.Value);
+            services.AddKeyedScoped<IOrderChangeProductStatusUseCase, RappiOrderChangeProductStatusUseCase>(RappiIntegrationKey.Value);
+            services.AddKeyedScoped<IOrderGetCancellationReasonUseCase, RappiOrderGetCancellationReasonUseCase>(RappiIntegrationKey.Value);
 
-        services.AddKeyedSingleton<ICustomJsonSerializer, RappiJsonSerializer>(RappiIntegrationKey.Value);
+            services.AddKeyedSingleton<ICustomJsonSerializer, RappiJsonSerializer>(RappiIntegrationKey.Value);
 
-        return services;
-    }
+            return services;
+        }
 
-    private static IServiceCollection AddRappiClients(this IServiceCollection services)
-    {
-        string baseUrl = AppEnv.INTEGRATIONS.RAPPI.ENDPOINT.BASE_URL.NotNullEnv();
-        string baseAuthUrl = AppEnv.INTEGRATIONS.RAPPI.ENDPOINT.AUTH.NotNullEnv();
+        private IServiceCollection AddRappiClients()
+        {
+            string baseUrl = AppEnv.INTEGRATIONS.RAPPI.ENDPOINT.BASE_URL.NotNullEnv();
+            string baseAuthUrl = AppEnv.INTEGRATIONS.RAPPI.ENDPOINT.AUTH.NotNullEnv();
 
-        services.AddHttpClient<RappiAuthClient, RappiAuthClient>(client => {
-            client.BaseAddress = new Uri(baseAuthUrl);
-        });
+            services.AddHttpClient<IRappiAuthClient, RappiAuthClient>(client => {
+                client.BaseAddress = new Uri(baseAuthUrl);
+            });
 
-        services.AddScoped<RappiAuthMessageHandler>();
+            services.AddScoped<RappiAuthMessageHandler>();
 
-        services.AddHttpClient<IRappiClient, RappiClient>(client => {
-            client.BaseAddress = new Uri(baseUrl);
-        }).AddHttpMessageHandler<RappiAuthMessageHandler>();
+            services.AddRefitClient<IRappiClient>(serviceProvider => new RefitSettings {
+                    ContentSerializer = new CustomJsonContentSerializer(
+                        serviceProvider.GetRequiredKeyedService<ICustomJsonSerializer>(RappiIntegrationKey.Value)
+                    )
+                })
+                .ConfigureHttpClient(client => {
+                    client.BaseAddress = new Uri(baseUrl);
+                })
+                .AddHttpMessageHandler<IntegrationContextHandler>()
+                .AddHttpMessageHandler<RappiAuthMessageHandler>();
 
-        return services;
+            return services;
+        }
     }
 }

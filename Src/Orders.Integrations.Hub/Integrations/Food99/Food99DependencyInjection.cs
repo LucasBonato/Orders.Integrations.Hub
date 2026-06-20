@@ -2,6 +2,8 @@
 using Orders.Integrations.Hub.Core.Application.Ports.Out.Serialization;
 using Orders.Integrations.Hub.Core.Application.Ports.Out.UseCases;
 using Orders.Integrations.Hub.Core.Infrastructure.Extensions;
+using Orders.Integrations.Hub.Integrations.Common.Application.Handlers;
+using Orders.Integrations.Hub.Integrations.Common.Serialization;
 using Orders.Integrations.Hub.Integrations.Food99.Application.Clients;
 using Orders.Integrations.Hub.Integrations.Food99.Application.Handlers;
 using Orders.Integrations.Hub.Integrations.Food99.Application.Ports.In;
@@ -11,46 +13,58 @@ using Orders.Integrations.Hub.Integrations.Food99.Domain.Contracts;
 using Orders.Integrations.Hub.Integrations.Food99.Domain.Entity;
 using Orders.Integrations.Hub.Integrations.Food99.Infrastructure;
 
+using Refit;
+
 namespace Orders.Integrations.Hub.Integrations.Food99;
 
 public static class Food99DependencyInjection
 {
-    public static IServiceCollection AddFood99(this IServiceCollection services)
-        => services
-            .AddFood99Services()
-            .AddFood99Clients()
+    extension(IServiceCollection services)
+    {
+        public IServiceCollection AddFood99()
+            => services
+                .AddFood99Services()
+                .AddFood99Clients()
         ;
 
-    private static IServiceCollection AddFood99Services(this IServiceCollection services)
-    {
-        services.AddTransient<IOrderCreateUseCase<Food99WebhookRequest>, Food99OrderCreateUseCase>();
-        services.AddTransient<IOrderUpdateUseCase<Food99WebhookRequest>, Food99OrderUpdateUseCase>();
-        services.AddTransient<IOrderDisputeUseCase<Food99WebhookRequest>, Food99ApplyOrderDisputeUseCase>();
+        private IServiceCollection AddFood99Services()
+        {
+            services.AddTransient<IOrderCreateUseCase<Food99WebhookRequest>, Food99OrderCreateUseCase>();
+            services.AddTransient<IOrderUpdateUseCase<Food99WebhookRequest>, Food99OrderUpdateUseCase>();
+            services.AddTransient<IOrderDisputeUseCase<Food99WebhookRequest>, Food99ApplyOrderDisputeUseCase>();
 
-        services.AddScoped<Food99SignatureStrategy>();
+            services.AddScoped<Food99SignatureStrategy>();
 
-        services.AddKeyedScoped<IOrderChangeStatusUseCase, Food99OrderChangeStatusUseCase>(Food99IntegrationKey.Value);
-        services.AddKeyedScoped<IOrderGetCancellationReasonUseCase, Food99OrderGetCancellationReasonUseCase>(Food99IntegrationKey.Value);
+            services.AddKeyedScoped<IOrderChangeStatusUseCase, Food99OrderChangeStatusUseCase>(Food99IntegrationKey.Value);
+            services.AddKeyedScoped<IOrderGetCancellationReasonUseCase, Food99OrderGetCancellationReasonUseCase>(Food99IntegrationKey.Value);
 
-        services.AddKeyedSingleton<ICustomJsonSerializer, Food99JsonSerializer>(Food99IntegrationKey.Value);
+            services.AddKeyedSingleton<ICustomJsonSerializer, Food99JsonSerializer>(Food99IntegrationKey.Value);
 
-        return services;
-    }
+            return services;
+        }
 
-    private static IServiceCollection AddFood99Clients(this IServiceCollection services)
-    {
-        string baseUrl = AppEnv.INTEGRATIONS.FOOD99.ENDPOINT.BASE_URL.NotNullEnv();
+        private IServiceCollection AddFood99Clients()
+        {
+            string baseUrl = AppEnv.INTEGRATIONS.FOOD99.ENDPOINT.BASE_URL.NotNullEnv();
 
-        services.AddHttpClient<IFood99AuthClient, Food99AuthClient>(client => {
-            client.BaseAddress = new Uri(baseUrl);
-        });
+            services.AddHttpClient<IFood99AuthClient, Food99AuthClient>(client => {
+                client.BaseAddress = new Uri(baseUrl);
+            });
 
-        services.AddScoped<Food99AuthMessageHandler>();
+            services.AddScoped<Food99AuthMessageHandler>();
 
-        services.AddHttpClient<IFood99Client, Food99Client>(client => {
-            client.BaseAddress = new Uri(baseUrl);
-        }).AddHttpMessageHandler<Food99AuthMessageHandler>();
+            services.AddRefitClient<IFood99Client>(serviceProvider => new RefitSettings {
+                    ContentSerializer = new CustomJsonContentSerializer(
+                        serviceProvider.GetRequiredKeyedService<ICustomJsonSerializer>(Food99IntegrationKey.Value)
+                    )
+                })
+                .ConfigureHttpClient(client => {
+                    client.BaseAddress = new Uri(baseUrl);
+                })
+                .AddHttpMessageHandler<IntegrationContextHandler>()
+                .AddHttpMessageHandler<Food99AuthMessageHandler>();
 
-        return services;
+            return services;
+        }
     }
 }

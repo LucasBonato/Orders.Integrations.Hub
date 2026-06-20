@@ -37,15 +37,6 @@ namespace Orders.Integrations.Hub.Core;
 
 public static class CoreDependencyInjection
 {
-    public static IServiceCollection AddCore(this IServiceCollection services)
-    {
-        return services
-                .AddOpenTelemetryConfiguration()
-                .AddServices()
-                .AddClients()
-            ;
-    }
-
     public static WebApplication UseCore(this WebApplication app)
     {
         app.MapEndpoints();
@@ -55,6 +46,15 @@ public static class CoreDependencyInjection
 
     extension(IServiceCollection services)
     {
+        public IServiceCollection AddCore()
+        {
+            return services
+                    .AddOpenTelemetryConfiguration()
+                    .AddServices()
+                    .AddClients()
+                ;
+        }
+        
         private IServiceCollection AddServices()
         {
             services.AddEndpoints(Assembly.GetExecutingAssembly());
@@ -247,7 +247,6 @@ public static class CoreDependencyInjection
                         });
                         configurator.ConfigureEndpoints(context);
                     });
-                    
                     
                     return;
                 }
