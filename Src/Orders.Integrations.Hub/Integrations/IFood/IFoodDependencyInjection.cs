@@ -68,6 +68,7 @@ public static class IFoodDependencyInjection
                 .ConfigureHttpClient(client => {
                     client.BaseAddress = new Uri(baseUrl);
                 })
+                .AddHttpMessageHandler<IntegrationContextHandler>()
                 .AddHttpMessageHandler<IFoodAuthMessageHandler>();
 
             return services;

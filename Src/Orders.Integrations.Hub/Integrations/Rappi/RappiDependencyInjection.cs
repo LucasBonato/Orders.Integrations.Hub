@@ -67,6 +67,7 @@ public static class RappiDependencyInjection
                 .ConfigureHttpClient(client => {
                     client.BaseAddress = new Uri(baseUrl);
                 })
+                .AddHttpMessageHandler<IntegrationContextHandler>()
                 .AddHttpMessageHandler<RappiAuthMessageHandler>();
 
             return services;

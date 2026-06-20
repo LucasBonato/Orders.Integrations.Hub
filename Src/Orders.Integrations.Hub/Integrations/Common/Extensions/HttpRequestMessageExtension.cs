@@ -12,7 +12,7 @@ public static class HttpRequestMessageExtension
         }
 
         public IIntegrationContext GetIntegrationContext() {
-            return (request.Options.TryGetValue(IntegrationKey, out var integrationContext))
+            return (request.Options.TryGetValue(IntegrationKey, out IIntegrationContext? integrationContext))
                 ? integrationContext
                 : throw new InvalidOperationException("IntegrationContext was not set on the request");
         }
