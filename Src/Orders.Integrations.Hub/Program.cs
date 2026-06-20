@@ -10,9 +10,9 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 Env.TraversePath().Load();
 
 builder.Services
-    .AddOpenApi()
     .AddCore()
     .AddIntegrationsModule()
+    .AddOpenApi()
 ;
 
 WebApplication app = builder.Build();
