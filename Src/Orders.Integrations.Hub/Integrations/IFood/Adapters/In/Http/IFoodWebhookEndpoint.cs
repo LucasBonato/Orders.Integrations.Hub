@@ -50,6 +50,7 @@ internal sealed class IFoodWebhookEndpoint : IEndpoint
         .WithDescription("IFood Webhook Endpoint")
         .Produces<IFoodWebhookRequest>()
         .ProducesValidationProblem()
-        .AddEndpointFilter<WebhookSignatureFilter<IFoodWebhookRequest, IFoodSignatureStrategy, IFoodSignatureStrategy>>();
+        .AddEndpointFilter<WebhookSignatureFilter<IFoodWebhookRequest, IFoodSignatureStrategy, IFoodSignatureStrategy>>()
+        .CacheOutput();
     }
 }

@@ -68,9 +68,9 @@ public class Food99AuthMessageHandler(
             await cacheService.SetAsync(cacheKey, accessToken, expiration);
             await InjectTokenIntoRequest(request, accessToken);
             logger.LogInformation("[INFO] Injected token: {Token} into {Method} {Uri} {body}", accessToken, request.Method, request.RequestUri, (request.Method == HttpMethod.Post) ? await request.Content?.ReadAsStringAsync(cancellationToken)! : null);
-        }
 
-        response = await base.SendAsync(request, cancellationToken);
+            response = await base.SendAsync(request, cancellationToken);
+        }
 
         return response;
     }

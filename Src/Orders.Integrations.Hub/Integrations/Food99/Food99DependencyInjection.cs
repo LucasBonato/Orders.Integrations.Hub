@@ -61,6 +61,7 @@ public static class Food99DependencyInjection
                 .ConfigureHttpClient(client => {
                     client.BaseAddress = new Uri(baseUrl);
                 })
+                .AddHttpMessageHandler<IntegrationContextHandler>()
                 .AddHttpMessageHandler<Food99AuthMessageHandler>();
 
             return services;

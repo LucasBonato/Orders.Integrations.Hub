@@ -30,5 +30,5 @@ public abstract class BaseOrderDisputeEvidenceStorage<TEvidence>(
         return objectStorageClient.DeleteFolder(FolderPath(orderId, disputeId));
     }
 
-    public abstract Task<DisputeEvidence> UploadEvidence(string orderId, string disputeId, TEvidence evidence);
+    protected abstract Task<DisputeEvidence> UploadEvidence(string orderId, string disputeId, TEvidence evidence);
 }

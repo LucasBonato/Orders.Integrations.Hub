@@ -9,6 +9,7 @@ namespace Orders.Integrations.Hub.Integrations.Common.Middleware;
 public class WebhookSignatureFilter<TRequest, TValidator, TResolver>(
     TValidator validator,
     TResolver resolver,
+    IInternalClient internalClient,
     ILogger<WebhookSignatureFilter<TRequest, TValidator, TResolver>> logger
 ) : IEndpointFilter 
     where TValidator : IWebhookSignatureValidator
@@ -19,7 +20,6 @@ public class WebhookSignatureFilter<TRequest, TValidator, TResolver>(
         IServiceProvider services = httpContext.RequestServices;
 
         ICustomJsonSerializer serializer = services.GetRequiredKeyedService<ICustomJsonSerializer>(validator.IntegrationKey);
-        IInternalClient internalClient = services.GetRequiredService<IInternalClient>();
         IIntegrationContext integrationContext = services.GetRequiredService<IIntegrationContext>();
 
         using StreamReader reader = new(httpContext.Request.Body, Encoding.UTF8, detectEncodingFromByteOrderMarks: false, leaveOpen: true);
@@ -62,6 +62,6 @@ public class WebhookSignatureFilter<TRequest, TValidator, TResolver>(
             return Results.Problem("Invalid Signature", statusCode: StatusCodes.Status401Unauthorized);
         }
         
-        return next(context);
+        return await next(context);
     }
 }
