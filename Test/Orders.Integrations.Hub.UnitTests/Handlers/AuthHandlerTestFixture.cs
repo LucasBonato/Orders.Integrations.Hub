@@ -8,10 +8,13 @@ using Orders.Integrations.Hub.Integrations.Common.Extensions;
 using Orders.Integrations.Hub.Integrations.Common.ValueObjects;
 using Orders.Integrations.Hub.UnitTests.Helpers;
 
+using Xunit.Sdk;
+
 namespace Orders.Integrations.Hub.UnitTests.Handlers;
 
-public abstract class AuthHandlerTestFixture
+public abstract class AuthHandlerTestFixture : IXunitSerializable
 {
+    public string Name { get; set; } = string.Empty;
     public abstract TestHandler InnerHandler { get; }
     public abstract DelegatingHandler Handler { get; }
     public abstract IIntegrationContext CreateContext();
@@ -51,5 +54,15 @@ public abstract class AuthHandlerTestFixture
         HttpRequestMessage request = new(HttpMethod.Get, "http://localhost/test");
         request.SetIntegrationContext(context);
         return request;
+    }
+
+    public void Deserialize(IXunitSerializationInfo info)
+    {
+        info.AddValue(nameof(Name), Name);
+    }
+
+    public void Serialize(IXunitSerializationInfo info)
+    {
+        Name = info.GetValue<string>(nameof(Name))?? string.Empty;
     }
 }
