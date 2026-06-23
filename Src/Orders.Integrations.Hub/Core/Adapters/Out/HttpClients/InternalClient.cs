@@ -8,8 +8,7 @@ namespace Orders.Integrations.Hub.Core.Adapters.Out.HttpClients;
 public class InternalClient(
     ILogger<InternalClient> logger,
     HttpClient httpClient
-) : IInternalClient
-{
+) : IInternalClient {
     private readonly List<IntegrationResponse> _responses = [
         new(
             TenantId: 1,
