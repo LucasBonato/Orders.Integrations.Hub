@@ -27,8 +27,8 @@
         <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.15.1"/>
         <PackageReference Include="OpenTelemetry.Instrumentation.Runtime" Version="1.15.1"/>
         <PackageReference Include="OpenTelemetry.Instrumentation.StackExchangeRedis" Version="1.15.1-beta.2"/>
-        <PackageReference Include="Refit" Version="11.2.0" />
-        <PackageReference Include="Refit.HttpClientFactory" Version="11.2.0" />
+        <PackageReference Include="Refit" Version="12.0.0" />
+        <PackageReference Include="Refit.HttpClientFactory" Version="12.0.0" />
         <PackageReference Include="Scalar.AspNetCore" Version="2.16.5" />
         <PackageReference Include="Scrutor" Version="7.0.0"/>
     </ItemGroup>
