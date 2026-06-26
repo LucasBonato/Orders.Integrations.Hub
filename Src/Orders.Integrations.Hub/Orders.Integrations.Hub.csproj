@@ -11,24 +11,26 @@
 
     <ItemGroup>
         <PackageReference Include="Anv" Version="1.0.0"/>
+        <PackageReference Include="Asp.Versioning.Http" Version="10.0.0" />
+        <PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="10.0.0" />
         <PackageReference Include="AWSSDK.Core" Version="4.0.9.7" />
         <PackageReference Include="AWSSDK.SimpleNotificationService" Version="4.0.3.8" />
         <PackageReference Include="AWSSDK.S3" Version="4.0.25.3" />
         <PackageReference Include="AWSSDK.SQS" Version="4.0.3.8" />
         <PackageReference Include="DotNetEnv" Version="3.2.0"/>
-        <PackageReference Include="MassTransit.RabbitMQ" Version="9.1.2" />
+        <PackageReference Include="MassTransit.RabbitMQ" Version="8.5.10" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.9"/>
         <PackageReference Include="Microsoft.Extensions.Caching.Hybrid" Version="10.7.0"/>
         <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="10.0.9"/>
         <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.16.0"/>
         <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.16.0"/>
-        <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.15.2"/>
+        <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.16.0" />
         <PackageReference Include="OpenTelemetry.Instrumentation.AWS" Version="1.16.0" />
-        <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.15.1"/>
+        <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.16.0" />
         <PackageReference Include="OpenTelemetry.Instrumentation.Runtime" Version="1.15.1"/>
         <PackageReference Include="OpenTelemetry.Instrumentation.StackExchangeRedis" Version="1.15.1-beta.2"/>
-        <PackageReference Include="Refit" Version="11.2.0" />
-        <PackageReference Include="Refit.HttpClientFactory" Version="11.2.0" />
+        <PackageReference Include="Refit" Version="12.0.0" />
+        <PackageReference Include="Refit.HttpClientFactory" Version="12.0.0" />
         <PackageReference Include="Scalar.AspNetCore" Version="2.16.5" />
         <PackageReference Include="Scrutor" Version="7.0.0"/>
     </ItemGroup>

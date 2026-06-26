@@ -14,18 +14,18 @@ internal sealed class OrdersHubOrderCancellationReasonEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapGet("Orders/Hub/Cancellation-Reason", async (
+        app.MapGet("orders/cancellation-reasons", async (
             [FromServices] IIntegrationRouter router,
             [FromQuery] string? externalOrderId,
             [FromQuery] string integration
         ) => {
-            var useCase = router.Resolve<IOrderGetCancellationReasonUseCase>(IntegrationKey.From(integration));
+            IOrderGetCancellationReasonUseCase useCase = router.Resolve<IOrderGetCancellationReasonUseCase>(IntegrationKey.From(integration));
             return Ok(await useCase.ExecuteAsync(externalOrderId));
         })
-        .WithTags("Cancellation Reason")
-        .WithDescription("Get cancellation reason of the order by integration")
+        .WithTags("Orders Hub", "Orders")
+        .WithDescription("Get cancellation reasons of the order by integration")
         .Produces<List<CancellationReasonsResponse>>()
         .ProducesValidationProblem()
-        .CacheOutput();
+        .ProducesProblem(StatusCodes.Status500InternalServerError);
     }
 }

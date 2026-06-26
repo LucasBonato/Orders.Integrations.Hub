@@ -13,7 +13,7 @@ internal sealed class OrdersHubOrderDisputeEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost("/Orders/Hub/Dispute", async (
+        app.MapPost("/orders/disputes", async (
             [FromServices] IIntegrationRouter router,
             [FromBody] RespondDisputeIntegrationRequest request
         ) => {
@@ -21,7 +21,11 @@ internal sealed class OrdersHubOrderDisputeEndpoint : IEndpoint
             await useCase.ExecuteAsync(request);
             return NoContent();
         })
-        .WithTags("Change Order Dispute Status")
-        .WithDescription("Change order dispute in integrations");
+        .WithTags("Orders Hub", "Orders")
+        .WithDescription("Change order dispute in integrations")
+        .Accepts<RespondDisputeIntegrationRequest>("application/json")
+        .Produces(StatusCodes.Status204NoContent)
+        .ProducesValidationProblem()
+        .ProducesProblem(StatusCodes.Status500InternalServerError);
     }
 }

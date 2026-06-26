@@ -14,7 +14,7 @@ internal sealed class RappiWebhookCancelOrderEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost("/Rappi/Webhook/Cancel", async (
+        app.MapPost("/rappi/webhook/cancel", async (
             [FromServices] IOrderUpdateUseCase<RappiWebhookEventOrderRequest> orderUpdate,
             HttpContext context
         ) => {
@@ -23,8 +23,11 @@ internal sealed class RappiWebhookCancelOrderEndpoint : IEndpoint
             return Accepted();
         })
         .WithTags("Rappi")
-        .WithDescription("Rappi Webhook Endpoint")
+        .WithDescription("Rappi webhook endpoint to cancel orders")
+        .Accepts<RappiWebhookEventOrderRequest>("application/json")
+        .Produces(StatusCodes.Status202Accepted)
         .ProducesValidationProblem()
+        .ProducesProblem(StatusCodes.Status500InternalServerError)
         .AddEndpointFilter<WebhookSignatureFilter<RappiWebhookEventOrderRequest, RappiSignatureValidator, RappiOrderEventResolver>>();
     }
 }

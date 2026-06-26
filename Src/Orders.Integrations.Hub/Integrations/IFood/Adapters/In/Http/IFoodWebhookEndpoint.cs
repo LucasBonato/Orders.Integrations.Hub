@@ -15,7 +15,7 @@ internal sealed class IFoodWebhookEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost("/IFood/Webhook", async (
+        app.MapPost("/ifood/webhook", async (
             [FromServices] IOrderCreateUseCase<IFoodWebhookRequest> orderCreate,
             [FromServices] IOrderUpdateUseCase<IFoodWebhookRequest> orderUpdate,
             [FromServices] IOrderDisputeUseCase<IFoodWebhookRequest> orderDispute,
@@ -47,9 +47,11 @@ internal sealed class IFoodWebhookEndpoint : IEndpoint
             };
         })
         .WithTags("IFood")
-        .WithDescription("IFood Webhook Endpoint")
+        .WithDescription("IFood webhook endpoint to receive events")
+        .Accepts<IFoodWebhookRequest>("application/json")
         .Produces<IFoodWebhookRequest>()
         .ProducesValidationProblem()
+        .ProducesProblem(StatusCodes.Status500InternalServerError)
         .AddEndpointFilter<WebhookSignatureFilter<IFoodWebhookRequest, IFoodSignatureStrategy, IFoodSignatureStrategy>>()
         .CacheOutput();
     }

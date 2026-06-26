@@ -12,7 +12,7 @@ internal sealed class RappiWebhookPingEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost("/Rappi/Webhook/Ping", (
+        app.MapPost("/rappi/webhook/ping", (
             HttpContext context
         ) => {
             RappiWebhookPingRequest _ = (RappiWebhookPingRequest)context.Items["WebhookRequest"]!;
@@ -25,8 +25,11 @@ internal sealed class RappiWebhookPingEndpoint : IEndpoint
             ));
         })
         .WithTags("Rappi")
-        .WithDescription("Rappi Webhook Endpoint")
+        .WithDescription("Rappi webhook endpoint to ping the application")
+        .Accepts<RappiWebhookPingRequest>("application/json")
+        .Produces<RappiWebhookPingResponse>()
         .ProducesValidationProblem()
+        .ProducesProblem(StatusCodes.Status500InternalServerError)
         .AddEndpointFilter<WebhookSignatureFilter<RappiWebhookPingRequest, RappiSignatureValidator, RappiPingResolver>>();
     }
 }
