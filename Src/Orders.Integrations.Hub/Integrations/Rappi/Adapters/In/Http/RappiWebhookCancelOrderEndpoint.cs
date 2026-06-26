@@ -14,7 +14,7 @@ internal sealed class RappiWebhookCancelOrderEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost("/Rappi/Webhook/Cancel", async (
+        app.MapPost("/rappi/webhook/cancel", async (
             [FromServices] IOrderUpdateUseCase<RappiWebhookEventOrderRequest> orderUpdate,
             HttpContext context
         ) => {

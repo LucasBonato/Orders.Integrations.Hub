@@ -15,12 +15,11 @@ internal sealed class OrdersHubProductStatusEndpoint : IEndpoint
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
         RouteGroupBuilder group = app
-                .MapGroup("/Orders/Hub/Product")
-                .WithTags("Product Status")
-                .WithDescription("Change status of the products in integrations")
+                .MapGroup("/orders/products")
+                .ExcludeFromDescription()
             ;
         
-        group.MapPost("/Enable", async (
+        group.MapPost("/enable", async (
             [FromServices] IIntegrationRouter router,
             HttpRequest request
         ) => {
@@ -29,7 +28,7 @@ internal sealed class OrdersHubProductStatusEndpoint : IEndpoint
             return NoContent();
         });
         
-        group.MapPost("/Disable", async (
+        group.MapPost("/disable", async (
             [FromServices] IIntegrationRouter router,
             HttpRequest request
         ) => {

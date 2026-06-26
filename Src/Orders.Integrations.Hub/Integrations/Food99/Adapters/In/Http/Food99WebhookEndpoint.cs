@@ -16,7 +16,7 @@ internal sealed class Food99WebhookEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost("/Food99/Webhook", async (
+        app.MapPost("/food99/webhook", async (
             [FromServices] IOrderCreateUseCase<Food99WebhookRequest> orderCreate,
             [FromServices] IOrderUpdateUseCase<Food99WebhookRequest> orderUpdate,
             [FromServices] IOrderDisputeUseCase<Food99WebhookRequest> orderDispute,

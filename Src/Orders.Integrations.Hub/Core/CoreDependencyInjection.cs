@@ -8,6 +8,9 @@ using System.Text.Json.Serialization;
 using Amazon.S3;
 using Amazon.SimpleNotificationService;
 
+using Asp.Versioning;
+using Asp.Versioning.Builder;
+
 using MassTransit;
 
 using Microsoft.AspNetCore.Mvc;
@@ -39,7 +42,17 @@ public static class CoreDependencyInjection
 {
     public static WebApplication UseCore(this WebApplication app)
     {
-        app.MapEndpoints();
+        ApiVersionSet apiVersionSet = app.NewApiVersionSet()
+            .HasApiVersion(new ApiVersion(1))
+            .ReportApiVersions()
+            .Build();
+
+        
+        app.MapEndpoints(
+            app
+                .MapGroup("/api/v{version:apiVersion}/orders-hub")
+                .WithApiVersionSet(apiVersionSet)
+        );
         app.UseExceptionHandler(_ => { });
         return app;
     }
@@ -57,6 +70,22 @@ public static class CoreDependencyInjection
         
         private IServiceCollection AddServices()
         {
+            services
+                .AddApiVersioning(options => {
+                    options.DefaultApiVersion = new ApiVersion(1);
+                    options.ReportApiVersions = true;
+                    options.AssumeDefaultVersionWhenUnspecified = true;
+                    options.ApiVersionReader = ApiVersionReader.Combine(
+                        new UrlSegmentApiVersionReader(),
+                        new HeaderApiVersionReader("X-Api-Version")
+                    );
+                })
+                .AddApiExplorer(options => {
+                    options.GroupNameFormat = "'v'V";
+                    options.SubstituteApiVersionInUrl = true;
+                })
+            ;
+            
             services.AddEndpoints(Assembly.GetExecutingAssembly());
             
             services.AddExceptionHandler<ExceptionHandlerMiddleware>();

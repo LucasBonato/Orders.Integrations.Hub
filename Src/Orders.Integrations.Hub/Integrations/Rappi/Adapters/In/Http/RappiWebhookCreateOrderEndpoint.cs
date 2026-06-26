@@ -14,7 +14,7 @@ internal sealed class RappiWebhookCreateOrderEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost("/Rappi/Webhook", async (
+        app.MapPost("/rappi/webhook", async (
             [FromServices] IOrderCreateUseCase<RappiOrder> orderCreate,
             HttpContext context
         ) => {

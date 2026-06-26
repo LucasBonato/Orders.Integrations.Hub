@@ -12,7 +12,7 @@ internal sealed class RappiWebhookPingEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost("/Rappi/Webhook/Ping", (
+        app.MapPost("/rappi/webhook/ping", (
             HttpContext context
         ) => {
             RappiWebhookPingRequest _ = (RappiWebhookPingRequest)context.Items["WebhookRequest"]!;
