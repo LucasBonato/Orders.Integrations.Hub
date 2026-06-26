@@ -23,8 +23,11 @@ internal sealed class RappiWebhookPatchOrderEndpoint : IEndpoint
             return Accepted();
         })
         .WithTags("Rappi")
-        .WithDescription("Rappi Webhook Endpoint")
+        .WithDescription("Rappi webhook endpoint to receive other events")
+        .Accepts<RappiWebhookEventOrderRequest>("application/json")
+        .Produces(StatusCodes.Status202Accepted)
         .ProducesValidationProblem()
+        .ProducesProblem(StatusCodes.Status500InternalServerError)
         .AddEndpointFilter<WebhookSignatureFilter<RappiWebhookEventOrderRequest, RappiSignatureValidator, RappiOrderEventResolver>>();
     }
 }

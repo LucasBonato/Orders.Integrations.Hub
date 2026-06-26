@@ -25,8 +25,11 @@ internal sealed class RappiWebhookPingEndpoint : IEndpoint
             ));
         })
         .WithTags("Rappi")
-        .WithDescription("Rappi Webhook Endpoint")
+        .WithDescription("Rappi webhook endpoint to ping the application")
+        .Accepts<RappiWebhookPingRequest>("application/json")
+        .Produces<RappiWebhookPingResponse>()
         .ProducesValidationProblem()
+        .ProducesProblem(StatusCodes.Status500InternalServerError)
         .AddEndpointFilter<WebhookSignatureFilter<RappiWebhookPingRequest, RappiSignatureValidator, RappiPingResolver>>();
     }
 }

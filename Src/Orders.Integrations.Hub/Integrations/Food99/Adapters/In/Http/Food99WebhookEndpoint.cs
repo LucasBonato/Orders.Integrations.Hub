@@ -37,15 +37,31 @@ internal sealed class Food99WebhookEndpoint : IEndpoint
                 
                 _ => null
             };
-
+            
             return result is null
-                ? BadRequest(new { Errno = 1, Errmsg = "Could not detect webhook request" })
-                : Ok(new { Errno = 0, Errmsg = "ok" });
+                ? BadRequest(
+                    new Food99BaseResponse(
+                        Errno: 1, 
+                        Errmsg: "Could not detect webhook request", 
+                        RequestId: string.Empty, 
+                        Time: 0
+                    )
+                )
+                : Ok(
+                    new Food99BaseResponse(
+                        Errno: 0, 
+                        Errmsg: "ok", 
+                        RequestId: string.Empty, 
+                        Time: 0
+                    )
+                );
         })
         .WithTags("Food99")
-        .WithDescription("Food99 Webhook Endpoint")
+        .WithDescription("Food99 webhook endpoint to receive events")
+        .Accepts<Food99WebhookRequest>("application/json")
         .Produces<Food99BaseResponse>()
         .ProducesValidationProblem()
+        .ProducesProblem(StatusCodes.Status500InternalServerError)
         .AddEndpointFilter<WebhookSignatureFilter<Food99WebhookRequest, Food99SignatureStrategy, Food99SignatureStrategy>>();
     }
 }

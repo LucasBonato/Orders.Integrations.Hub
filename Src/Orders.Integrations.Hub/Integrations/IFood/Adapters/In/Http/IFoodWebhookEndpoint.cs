@@ -47,9 +47,11 @@ internal sealed class IFoodWebhookEndpoint : IEndpoint
             };
         })
         .WithTags("IFood")
-        .WithDescription("IFood Webhook Endpoint")
+        .WithDescription("IFood webhook endpoint to receive events")
+        .Accepts<IFoodWebhookRequest>("application/json")
         .Produces<IFoodWebhookRequest>()
         .ProducesValidationProblem()
+        .ProducesProblem(StatusCodes.Status500InternalServerError)
         .AddEndpointFilter<WebhookSignatureFilter<IFoodWebhookRequest, IFoodSignatureStrategy, IFoodSignatureStrategy>>()
         .CacheOutput();
     }
