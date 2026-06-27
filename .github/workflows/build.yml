@@ -19,7 +19,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
@@ -54,13 +54,13 @@ jobs:
 
       - name: Publish application
         run: | 
-          dotnet publish Orders.Integrations.Hub.slnx \
+          dotnet publish Src/Orders.Integrations.Hub/Orders.Integrations.Hub.csproj \
             -c Release \
             --no-build \
             -o ./publish
 
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: build-output
           path: ./publish
@@ -68,7 +68,7 @@ jobs:
 
       - name: Upload test results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: test-results
           path: "**/TestResults/**/*.trx"
@@ -85,13 +85,13 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
 
       - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -99,7 +99,7 @@ jobs:
 
       - name: Extract metadata
         id: meta
-        uses: docker/metadata-action@v5
+        uses: docker/metadata-action@v6
         with:
           images: ghcr.io/${{ github.repository }}
           tags: |
@@ -109,7 +109,7 @@ jobs:
             type=semver,pattern={{major}}.{{minor}}
 
       - name: Build and push Docker image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v7
         with:
           context: .
           push: true
@@ -139,7 +139,7 @@ jobs:
           echo "Version: ${{ github.sha }}" >> build-status.txt
 
       - name: Upload build status
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: build-status
           path: build-status.txt
