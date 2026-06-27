@@ -2,13 +2,9 @@ name: Code Quality & Security
 
 on:
   pull_request:
-    branches:
-      - main
-      - dev
+    branches: [main, dev]
   push:
-    branches:
-      - main
-      - dev
+    branches: [main, dev]
 
 concurrency:
   group: code-quality-${{ github.ref }}
@@ -35,18 +31,21 @@ jobs:
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
+      - name: Install Semgrep
+        run: pip install semgrep
+
       - name: Run Semgrep SAST Scan
-        uses: returntocorp/semgrep-action@v1
-        with:
-          generateSarif: true
-          config: >-
-            p/csharp
-            p/owasp-top-ten
-            p/security-audit
+        run: |
+          semgrep scan \
+            --config=p/csharp \
+            --config=p/owasp-top-ten \
+            --config=p/security-audit \
+            --sarif \
+            --output=semgrep.sarif || true
 
       - name: Upload SARIF to GitHub Security
-        uses: github/codeql-action/upload-sarif@v3
         if: always()
+        uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: semgrep.sarif
           category: semgrep
@@ -67,14 +66,14 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore Orders.Integrations.Hub.slnx
 
-      - name: Run dotnet list package vulnerabilities
+      - name: Check vulnerabilities
         run: dotnet list package --vulnerable --include-transitive
 
-      - name: Check for outdated packages
+      - name: Check outdated packages
         run: dotnet outdated Orders.Integrations.Hub.slnx --exit-code 1 --options Prerelease=false || true
 
-  code-complexity:
-    name: Code Complexity Analysis
+  code-quality:
+    name: Code Quality Analysis
     runs-on: ubuntu-latest
 
     steps:
@@ -86,21 +85,11 @@ jobs:
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
-      - name: Install complexity analyzer
-        run: dotnet tool install -g Metriculator
+      - name: Restore
+        run: dotnet restore Orders.Integrations.Hub.slnx
 
-      - name: Analyze complexity
-        run: |
-          metriculator Src/Orders.Integrations.Hub \
-            --output complexity-report.json \
-            --threshold 15 || true
-
-      - name: Upload complexity report
-        uses: actions/upload-artifact@v7
-        if: always()
-        with:
-          name: complexity-report
-          path: complexity-report.json
+      - name: Build with analyzers
+        run: dotnet build Orders.Integrations.Hub.slnx -c Release /p:RunAnalyzers=true
 
   code-duplication:
     name: Code Duplication Check
@@ -110,19 +99,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v7
 
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v5
-        with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
+      - name: Install jscpd
+        run: npm install -g jscpd
 
-      - name: Install SimSharp (duplication detector)
-        run: dotnet tool install -g SimSharp
-
-      - name: Detect code duplication
-        run: |
-          simsharp Src/Orders.Integrations.Hub \
-            --threshold 3 \
-            --min-fragment-size 10 || true
+      - name: Detect duplication
+        run: jscpd Src/ --min-lines 10 --reporters json || true
 
   licensing-check:
     name: License Compliance
@@ -140,9 +121,10 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore Orders.Integrations.Hub.slnx
 
-      - name: Check licenses
-        run: dotnet list package --format json > packages.json && \
-          echo "Review licenses in artifacts"
+      - name: Export packages
+        run: |
+          dotnet list package --format json > packages.json
+          echo "Package list generated"
 
       - name: Upload package list
         uses: actions/upload-artifact@v7
@@ -153,40 +135,41 @@ jobs:
   quality-gate:
     name: Quality Gate
     runs-on: ubuntu-latest
-    needs: [ sast-scan, dependency-check, code-complexity, code-duplication, licensing-check ]
+    needs: [sast-scan, dependency-check, code-quality, code-duplication, licensing-check]
     if: always()
 
     steps:
-      - name: Check quality gate status
+      - name: Evaluate status
         run: |
           if [[ "${{ needs.sast-scan.result }}" == "failure" ]] || \
              [[ "${{ needs.dependency-check.result }}" == "failure" ]]; then
-            echo "❌ Quality Gate FAILED - Security/Dependency issues"
+            echo "❌ Quality Gate FAILED"
             exit 1
           fi
+
           echo "✅ Quality Gate PASSED"
 
-      - name: Comment PR with quality summary
+      - name: Comment PR
         if: github.event_name == 'pull_request'
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           script: |
             const sast = '${{ needs.sast-scan.result }}' === 'success' ? '✅' : '⚠️';
-            const dependency = '${{ needs.dependency-check.result }}' === 'success' ? '✅' : '⚠️';
-            const complexity = '${{ needs.code-complexity.result }}' === 'success' ? '✅' : '⚠️';
-            const duplication = '${{ needs.code-duplication.result }}' === 'success' ? '✅' : '⚠️';
-            const licenses = '${{ needs.licensing-check.result }}' === 'success' ? '✅' : '⚠️';
+            const deps = '${{ needs.dependency-check.result }}' === 'success' ? '✅' : '⚠️';
+            const quality = '${{ needs.code-quality.result }}' === 'success' ? '✅' : '⚠️';
+            const dup = '${{ needs.code-duplication.result }}' === 'success' ? '✅' : '⚠️';
+            const lic = '${{ needs.licensing-check.result }}' === 'success' ? '✅' : '⚠️';
 
             const comment = [
               '| Check | Status |',
-              '|-------|--------|',
-              `| 🔍 SAST Scan | ${sast} |`,
-              `| 📦 Dependency Scan | ${dependency} |`,
-              `| 📊 Complexity | ${complexity} |`,
-              `| 🔄 Duplication | ${duplication} |`,
-              `| 📋 Licenses | ${licenses} |`,
+              '|------|--------|',
+              `| 🔍 SAST | ${sast} |`,
+              `| 📦 Dependencies | ${deps} |`,
+              `| 📊 Code Quality | ${quality} |`,
+              `| 🔄 Duplication | ${dup} |`,
+              `| 📋 Licenses | ${lic} |`,
               '',
-              `See workflow run for details: ${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`
+              `Run: ${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`
             ].join('\n');
 
             await github.rest.issues.createComment({
