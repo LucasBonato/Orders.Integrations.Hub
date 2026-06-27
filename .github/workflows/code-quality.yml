@@ -135,6 +135,10 @@ jobs:
   quality-gate:
     name: Quality Gate
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+      pull-requests: write
     needs: [sast-scan, dependency-check, code-quality, code-duplication, licensing-check]
     if: always()
 
