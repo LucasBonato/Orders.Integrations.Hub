@@ -171,14 +171,20 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
+            const sast = '${{ needs.sast-scan.result }}' === 'success' ? '✅' : '⚠️';
+            const dependency = '${{ needs.dependency-check.result }}' === 'success' ? '✅' : '⚠️';
+            const complexity = '${{ needs.code-complexity.result }}' === 'success' ? '✅' : '⚠️';
+            const duplication = '${{ needs.code-duplication.result }}' === 'success' ? '✅' : '⚠️';
+            const licenses = '${{ needs.licensing-check.result }}' === 'success' ? '✅' : '⚠️';
+
             const comment = [
               '| Check | Status |',
               '|-------|--------|',
-              `| 🔍 SAST Scan | ${{ needs.sast-scan.result == 'success' ? '✅' : '⚠️' }} |`,
-              `| 📦 Dependency Scan | ${{ needs.dependency-check.result == 'success' ? '✅' : '⚠️' }} |`,
-              `| 📊 Complexity | ${{ needs.code-complexity.result == 'success' ? '✅' : '⚠️' }} |`,
-              `| 🔄 Duplication | ${{ needs.code-duplication.result == 'success' ? '✅' : '⚠️' }} |`,
-              `| 📋 Licenses | ${{ needs.licensing-check.result == 'success' ? '✅' : '⚠️' }} |`,
+              `| 🔍 SAST Scan | ${sast} |`,
+              `| 📦 Dependency Scan | ${dependency} |`,
+              `| 📊 Complexity | ${complexity} |`,
+              `| 🔄 Duplication | ${duplication} |`,
+              `| 📋 Licenses | ${licenses} |`,
               '',
               `See workflow run for details: ${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`
             ].join('\n');
