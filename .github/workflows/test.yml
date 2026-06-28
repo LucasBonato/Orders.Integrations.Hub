@@ -207,12 +207,14 @@ jobs:
         run: dotnet tool install -g dotnet-reportgenerator-globaltool
 
       - name: Download unit coverage
+        if: needs.unit-tests.result == 'success'
         uses: actions/download-artifact@v8
         with:
           name: coverage-unit
           path: coverage-input/unit
 
       - name: Download integration coverage
+        if: needs.integration-tests.result == 'success'
         uses: actions/download-artifact@v8
         with:
           name: coverage-integration
@@ -220,8 +222,13 @@ jobs:
 
       - name: Generate coverage report
         run: |
+          reports=$(find coverage-input -name 'coverage.cobertura.xml' 2>/dev/null | tr '\n' ';')
+          if [ -z "$reports" ]; then
+            echo "⚠️ No coverage data available (tests failed)." >> $GITHUB_STEP_SUMMARY
+            exit 0
+          fi
           reportgenerator \
-            -reports:coverage-input/**/coverage.cobertura.xml \
+            -reports:"$reports" \
             -targetdir:./coverage-html \
             -reporttypes:HtmlInline_AzurePipelines;Cobertura \
             -assemblyfilters:"+Orders.Integrations.Hub*"
@@ -241,6 +248,7 @@ jobs:
           echo "See attached HTML report for detailed breakdown." >> $GITHUB_STEP_SUMMARY
 
       - name: Upload coverage report
+        if: hashFiles('./coverage-html/**') != ''
         uses: actions/upload-artifact@v7
         with:
           name: coverage-report
