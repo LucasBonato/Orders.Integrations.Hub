@@ -62,11 +62,16 @@ jobs:
           name: unit-tests-coverage
           fail_ci_if_error: false
 
+      - name: Prepare coverage files
+        run: |
+          mkdir -p coverage-data
+          find . -name 'coverage.cobertura.xml' -exec cp {} coverage-data/ \;
+
       - name: Upload coverage artifacts
         uses: actions/upload-artifact@v7
         with:
           name: coverage-unit
-          path: "**/coverage.cobertura.xml"
+          path: coverage-data/
 
       - name: Upload test results
         if: failure()
@@ -128,11 +133,16 @@ jobs:
           name: integration-tests-coverage
           fail_ci_if_error: false
 
+      - name: Prepare coverage files
+        run: |
+          mkdir -p coverage-data
+          find . -name 'coverage.cobertura.xml' -exec cp {} coverage-data/ \;
+
       - name: Upload coverage artifacts
         uses: actions/upload-artifact@v7
         with:
           name: coverage-integration
-          path: "**/coverage.cobertura.xml"
+          path: coverage-data/
 
       - name: Upload test results
         if: failure()
@@ -196,17 +206,22 @@ jobs:
       - name: Install ReportGenerator
         run: dotnet tool install -g dotnet-reportgenerator-globaltool
 
-      - name: Download coverage artifacts
+      - name: Download unit coverage
         uses: actions/download-artifact@v8
         with:
-          pattern: coverage-*
-          path: coverage-input
-          merge-multiple: true
+          name: coverage-unit
+          path: coverage-input/unit
+
+      - name: Download integration coverage
+        uses: actions/download-artifact@v8
+        with:
+          name: coverage-integration
+          path: coverage-input/integration
 
       - name: Generate coverage report
         run: |
           reportgenerator \
-            -reports:"**/coverage.cobertura.xml" \
+            -reports:coverage-input/**/coverage.cobertura.xml \
             -targetdir:./coverage-html \
             -reporttypes:HtmlInline_AzurePipelines;Cobertura \
             -assemblyfilters:"+Orders.Integrations.Hub*"
