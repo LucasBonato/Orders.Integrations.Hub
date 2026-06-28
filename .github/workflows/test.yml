@@ -53,14 +53,6 @@ jobs:
             --logger trx \
             --collect:"XPlat Code Coverage" \
             -- RunConfiguration.DisableAppDomain=true
-          
-          echo ""
-          echo "Coverage files:"
-          find . -name "coverage.cobertura.xml"
-      
-          echo ""
-          echo "TestResults:"
-          find . -name "TestResults" -type d
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v7
@@ -230,16 +222,18 @@ jobs:
 
       - name: Generate coverage report
         run: |
-          reports=$(find coverage-input -name 'coverage.cobertura.xml' 2>/dev/null | tr '\n' ';')
+          reports=$(find coverage-input -name 'coverage.cobertura.xml' | paste -sd ';' -)
+
           if [ -z "$reports" ]; then
-            echo "⚠️ No coverage data available (tests failed)." >> $GITHUB_STEP_SUMMARY
+            echo "⚠️ No coverage data available." >> "$GITHUB_STEP_SUMMARY"
             exit 0
           fi
+
           reportgenerator \
-            -reports:"$reports" \
-            -targetdir:./coverage-html \
-            -reporttypes:HtmlInline_AzurePipelines;Cobertura \
-            -assemblyfilters:"+Orders.Integrations.Hub*"
+            "-reports:$reports" \
+            "-targetdir:coverage-html" \
+            "-reporttypes:HtmlInline_AzurePipelines;Cobertura" \
+            "-assemblyfilters:+Orders.Integrations.Hub*"
 
       - name: Output coverage summary
         run: |
