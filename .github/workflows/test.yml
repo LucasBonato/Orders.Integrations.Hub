@@ -1,18 +1,18 @@
-name: Test Coverage & Quality
+name: Tests
 
 on:
-  pull_request:
+  workflow_dispatch:
+  push:
     branches:
       - main
       - dev
-    types: [opened, synchronize, reopened]
-  push:
+  pull_request:
     branches:
       - main
       - dev
 
 concurrency:
-  group: test-coverage-${{ github.ref }}
+  group: tests-${{ github.ref }}
   cancel-in-progress: true
 
 env:
@@ -39,17 +39,17 @@ jobs:
         run: dotnet restore Orders.Integrations.Hub.slnx
 
       - name: Build
-        run: | 
+        run: |
           dotnet build Orders.Integrations.Hub.slnx \
             -c Release \
             --no-restore
 
       - name: Run Unit Tests
-        run: | 
+        run: |
           dotnet test Test/Orders.Integrations.Hub.UnitTests \
             -c Release \
             --no-build \
-            --logger "console;verbosity=detailed" \
+            --logger "console;verbosity=minimal" \
             --logger trx \
             --collect:"XPlat Code Coverage" \
             -- RunConfiguration.DisableAppDomain=true
@@ -63,7 +63,7 @@ jobs:
           fail_ci_if_error: false
 
       - name: Upload test results
-        if: always()
+        if: failure()
         uses: actions/upload-artifact@v7
         with:
           name: unit-test-results
@@ -97,7 +97,7 @@ jobs:
         run: dotnet restore Orders.Integrations.Hub.slnx
 
       - name: Build
-        run: | 
+        run: |
           dotnet build Orders.Integrations.Hub.slnx \
             -c Release \
             --no-restore
@@ -107,7 +107,7 @@ jobs:
           dotnet test Test/Orders.Integrations.Hub.IntegrationTests \
             -c Release \
             --no-build \
-            --logger "console;verbosity=detailed" \
+            --logger "console;verbosity=minimal" \
             --logger trx \
             --collect:"XPlat Code Coverage"
         env:
@@ -123,7 +123,7 @@ jobs:
           fail_ci_if_error: false
 
       - name: Upload test results
-        if: always()
+        if: failure()
         uses: actions/upload-artifact@v7
         with:
           name: integration-test-results
@@ -152,15 +152,15 @@ jobs:
             --no-restore
 
       - name: Run Architecture Tests
-        run: | 
+        run: |
           dotnet test Test/Orders.Integrations.Hub.ArchTests \
             -c Release \
             --no-build \
-            --logger "console;verbosity=detailed" \
+            --logger "console;verbosity=minimal" \
             --logger trx
 
       - name: Upload test results
-        if: always()
+        if: failure()
         uses: actions/upload-artifact@v7
         with:
           name: arch-test-results
@@ -169,51 +169,53 @@ jobs:
   coverage-report:
     name: Coverage Report
     runs-on: ubuntu-latest
-    needs: [unit-tests, integration-tests, architecture-tests]
+    needs: [unit-tests, integration-tests]
     if: always()
-    permissions:
-      pull-requests: write
 
     steps:
-      - name: Download all coverage artifacts
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Install ReportGenerator
+        run: dotnet tool install -g dotnet-reportgenerator-globaltool
+
+      - name: Download coverage artifacts
         uses: actions/download-artifact@v8
         with:
-          path: coverage-results
+          pattern: coverage-*
+          path: coverage-input
+          merge-multiple: true
 
-      - name: Merge coverage reports
+      - name: Generate coverage report
         run: |
-          find . -name "coverage.cobertura.xml" -type f
-          echo "Coverage files found. Merge would occur here with ReportGenerator."
+          reportgenerator \
+            -reports:"**/coverage.cobertura.xml" \
+            -targetdir:./coverage-html \
+            -reporttypes:HtmlInline_AzurePipelines;Cobertura \
+            -assemblyfilters:"+Orders.Integrations.Hub*"
 
-      - name: Generate coverage badge
+      - name: Output coverage summary
         run: |
-          echo "Coverage badge generation - integrate ReportGenerator for visualization"
-
-      - name: Comment PR with coverage
-        if: github.event_name == 'pull_request'
-        uses: actions/github-script@v9
-        with:
-          script: |
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: '📊 **Test Coverage Report**\n\n✅ Unit Tests: Passed\n✅ Integration Tests: Passed\n✅ Architecture Tests: Passed\n\nDetailed reports in Artifacts.'
-            })
-
-  test-summary:
-    name: Test Results Summary
-    runs-on: ubuntu-latest
-    needs: [unit-tests, integration-tests, architecture-tests]
-    if: always()
-
-    steps:
-      - name: Check test results
-        run: |
-          if [[ "${{ needs.unit-tests.result }}" == "failure" ]] || \
-             [[ "${{ needs.integration-tests.result }}" == "failure" ]] || \
-             [[ "${{ needs.architecture-tests.result }}" == "failure" ]]; then
-            echo "❌ Tests FAILED"
-            exit 1
+          echo "## Coverage Report" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ -f ./coverage-html/Cobertura.xml ]; then
+            COVERAGE=$(grep -oP 'line-rate="\K[^"]*' ./coverage-html/Cobertura.xml | head -1)
+            COVERAGE_PCT=$(echo "$COVERAGE * 100" | bc -l | xargs printf "%.1f")
+            echo "**Overall coverage: $COVERAGE_PCT%**" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "Coverage data not available from all sources." >> $GITHUB_STEP_SUMMARY
           fi
-          echo "✅ All tests PASSED"
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "See attached HTML report for detailed breakdown." >> $GITHUB_STEP_SUMMARY
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v7
+        with:
+          name: coverage-report
+          path: ./coverage-html
+          retention-days: 14
