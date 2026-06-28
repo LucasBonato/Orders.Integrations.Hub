@@ -62,6 +62,12 @@ jobs:
           name: unit-tests-coverage
           fail_ci_if_error: false
 
+      - name: Upload coverage artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: coverage-unit
+          path: "**/coverage.cobertura.xml"
+
       - name: Upload test results
         if: failure()
         uses: actions/upload-artifact@v7
@@ -121,6 +127,12 @@ jobs:
           flags: integration
           name: integration-tests-coverage
           fail_ci_if_error: false
+
+      - name: Upload coverage artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: coverage-integration
+          path: "**/coverage.cobertura.xml"
 
       - name: Upload test results
         if: failure()
@@ -204,7 +216,7 @@ jobs:
           echo "## Coverage Report" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           if [ -f ./coverage-html/Cobertura.xml ]; then
-            COVERAGE=$(grep -oP 'line-rate="\K[^"]*' ./coverage-html/Cobertura.xml | head -1)
+            COVERAGE=$(grep -o 'line-rate="[0-9.]*"' ./coverage-html/Cobertura.xml | head -1 | grep -o '[0-9.]*')
             COVERAGE_PCT=$(echo "$COVERAGE * 100" | bc -l | xargs printf "%.1f")
             echo "**Overall coverage: $COVERAGE_PCT%**" >> $GITHUB_STEP_SUMMARY
           else
