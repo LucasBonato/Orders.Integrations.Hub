@@ -232,22 +232,12 @@ jobs:
           reportgenerator \
             "-reports:$reports" \
             "-targetdir:coverage-html" \
-            "-reporttypes:HtmlInline_AzurePipelines;Cobertura" \
+            "-reporttypes:Html;MarkdownSummaryGithub;Cobertura" \
             "-assemblyfilters:+Orders.Integrations.Hub*"
 
-      - name: Output coverage summary
+      - name: Publish coverage summary
         run: |
-          echo "## Coverage Report" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          if [ -f ./coverage-html/Cobertura.xml ]; then
-            COVERAGE=$(grep -o 'line-rate="[0-9.]*"' ./coverage-html/Cobertura.xml | head -1 | grep -o '[0-9.]*')
-            COVERAGE_PCT=$(echo "$COVERAGE * 100" | bc -l | xargs printf "%.1f")
-            echo "**Overall coverage: $COVERAGE_PCT%**" >> $GITHUB_STEP_SUMMARY
-          else
-            echo "Coverage data not available from all sources." >> $GITHUB_STEP_SUMMARY
-          fi
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "See attached HTML report for detailed breakdown." >> $GITHUB_STEP_SUMMARY
+          cat coverage-html/SummaryGithub.md >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload coverage report
         if: hashFiles('./coverage-html/**') != ''
