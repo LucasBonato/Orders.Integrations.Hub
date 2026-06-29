@@ -26,6 +26,8 @@ using Orders.Integrations.Hub.Integrations.Rappi.Domain.ValueObjects.DTOs.Reques
 using Orders.Integrations.Hub.Integrations.Rappi.Domain.ValueObjects.DTOs.Response;
 using Orders.Integrations.Hub.UnitTests.Helpers;
 
+using IntegrationRecord = Orders.Integrations.Hub.Integrations.Common.ValueObjects.Integration;
+
 namespace Orders.Integrations.Hub.UnitTests.Pipeline;
 
 public class IntegrationPipelineTests
@@ -41,7 +43,7 @@ public class IntegrationPipelineTests
         context.TenantId.Returns("tenant-1");
         context.MerchantId.Returns("merchant-1");
         context.Integration.Returns(
-            new Integration(
+            new IntegrationRecord(
                 TenantId: "tenant-1", 
                 MerchantId: "merchant-1", 
                 ClientId: "client-id", 

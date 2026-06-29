@@ -8,6 +8,8 @@ using Orders.Integrations.Hub.Integrations.Common.Extensions;
 using Orders.Integrations.Hub.Integrations.Common.ValueObjects;
 using Orders.Integrations.Hub.UnitTests.Helpers;
 
+using IntegrationRecord = Orders.Integrations.Hub.Integrations.Common.ValueObjects.Integration;
+
 using Xunit.Sdk;
 
 namespace Orders.Integrations.Hub.UnitTests.Handlers;
@@ -24,7 +26,7 @@ public abstract class AuthHandlerTestFixture : IXunitSerializable
     public abstract void SetupAuthSuccess(string token, TimeSpan expiration);
     public abstract void SetupAuthFailure(Exception exception);
 
-    private static Integration CreateDefaultIntegration() 
+    private static IntegrationRecord CreateDefaultIntegration() 
         => new(
             TenantId: "tenant-1", 
             MerchantId: "merchant-1", 

@@ -1,0 +1,11 @@
+{
+  "id": "event-cancelled-1",
+  "code": "CAN",
+  "fullCode": "CANCELLED",
+  "orderId": "order-456",
+  "merchantId": "merchant-1",
+  "merchantIds": ["merchant-1"],
+  "createdAt": "2025-01-15T11:00:00Z",
+  "salesChannel": "IFOOD",
+  "metadata": null
+}

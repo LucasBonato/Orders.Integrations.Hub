@@ -1,0 +1,7 @@
+{
+  "order_event": "TAKEN_VISIBLE_ORDER",
+  "order_id": "rappi-order-123",
+  "store_id": "store-ext-1",
+  "event_time": "2024-01-15T11:30:00Z",
+  "additional_information": null
+}

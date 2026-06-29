@@ -1,0 +1,11 @@
+{
+  "id": "event-keepalive-1",
+  "code": "KEEPALIVE",
+  "fullCode": "KEEPALIVE",
+  "orderId": "",
+  "merchantId": "merchant-1",
+  "merchantIds": null,
+  "createdAt": "2025-01-15T10:00:00Z",
+  "salesChannel": null,
+  "metadata": null
+}

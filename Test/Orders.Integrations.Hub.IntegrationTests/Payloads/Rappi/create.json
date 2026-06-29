@@ -1,0 +1,99 @@
+{
+  "order_detail": {
+    "order_id": "rappi-order-123",
+    "created_at": "2024-01-15T10:30:00Z",
+    "cooking_time": 15,
+    "min_cooking_time": 10,
+    "max_cooking_time": 20,
+    "delivery_method": "DELIVERY",
+    "payment_method": "PIX",
+    "billing_information": null,
+    "delivery_information": {
+      "city": "São Paulo",
+      "complete_address": "Av Paulista, 1000",
+      "street_shortcut": "Av Paulista",
+      "federal_unit": "SP",
+      "street_number": "1000",
+      "neighborhood": "Bela Vista",
+      "complement": "Apt 42",
+      "postal_code": "01310-100",
+      "street_name": "Avenida Paulista"
+    },
+    "totals": {
+      "total_products": 50.00,
+      "total_discounts": 5.00,
+      "total_products_with_discount": 45.00,
+      "total_products_without_discount": 50.00,
+      "total_other_discounts": 0.00,
+      "total_order": 55.00,
+      "total_to_pay": 55.00,
+      "charges": {
+        "shipping": 10.00,
+        "service_fee": 0.00
+      },
+      "other_totals": {
+        "total_rappi_credits": 0,
+        "total_rappi_pay": 0,
+        "tip": 0
+      }
+    },
+    "items": [
+      {
+        "price": 50.00,
+        "sku": "SKU-001",
+        "id": "item-1",
+        "name": "Pizza Calabresa",
+        "type": "PRODUCT",
+        "comments": "Sem cebola",
+        "unit_price_with_discount": 22.50,
+        "unit_price_without_discount": 25.00,
+        "percentage_discount": 10.0,
+        "quantity": 2,
+        "subitems": [
+          {
+            "sku": "SUB-SKU-001",
+            "id": "subitem-1",
+            "name": "Borda Recheada",
+            "type": "TOPPING",
+            "price": 5.00,
+            "percentage_discount": 0,
+            "quantity": 1
+          }
+        ]
+      }
+    ],
+    "discounts": [
+      {
+        "value": 5.00,
+        "description": "Cupom de 10%",
+        "title": "Promoção Pizza",
+        "product_id": 123,
+        "sku": "SKU-001",
+        "type": "PERCENTAGE",
+        "raw_value": 5.00,
+        "value_type": "PERCENTAGE",
+        "max_value": null,
+        "includes_toppings": false,
+        "percentage_by_rappi": 50.0,
+        "percentage_by_partners": 50.0,
+        "amount_by_rappi": 2.50,
+        "amount_by_partner": 2.50,
+        "discount_product_units": 0,
+        "discount_product_unit_value": null
+      }
+    ],
+    "delivery_discount": null
+  },
+  "customer": {
+    "first_name": "João",
+    "last_name": "Silva",
+    "phone_number": "11999999999",
+    "document_type": "CPF",
+    "document_number": "12345678901"
+  },
+  "store": {
+    "internal_id": "store-int-1",
+    "external_id": "store-ext-1",
+    "name": "Pizzaria do João"
+  }
+}

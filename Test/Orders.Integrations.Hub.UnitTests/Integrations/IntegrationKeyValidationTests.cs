@@ -20,7 +20,7 @@ public class IntegrationKeyValidationTests
         // (value provided by theory data)
 
         // Act
-        var exception = Record.Exception(() =>
+        Exception? exception = Record.Exception(() =>
             IntegrationKeyValidator.ValidateRawValue(value)
         );
 
@@ -49,7 +49,7 @@ public class IntegrationKeyValidationTests
     public void GetIntegrationKeyTypes_InIntegrationsNamespace_AllHaveIntegrationKeyDefinitionAttribute()
     {
         // Arrange
-        var assembly = typeof(IFoodIntegrationKey).Assembly;
+        Assembly assembly = typeof(IFoodIntegrationKey).Assembly;
 
         // Act
         List<Type> typesWithoutAttribute = assembly
@@ -70,8 +70,8 @@ public class IntegrationKeyValidationTests
     public void GetIntegrationKeyTypes_WithIntegrationKeyDefinitionAttribute_AllHaveValueField()
     {
         // Arrange
-        var assembly = typeof(IFoodIntegrationKey).Assembly;
-        var integrationKeyTypes = assembly
+        Assembly assembly = typeof(IFoodIntegrationKey).Assembly;
+        List<Type> integrationKeyTypes = assembly
             .GetTypes()
             .Where(type => type.GetCustomAttribute<IntegrationKeyDefinitionAttribute>() is not null)
             .ToList();
@@ -82,7 +82,7 @@ public class IntegrationKeyValidationTests
         foreach (var type in integrationKeyTypes)
         {
             // Act
-            var valueField = type.GetField("Value", BindingFlags.Public | BindingFlags.Static);
+            FieldInfo? valueField = type.GetField("Value", BindingFlags.Public | BindingFlags.Static);
 
             // Assert
             Assert.NotNull(valueField);
@@ -93,8 +93,8 @@ public class IntegrationKeyValidationTests
     public void GetIntegrationKeyTypes_WithIntegrationKeyDefinitionAttribute_AllValuesAreNormalized()
     {
         // Arrange
-        var assembly = typeof(IFoodIntegrationKey).Assembly;
-        var integrationKeyTypes = assembly
+        Assembly assembly = typeof(IFoodIntegrationKey).Assembly;
+        List<Type> integrationKeyTypes = assembly
             .GetTypes()
             .Where(type => type.GetCustomAttribute<IntegrationKeyDefinitionAttribute>() is not null)
             .ToList();
@@ -105,12 +105,12 @@ public class IntegrationKeyValidationTests
         foreach (var type in integrationKeyTypes)
         {
             // Arrange (per iteration)
-            var valueField = type.GetField("Value", BindingFlags.Public | BindingFlags.Static);
+            FieldInfo? valueField = type.GetField("Value", BindingFlags.Public | BindingFlags.Static);
             Assert.NotNull(valueField); // Precondition
 
             // Act
-            var value = (string)valueField.GetValue(null)!;
-            var normalizedValue = value.Trim().ToUpperInvariant();
+            string value = (string)valueField.GetValue(null)!;
+            string normalizedValue = value.Trim().ToUpperInvariant();
 
             // Assert
             Assert.Equal(normalizedValue, value);

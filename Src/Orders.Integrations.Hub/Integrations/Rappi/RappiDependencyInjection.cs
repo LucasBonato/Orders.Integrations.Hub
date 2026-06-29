@@ -1,4 +1,4 @@
-﻿using Orders.Integrations.Hub.Core.Application.Ports.In.UseCases;
+using Orders.Integrations.Hub.Core.Application.Ports.In.UseCases;
 using Orders.Integrations.Hub.Core.Application.Ports.Out.Serialization;
 using Orders.Integrations.Hub.Core.Application.Ports.Out.UseCases;
 using Orders.Integrations.Hub.Core.Infrastructure.Extensions;
@@ -34,9 +34,13 @@ public static class RappiDependencyInjection
             services.AddTransient<IOrderCreateUseCase<RappiOrder>, RappiOrderCreateUseCase>();
             services.AddTransient<IOrderUpdateUseCase<RappiWebhookEventOrderRequest>, RappiOrderUpdateUseCase>();
 
+            services.AddScoped<RappiSignatureValidator>();
             services.AddScoped<IWebhookSignatureValidator, RappiSignatureValidator>();
+            services.AddScoped<RappiOrderResolver>();
             services.AddScoped<IWebhookSignatureResolver<RappiOrder>, RappiOrderResolver>();
+            services.AddScoped<RappiOrderEventResolver>();
             services.AddScoped<IWebhookSignatureResolver<RappiWebhookEventOrderRequest>, RappiOrderEventResolver>();
+            services.AddScoped<RappiPingResolver>();
             services.AddScoped<IWebhookSignatureResolver<RappiWebhookPingRequest>, RappiPingResolver>();
 
             services.AddKeyedScoped<IOrderChangeStatusUseCase, RappiOrderChangeStatusUseCase>(RappiIntegrationKey.Value);

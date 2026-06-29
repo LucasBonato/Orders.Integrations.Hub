@@ -3,6 +3,8 @@ using Orders.Integrations.Hub.Integrations.Common.Contracts;
 using Orders.Integrations.Hub.Integrations.Common.Extensions;
 using Orders.Integrations.Hub.Integrations.Common.ValueObjects;
 
+using IntegrationRecord = Orders.Integrations.Hub.Integrations.Common.ValueObjects.Integration;
+
 namespace Orders.Integrations.Hub.UnitTests.Extensions;
 
 public class HttpRequestMessageExtensionTests
@@ -11,7 +13,7 @@ public class HttpRequestMessageExtensionTests
         new() {
             TenantId = "tenant-1",
             MerchantId = "merchant-1",
-            Integration = new Integration(
+            Integration = new IntegrationRecord(
                 TenantId: "tenant-1", 
                 MerchantId: "merchant-1", 
                 ClientId: "client-id", 

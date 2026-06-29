@@ -11,6 +11,8 @@ using Orders.Integrations.Hub.Integrations.Common.Extensions;
 using Orders.Integrations.Hub.Integrations.Common.ValueObjects;
 using Orders.Integrations.Hub.UnitTests.Helpers;
 
+using IntegrationRecord = Orders.Integrations.Hub.Integrations.Common.ValueObjects.Integration;
+
 namespace Orders.Integrations.Hub.UnitTests.Handlers;
 
 public class IntegrationContextHandlerTests
@@ -24,7 +26,7 @@ public class IntegrationContextHandlerTests
         => new() {
             TenantId = "tenant-1",
             MerchantId = "merchant-1",
-            Integration = new Integration("tenant-1", "merchant-1", "client-id", "client-secret", false, IntegrationMode.Distributed)
+            Integration = new IntegrationRecord("tenant-1", "merchant-1", "client-id", "client-secret", false, IntegrationMode.Distributed)
         };
 
     [Fact]
