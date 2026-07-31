@@ -1,0 +1,41 @@
+﻿# Git
+.git
+.gitignore
+
+# IDE
+.vs
+.vscode
+.idea
+
+# Build outputs
+**/bin
+**/obj
+**/artifacts
+**/TestResults
+Test/**
+
+# Docker
+Dockerfile*
+docker-compose*
+
+# Documentation
+Docs/**
+README.md
+LICENSE
+
+# Terraform
+**/.terraform
+**/*.tfstate
+**/*.tfstate.*
+
+# Local config
+.env
+.env.*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Random
+.ai
+.github
