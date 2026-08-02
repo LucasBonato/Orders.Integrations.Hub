@@ -40,7 +40,7 @@ public sealed class RappiOrderMappingTests
 
         Assert.Equal("João Silva", result.Customer?.Name);
         Assert.Equal("12345678901", result.Customer?.DocumentNumber);
-        Assert.Equal("11999999999", result.Customer?.Phone?.Number);
+        Assert.Equal("11999999999", result.Customer?.Phone.Number);
     }
 
     [Fact]
@@ -118,8 +118,8 @@ public sealed class RappiOrderMappingTests
         Order result = source.ToOrder("tenant-1");
 
         Assert.NotNull(result.Total);
-        Assert.Equal(55.00m, result.Total!.OrderAmount?.Value);
-        Assert.Equal(50.00m, result.Total!.ItemsPrice?.Value);
-        Assert.Equal(5.00m, result.Total!.Discount?.Value);
+        Assert.Equal(55.00m, result.Total.OrderAmount.Value);
+        Assert.Equal(50.00m, result.Total.ItemsPrice.Value);
+        Assert.Equal(5.00m, result.Total.Discount?.Value);
     }
 }

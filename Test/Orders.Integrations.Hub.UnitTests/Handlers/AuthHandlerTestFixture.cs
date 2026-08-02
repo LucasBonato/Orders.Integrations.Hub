@@ -37,7 +37,7 @@ public abstract class AuthHandlerTestFixture : IXunitSerializable
         );
 
     protected static IIntegrationContext CreateDefaultContext() {
-        IIntegrationContext? context = Substitute.For<IIntegrationContext>();
+        IIntegrationContext context = Substitute.For<IIntegrationContext>();
         context.TenantId.Returns("tenant-1");
         context.MerchantId.Returns("merchant-1");
         context.Integration.Returns(CreateDefaultIntegration());
@@ -45,7 +45,7 @@ public abstract class AuthHandlerTestFixture : IXunitSerializable
     }
 
     protected static ICacheService CreateCacheMock() {
-        ICacheService? cache = Substitute.For<ICacheService>();
+        ICacheService cache = Substitute.For<ICacheService>();
         cache.GetAsync<string>(Arg.Any<string>()).Returns((string?)null);
         return cache;
     }

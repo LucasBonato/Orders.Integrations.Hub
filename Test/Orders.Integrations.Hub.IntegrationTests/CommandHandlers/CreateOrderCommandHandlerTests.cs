@@ -45,6 +45,7 @@ public sealed class CreateOrderCommandHandlerTests : IAsyncLifetime {
         
         await _orderClient.Received(1).CreateOrder(
             Arg.Is<Order>(order =>
+                order != null &&
                 order.OrderId == command.Order.OrderId &&
                 order.TenantId == command.Order.TenantId &&
                 order.SalesChannel == command.Order.SalesChannel &&

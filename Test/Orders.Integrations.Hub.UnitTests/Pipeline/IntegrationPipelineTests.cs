@@ -39,7 +39,7 @@ public class IntegrationPipelineTests
 
     private static IIntegrationContext CreateContext()
     {
-        IIntegrationContext? context = Substitute.For<IIntegrationContext>();
+        IIntegrationContext context = Substitute.For<IIntegrationContext>();
         context.TenantId.Returns("tenant-1");
         context.MerchantId.Returns("merchant-1");
         context.Integration.Returns(
@@ -71,10 +71,10 @@ public class IntegrationPipelineTests
         CancellationToken ct = TestContext.Current.CancellationToken;
         IIntegrationContext context = CreateContext();
         IHttpContextAccessor httpContextAccessor = CreateHttpContextAccessor(context);
-        ICacheService? cache = Substitute.For<ICacheService>();
+        ICacheService cache = Substitute.For<ICacheService>();
         cache.GetAsync<string>(Arg.Any<string>()).Returns((string?)null);
 
-        IIFoodAuthClient? authClient = Substitute.For<IIFoodAuthClient>();
+        IIFoodAuthClient authClient = Substitute.For<IIFoodAuthClient>();
         authClient
             .RetrieveToken(Arg.Any<IFoodAuthTokenRequest>())
             .Returns(
@@ -118,10 +118,10 @@ public class IntegrationPipelineTests
 
         IIntegrationContext context = CreateContext();
         IHttpContextAccessor httpContextAccessor = CreateHttpContextAccessor(context);
-        ICacheService? cache = Substitute.For<ICacheService>();
+        ICacheService cache = Substitute.For<ICacheService>();
         cache.GetAsync<string>(Arg.Any<string>()).Returns((string?)null);
         
-        IRappiAuthClient? authClient = Substitute.For<IRappiAuthClient>();
+        IRappiAuthClient authClient = Substitute.For<IRappiAuthClient>();
         
         authClient
             .RetrieveToken(Arg.Any<RappiAuthTokenRequest>())
@@ -164,10 +164,10 @@ public class IntegrationPipelineTests
         CancellationToken ct = TestContext.Current.CancellationToken;
         IIntegrationContext context = CreateContext();
         IHttpContextAccessor httpContextAccessor = CreateHttpContextAccessor(context);
-        ICacheService? cache = Substitute.For<ICacheService>();
+        ICacheService cache = Substitute.For<ICacheService>();
         cache.GetAsync<string>(Arg.Any<string>()).Returns((string?)null);
 
-        IFood99AuthClient? authClient = Substitute.For<IFood99AuthClient>();
+        IFood99AuthClient authClient = Substitute.For<IFood99AuthClient>();
         authClient
             .RetrieveToken(Arg.Any<Food99AuthTokenRequest>())
             .Returns(
@@ -185,7 +185,7 @@ public class IntegrationPipelineTests
                 )
             );
 
-        ICustomJsonSerializer? jsonSerializer = Substitute.For<ICustomJsonSerializer>();
+        ICustomJsonSerializer jsonSerializer = Substitute.For<ICustomJsonSerializer>();
         
         jsonSerializer
             .Deserialize<Food99BaseResponse>(Arg.Any<string>())
@@ -213,7 +213,7 @@ public class IntegrationPipelineTests
             .Serialize(Arg.Any<Food99StatusChangeRequest>())
             .Returns(callInfo => {
                 Food99StatusChangeRequest? req = callInfo.Arg<Food99StatusChangeRequest>();
-                return $$"""{"order_id":"{{req.OrderId}}","auth_token":"{{req.AuthToken}}"}""";
+                return $$"""{"order_id":"{{req?.OrderId}}","auth_token":"{{req?.AuthToken}}"}""";
             });
 
         TestHandler inner = new(new HttpResponseMessage(HttpStatusCode.OK) {
@@ -255,9 +255,9 @@ public class IntegrationPipelineTests
         CancellationToken ct = TestContext.Current.CancellationToken;
         IIntegrationContext context = CreateContext();
         IHttpContextAccessor httpContextAccessor = CreateHttpContextAccessor(context);
-        ICacheService? cache = Substitute.For<ICacheService>();
+        ICacheService cache = Substitute.For<ICacheService>();
 
-        IIFoodAuthClient? authClient = Substitute.For<IIFoodAuthClient>();
+        IIFoodAuthClient authClient = Substitute.For<IIFoodAuthClient>();
         TestHandler inner = new();
 
         IFoodAuthMessageHandler authHandler = new(
@@ -287,12 +287,12 @@ public class IntegrationPipelineTests
     {
         // Arrange
         CancellationToken ct = TestContext.Current.CancellationToken;
-        IHttpContextAccessor? httpContextAccessor = Substitute.For<IHttpContextAccessor>();
+        IHttpContextAccessor httpContextAccessor = Substitute.For<IHttpContextAccessor>();
         httpContextAccessor.HttpContext.Returns((HttpContext?)null);
-        ICacheService? cache = Substitute.For<ICacheService>();
+        ICacheService cache = Substitute.For<ICacheService>();
         cache.GetAsync<string>(Arg.Any<string>()).Returns((string?)null);
 
-        IIFoodAuthClient? authClient = Substitute.For<IIFoodAuthClient>();
+        IIFoodAuthClient authClient = Substitute.For<IIFoodAuthClient>();
         authClient
             .RetrieveToken(Arg.Any<IFoodAuthTokenRequest>())
             .Returns(

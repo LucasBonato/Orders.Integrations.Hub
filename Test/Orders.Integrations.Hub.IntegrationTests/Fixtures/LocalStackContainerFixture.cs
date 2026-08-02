@@ -79,23 +79,22 @@ public class LocalStackContainerFixture : IAsyncLifetime
 
     private async Task<string> RunTerraform(string arguments)
     {
-        using var process = new Process
-        {
-            StartInfo = new ProcessStartInfo
-            {
-                FileName = "terraform",
-                Arguments = arguments,
-                WorkingDirectory = _terraformDir,
-                RedirectStandardOutput = true,
-                RedirectStandardError = true,
-                UseShellExecute = false,
-                CreateNoWindow = true
+        using var process = new Process();
+        process.StartInfo = new ProcessStartInfo {
+            FileName = "terraform",
+            Arguments = arguments,
+            WorkingDirectory = _terraformDir,
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
+            UseShellExecute = false,
+            CreateNoWindow = true,
+            EnvironmentVariables = {
+                ["TF_IN_AUTOMATION"] = "true", 
+                ["AWS_ACCESS_KEY_ID"] = "dummy", 
+                ["AWS_SECRET_ACCESS_KEY"] = "dummy", 
+                ["AWS_REGION"] = "us-east-1"
             }
         };
-        process.StartInfo.EnvironmentVariables["TF_IN_AUTOMATION"] = "true";
-        process.StartInfo.EnvironmentVariables["AWS_ACCESS_KEY_ID"] = "dummy";
-        process.StartInfo.EnvironmentVariables["AWS_SECRET_ACCESS_KEY"] = "dummy";
-        process.StartInfo.EnvironmentVariables["AWS_REGION"] = "us-east-1";
 
         process.Start();
         string output = await process.StandardOutput.ReadToEndAsync();

@@ -34,7 +34,7 @@ public class IntegrationContextHandlerTests
     {
         // Arrange
         IntegrationContext context = CreateContext();
-        IHttpContextAccessor? httpContextAccessor = Substitute.For<IHttpContextAccessor>();
+        IHttpContextAccessor httpContextAccessor = Substitute.For<IHttpContextAccessor>();
         FakeServiceProvider serviceProvider = new(context);
         httpContextAccessor.HttpContext.Returns(new DefaultHttpContext { RequestServices = serviceProvider });
 
@@ -56,7 +56,7 @@ public class IntegrationContextHandlerTests
     public async Task SendAsync_ShouldNotSetContext_WhenHttpContextIsNull()
     {
         // Arrange
-        IHttpContextAccessor? httpContextAccessor = Substitute.For<IHttpContextAccessor>();
+        IHttpContextAccessor httpContextAccessor = Substitute.For<IHttpContextAccessor>();
         httpContextAccessor.HttpContext.Returns((HttpContext?)null);
 
         TestHandler inner = new();
@@ -76,7 +76,7 @@ public class IntegrationContextHandlerTests
     public async Task SendAsync_ShouldNotSetContext_WhenServiceNotRegistered()
     {
         // Arrange
-        IHttpContextAccessor? httpContextAccessor = Substitute.For<IHttpContextAccessor>();
+        IHttpContextAccessor httpContextAccessor = Substitute.For<IHttpContextAccessor>();
         FakeServiceProvider serviceProvider = new(null);
         httpContextAccessor.HttpContext.Returns(new DefaultHttpContext { RequestServices = serviceProvider });
 
@@ -96,7 +96,7 @@ public class IntegrationContextHandlerTests
     {
         // Arrange
         IntegrationContext context = CreateContext();
-        IHttpContextAccessor? httpContextAccessor = Substitute.For<IHttpContextAccessor>();
+        IHttpContextAccessor httpContextAccessor = Substitute.For<IHttpContextAccessor>();
         FakeServiceProvider serviceProvider = new(context);
         httpContextAccessor.HttpContext.Returns(new DefaultHttpContext { RequestServices = serviceProvider });
 

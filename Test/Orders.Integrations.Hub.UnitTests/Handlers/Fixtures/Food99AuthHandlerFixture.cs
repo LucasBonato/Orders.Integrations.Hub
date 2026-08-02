@@ -131,7 +131,7 @@ public sealed class Food99AuthHandlerFixture : AuthHandlerTestFixture
             .Serialize(Arg.Any<Food99StatusChangeRequest>())
             .Returns(callInfo => {
                 Food99StatusChangeRequest? req = callInfo.Arg<Food99StatusChangeRequest>();
-                return $$"""{"order_id":"{{req.OrderId}}","auth_token":"{{req.AuthToken}}"}""";
+                return $$"""{"order_id":"{{req?.OrderId}}","auth_token":"{{req?.AuthToken}}"}""";
             });
     }
 }

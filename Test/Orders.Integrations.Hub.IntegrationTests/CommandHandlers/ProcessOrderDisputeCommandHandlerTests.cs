@@ -48,6 +48,7 @@ public sealed class ProcessOrderDisputeCommandHandlerTests : IAsyncLifetime {
             .Consumed.Any<ProcessOrderDisputeCommand>(TestContext.Current.CancellationToken));
 
         await _orderClient.Received(1).PatchOrderDispute(Arg.Is<OrderUpdate>(order =>
+            order != null &&
             order.OrderId == command.ExternalOrderId &&
             order.SourceAppId == command.Integration &&
             order.Type == command.Type &&

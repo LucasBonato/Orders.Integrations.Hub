@@ -39,6 +39,7 @@ public class ExceptionHandlerMiddlewareTests
         await sut.TryHandleAsync(httpContext, new Exception("generic error"), TestContext.Current.CancellationToken);
 
         await problemDetailsService.Received(1).TryWriteAsync(Arg.Is<ProblemDetailsContext>(predicate: ctx =>
+            ctx != null && 
             ctx.ProblemDetails.Status == 500
         ));
     }
@@ -52,6 +53,7 @@ public class ExceptionHandlerMiddlewareTests
         await sut.TryHandleAsync(httpContext, new InvalidOperationException("invalid op"), TestContext.Current.CancellationToken);
 
         await problemDetailsService.Received(1).TryWriteAsync(Arg.Is<ProblemDetailsContext>(ctx =>
+            ctx != null && 
             ctx.ProblemDetails.Status == 501
         ));
     }
@@ -66,6 +68,7 @@ public class ExceptionHandlerMiddlewareTests
         await sut.TryHandleAsync(httpContext, exception, TestContext.Current.CancellationToken);
 
         await problemDetailsService.Received(1).TryWriteAsync(Arg.Is<ProblemDetailsContext>(ctx =>
+            ctx != null && 
             ctx.ProblemDetails.Status == 422 &&
             ctx.ProblemDetails.Detail == "custom error"
         ));

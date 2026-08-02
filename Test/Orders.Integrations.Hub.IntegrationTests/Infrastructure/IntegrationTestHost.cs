@@ -75,7 +75,7 @@ public sealed class IntegrationTestHost : WebApplicationFactory<Program>, IAsync
         string snsTopicArn = "arn:aws:sns:us-east-1:123456789012:accept-order",
         string redisConnectionString = "localhost:6379"
     ) {
-        IInternalClient? internalClient = Substitute.For<IInternalClient>();
+        IInternalClient internalClient = Substitute.For<IInternalClient>();
         internalClient
             .GetIntegrationByExternalId(Arg.Any<string>())
             .Returns(new IntegrationResponse(
@@ -98,12 +98,12 @@ public sealed class IntegrationTestHost : WebApplicationFactory<Program>, IAsync
                 }
             ));
 
-        IIFoodClient? ifoodClient = Substitute.For<IIFoodClient>();
+        IIFoodClient ifoodClient = Substitute.For<IIFoodClient>();
         ifoodClient
             .GetOrderDetails(Arg.Any<string>())
-            .Returns(callInfo => TestDataFactory.CreateMinimalIFoodOrder(callInfo.Arg<string>()));
+            .Returns(callInfo => TestDataFactory.CreateMinimalIFoodOrder(callInfo.Arg<string>()?? string.Empty));
 
-        IOrderClient? orderClient = Substitute.For<IOrderClient>();
+        IOrderClient orderClient = Substitute.For<IOrderClient>();
 
         return new IntegrationTestHost(internalClient, ifoodClient, orderClient, new Dictionary<string, string> {
             ["LOCALSTACK__ENDPOINT_URL"] = localStackEndpoint,
