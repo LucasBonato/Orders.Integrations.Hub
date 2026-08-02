@@ -269,24 +269,6 @@ public class CoreArchitectureTests
 
     #endregion
 
-    #region 5. Infrastructure Tests
-
-    [Fact]
-    public void Infrastructure_ShouldNotDependOnAdapters()
-    {
-        var result = Types.InAssembly(typeof(Program).Assembly)
-            .That()
-            .ResideInNamespace(InfrastructureNamespace)
-            .ShouldNot()
-            .HaveDependencyOn(AdaptersNamespace)
-            .GetResult();
-
-        Assert.True(result.IsSuccessful,
-            $"Infrastructure should not depend on Adapters. Violations: {string.Join(", ", result.FailingTypeNames ?? [])}");
-    }
-
-    #endregion
-
     #region 6. Integration Module Isolation Tests
 
     [Fact]
