@@ -5,6 +5,9 @@ using Amazon.Runtime.Credentials;
 using Amazon.S3;
 using Amazon.SimpleNotificationService;
 
+using Orders.Integrations.Hub.Core.Adapters.Out.HttpClients;
+using Orders.Integrations.Hub.Core.Application.Ports.Out.Clients;
+
 namespace Orders.Integrations.Hub.Core.Infrastructure.Extensions;
 
 public static class AwsConfigurationExtensions
@@ -15,7 +18,14 @@ public static class AwsConfigurationExtensions
     private static string LocalStackEndpointUrl => AppEnv.LOCALSTACK.ENDPOINT_URL.GetDefault("http://localhost:4566");
     private static string? Profile => !IsLocalStack ? null : "localstack";
 
-    public static AmazonSimpleNotificationServiceClient SimpleNotificationServiceConfiguration() {
+    public static IServiceCollection AddAwsConfiguration(this IServiceCollection services) {
+        services.AddSingleton<IAmazonSimpleNotificationService>(_ => SimpleNotificationServiceConfiguration());
+        services.AddSingleton<IAmazonS3>(_ => SimpleStorageServiceConfiguration());
+        services.AddSingleton<IObjectStorageClient, SimpleStorageServiceClient>();
+        return services;
+    }
+
+    private static AmazonSimpleNotificationServiceClient SimpleNotificationServiceConfiguration() {
         if (!IsLocalStack || !IsLocalSns)
             return new AmazonSimpleNotificationServiceClient(LoadCredentials());
 
@@ -28,7 +38,7 @@ public static class AwsConfigurationExtensions
 
     }
 
-    public static IAmazonS3 SimpleStorageServiceConfiguration() {
+    private static AmazonS3Client SimpleStorageServiceConfiguration() {
         if (!IsLocalStack)
             return new AmazonS3Client(LoadCredentials());
         

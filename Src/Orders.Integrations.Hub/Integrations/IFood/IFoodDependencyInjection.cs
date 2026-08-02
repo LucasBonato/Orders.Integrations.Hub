@@ -5,7 +5,6 @@ using Orders.Integrations.Hub.Core.Infrastructure.Extensions;
 using Orders.Integrations.Hub.Integrations.Common.Application.Handlers;
 using Orders.Integrations.Hub.Integrations.Common.Contracts;
 using Orders.Integrations.Hub.Integrations.Common.Serialization;
-using Orders.Integrations.Hub.Integrations.IFood.Application;
 using Orders.Integrations.Hub.Integrations.IFood.Application.Clients;
 using Orders.Integrations.Hub.Integrations.IFood.Application.Handlers;
 using Orders.Integrations.Hub.Integrations.IFood.Application.Ports.In;

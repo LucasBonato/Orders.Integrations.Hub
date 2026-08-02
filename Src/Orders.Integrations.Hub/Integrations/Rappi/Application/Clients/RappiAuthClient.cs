@@ -1,5 +1,4 @@
 ﻿using Orders.Integrations.Hub.Core.Application.Ports.Out.Serialization;
-using Orders.Integrations.Hub.Integrations.Common.Contracts;
 using Orders.Integrations.Hub.Integrations.Rappi.Application.ValueObjects;
 using Orders.Integrations.Hub.Integrations.Rappi.Domain.Contracts;
 using Orders.Integrations.Hub.Integrations.Rappi.Domain.ValueObjects.DTOs.Request;
