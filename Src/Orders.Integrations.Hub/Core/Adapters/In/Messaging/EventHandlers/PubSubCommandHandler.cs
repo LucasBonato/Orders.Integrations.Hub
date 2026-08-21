@@ -1,24 +1,27 @@
-﻿using System.Text.Json;
+using System.Text.Json;
 
 using Amazon.SimpleNotificationService;
 using Amazon.SimpleNotificationService.Model;
 
 using MassTransit;
 
+using Microsoft.Extensions.Options;
+
 using Orders.Integrations.Hub.Core.Application.Commands;
-using Orders.Integrations.Hub.Core.Infrastructure.Extensions;
+using Orders.Integrations.Hub.Core.Infrastructure.Options;
 
 namespace Orders.Integrations.Hub.Core.Adapters.In.Messaging.EventHandlers;
 
 public sealed class PubSubCommandHandler(
     ILogger<PubSubCommandHandler> logger,
-    IAmazonSimpleNotificationService simpleNotificationService
+    IAmazonSimpleNotificationService simpleNotificationService,
+    IOptions<PubSubOptions> options
 ) : IConsumer<SendNotificationCommand> {
     public async Task Consume(ConsumeContext<SendNotificationCommand> context)
     {
         SendNotificationCommand command = context.Message;
 
-        string shareConfirmOrderTopicArn = command.TopicArn ?? AppEnv.PUB_SUB.TOPICS.ACCEPT_ORDER.NotNullEnv();
+        string shareConfirmOrderTopicArn = command.TopicArn ?? options.Value.Topics.AcceptOrder;
 
         string message = JsonSerializer.Serialize(command.Message);
 
