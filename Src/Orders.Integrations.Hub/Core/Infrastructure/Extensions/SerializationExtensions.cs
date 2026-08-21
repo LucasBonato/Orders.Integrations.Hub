@@ -12,15 +12,16 @@ public static class SerializationExtensions
 {
     public static IServiceCollection AddSerializationConfiguration(this IServiceCollection services) {
         services.AddSingleton<ICustomJsonSerializer, CoreJsonSerializer>();
-        services.Configure<JsonOptions>(options => {
-            options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-            options.JsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
-            options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
-            options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.SnakeCaseUpper));
-        });
-        services.ConfigureHttpJsonOptions(options => {
-            options.SerializerOptions.Converters.Add(new IntegrationKeyJsonConverter());
-        });
+        services.Configure<JsonOptions>(options => ConfigureJsonSerializer(options.JsonSerializerOptions));
+        services.ConfigureHttpJsonOptions(options => ConfigureJsonSerializer(options.SerializerOptions));
         return services;
+    }
+
+    private static void ConfigureJsonSerializer(JsonSerializerOptions options) {
+        options.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+        options.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
+        options.PropertyNameCaseInsensitive = true;
+        options.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.SnakeCaseUpper));
+        options.Converters.Add(new IntegrationKeyJsonConverter());
     }
 }

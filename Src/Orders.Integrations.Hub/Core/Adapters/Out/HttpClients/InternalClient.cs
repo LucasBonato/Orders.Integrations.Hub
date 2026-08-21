@@ -1,12 +1,12 @@
-﻿using Orders.Integrations.Hub.Core.Application.DTOs.Internal;
+using Orders.Integrations.Hub.Core.Application.DTOs.Internal;
 using Orders.Integrations.Hub.Core.Application.Ports.Out.Clients;
-using Orders.Integrations.Hub.Core.Infrastructure.Extensions;
 using Orders.Integrations.Hub.Integrations.Common.ValueObjects;
 
 namespace Orders.Integrations.Hub.Core.Adapters.Out.HttpClients;
 
 public class InternalClient(
     ILogger<InternalClient> logger,
+    IConfiguration configuration,
     HttpClient httpClient
 ) : IInternalClient {
     private readonly List<IntegrationResponse> _responses = [
@@ -21,11 +21,11 @@ public class InternalClient(
                 ),
                 new IntegrationSetting(
                     Name: "ifood_client_id",
-                    Value: AppEnv.INTEGRATIONS.IFOOD.CLIENT.ID.NotNullEnv()
+                    Value: configuration.GetValue("Integrations:IFood:Client:Id", string.Empty)
                 ),
                 new IntegrationSetting(
                     Name: "ifood_client_secret",
-                    Value: AppEnv.INTEGRATIONS.IFOOD.CLIENT.SECRET.NotNullEnv()
+                    Value: configuration.GetValue("Integrations:IFood:Client:Secret", string.Empty)
                 ),
                 new IntegrationSetting(
                     Name: "ifood_mode",
@@ -44,11 +44,11 @@ public class InternalClient(
                 ),
                 new IntegrationSetting(
                     Name: "rappi_client_id",
-                    Value: AppEnv.INTEGRATIONS.RAPPI.CLIENT.ID.NotNullEnv()
+                    Value: configuration.GetValue("Integrations:Rappi:Client:Id", string.Empty)
                 ),
                 new IntegrationSetting(
                     Name: "rappi_client_secret",
-                    Value: AppEnv.INTEGRATIONS.RAPPI.CLIENT.SECRET.NotNullEnv()
+                    Value: configuration.GetValue("Integrations:Rappi:Client:Id", string.Empty)
                 ),
                 new IntegrationSetting(
                     Name: "rappi_mode",
@@ -67,11 +67,11 @@ public class InternalClient(
                 ),
                 new IntegrationSetting(
                     Name: "food99_client_id",
-                    Value: AppEnv.INTEGRATIONS.FOOD99.CLIENT.ID.NotNullEnv()
+                    Value: configuration.GetValue("Integrations:Food99:Client:Id", string.Empty)
                 ),
                 new IntegrationSetting(
                     Name: "food99_client_secret",
-                    Value: AppEnv.INTEGRATIONS.FOOD99.CLIENT.SECRET.NotNullEnv()
+                    Value: configuration.GetValue("Integrations:Food99:Client:Id", string.Empty)
                 ),
                 new IntegrationSetting(
                     Name: "food99_mode",

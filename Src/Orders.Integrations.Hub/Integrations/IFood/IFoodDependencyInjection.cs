@@ -1,7 +1,8 @@
+using Microsoft.Extensions.Options;
+
 using Orders.Integrations.Hub.Core.Application.Ports.In.UseCases;
 using Orders.Integrations.Hub.Core.Application.Ports.Out.Serialization;
 using Orders.Integrations.Hub.Core.Application.Ports.Out.UseCases;
-using Orders.Integrations.Hub.Core.Infrastructure.Extensions;
 using Orders.Integrations.Hub.Integrations.Common.Application.Handlers;
 using Orders.Integrations.Hub.Integrations.Common.Contracts;
 using Orders.Integrations.Hub.Integrations.Common.Serialization;
@@ -14,6 +15,7 @@ using Orders.Integrations.Hub.Integrations.IFood.Domain.Contracts;
 using Orders.Integrations.Hub.Integrations.IFood.Domain.Entity.Handshake;
 using Orders.Integrations.Hub.Integrations.IFood.Domain.ValueObjects.DTOs.Request;
 using Orders.Integrations.Hub.Integrations.IFood.Infrastructure;
+using Orders.Integrations.Hub.Integrations.IFood.Infrastructure.Options;
 
 using Refit;
 
@@ -23,10 +25,10 @@ public static class IFoodDependencyInjection
 {
     extension(IServiceCollection services)
     {
-        public IServiceCollection AddIFood()
+        public IServiceCollection AddIFood(IConfiguration configuration)
             => services
                 .AddIFoodServices()
-                .AddIFoodClients()
+                .AddIFoodClients(configuration)
         ;
 
         private IServiceCollection AddIFoodServices()
@@ -49,12 +51,16 @@ public static class IFoodDependencyInjection
             return services;
         }
 
-        private IServiceCollection AddIFoodClients()
+        private IServiceCollection AddIFoodClients(IConfiguration configuration)
         {
-            string baseUrl = AppEnv.INTEGRATIONS.IFOOD.ENDPOINT.BASE_URL.NotNullEnv();
+            services.AddOptions<IFoodOptions>()
+                .Bind(configuration.GetSection(IFoodOptions.SectionName))
+                .ValidateDataAnnotations()
+                .ValidateOnStart();
 
-            services.AddHttpClient<IIFoodAuthClient, IFoodAuthClient>(client => {
-                client.BaseAddress = new Uri(baseUrl);
+            services.AddHttpClient<IIFoodAuthClient, IFoodAuthClient>((serviceProvider, client) => {
+                IFoodOptions options = serviceProvider.GetRequiredService<IOptions<IFoodOptions>>().Value;
+                client.BaseAddress = options.Endpoint.BaseUrl;
             });
 
             services.AddScoped<IFoodAuthMessageHandler>();
@@ -64,8 +70,9 @@ public static class IFoodDependencyInjection
                         serviceProvider.GetRequiredKeyedService<ICustomJsonSerializer>(IFoodIntegrationKey.Value)
                     )
                 })
-                .ConfigureHttpClient(client => {
-                    client.BaseAddress = new Uri(baseUrl);
+                .ConfigureHttpClient((serviceProvider, client) => {
+                    IFoodOptions options = serviceProvider.GetRequiredService<IOptions<IFoodOptions>>().Value;
+                    client.BaseAddress = options.Endpoint.BaseUrl;
                 })
                 .AddHttpMessageHandler<IntegrationContextHandler>()
                 .AddHttpMessageHandler<IFoodAuthMessageHandler>();

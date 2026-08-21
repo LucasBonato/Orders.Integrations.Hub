@@ -1,4 +1,8 @@
-﻿using Orders.Integrations.Hub.Core.Application.Ports.In.UseCases;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+
+using Orders.Integrations.Hub.Core.Application.Ports.In.UseCases;
 using Orders.Integrations.Hub.Core.Application.Ports.Out.Serialization;
 using Orders.Integrations.Hub.Core.Application.Ports.Out.UseCases;
 using Orders.Integrations.Hub.Core.Infrastructure.Extensions;
@@ -12,6 +16,7 @@ using Orders.Integrations.Hub.Integrations.Food99.Application.ValueObjects;
 using Orders.Integrations.Hub.Integrations.Food99.Domain.Contracts;
 using Orders.Integrations.Hub.Integrations.Food99.Domain.Entity;
 using Orders.Integrations.Hub.Integrations.Food99.Infrastructure;
+using Orders.Integrations.Hub.Integrations.Food99.Infrastructure.Options;
 
 using Refit;
 
@@ -21,10 +26,10 @@ public static class Food99DependencyInjection
 {
     extension(IServiceCollection services)
     {
-        public IServiceCollection AddFood99()
+        public IServiceCollection AddFood99(IConfiguration configuration)
             => services
                 .AddFood99Services()
-                .AddFood99Clients()
+                .AddFood99Clients(configuration)
         ;
 
         private IServiceCollection AddFood99Services()
@@ -43,12 +48,16 @@ public static class Food99DependencyInjection
             return services;
         }
 
-        private IServiceCollection AddFood99Clients()
+        private IServiceCollection AddFood99Clients(IConfiguration configuration)
         {
-            string baseUrl = AppEnv.INTEGRATIONS.FOOD99.ENDPOINT.BASE_URL.NotNullEnv();
+            services.AddOptions<Food99Options>()
+                .Bind(configuration.GetSection(Food99Options.SectionName))
+                .ValidateDataAnnotations()
+                .ValidateOnStart();
 
-            services.AddHttpClient<IFood99AuthClient, Food99AuthClient>(client => {
-                client.BaseAddress = new Uri(baseUrl);
+            services.AddHttpClient<IFood99AuthClient, Food99AuthClient>((serviceProvider, client) => {
+                Food99Options options = serviceProvider.GetRequiredService<IOptions<Food99Options>>().Value;
+                client.BaseAddress = options.Endpoint.BaseUrl;
             });
 
             services.AddScoped<Food99AuthMessageHandler>();
@@ -58,8 +67,9 @@ public static class Food99DependencyInjection
                         serviceProvider.GetRequiredKeyedService<ICustomJsonSerializer>(Food99IntegrationKey.Value)
                     )
                 })
-                .ConfigureHttpClient(client => {
-                    client.BaseAddress = new Uri(baseUrl);
+                .ConfigureHttpClient((serviceProvider, client) => {
+                    Food99Options options = serviceProvider.GetRequiredService<IOptions<Food99Options>>().Value;
+                    client.BaseAddress = options.Endpoint.BaseUrl;
                 })
                 .AddHttpMessageHandler<IntegrationContextHandler>()
                 .AddHttpMessageHandler<Food99AuthMessageHandler>();

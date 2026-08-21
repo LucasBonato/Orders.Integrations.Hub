@@ -1,17 +1,20 @@
-﻿using MassTransit;
+using MassTransit;
 
 using Orders.Integrations.Hub.Core.Adapters.In.Messaging.EventHandlers;
 using Orders.Integrations.Hub.Core.Application.Ports.Out.Messaging;
 using Orders.Integrations.Hub.Core.Infrastructure.Messaging;
+using Orders.Integrations.Hub.Core.Infrastructure.Options;
 using Orders.Integrations.Hub.Core.Infrastructure.Serialization;
 
 namespace Orders.Integrations.Hub.Core.Infrastructure.Extensions;
 
 public static class MessageBrokerExtensions
 {
-    public static IServiceCollection AddMessageBrokerConfiguration(this IServiceCollection services) {
-        
-        string brokerMode = AppEnv.MESSAGE_BROKER.MODE.NotNullEnv();
+    public static IServiceCollection AddMessageBrokerConfiguration(this IServiceCollection services, IConfiguration configuration) {
+        MessageBrokerOptions messageBrokerOptions = configuration
+            .GetSection(MessageBrokerOptions.SectionName)
+            .Get<MessageBrokerOptions>()
+                ?? throw new InvalidOperationException($"Missing '{MessageBrokerOptions.SectionName}' configuration section.");
         
         services.AddSingleton<ICommandDispatcher, MassTransitCommandDispatcher>();
         
@@ -23,7 +26,7 @@ public static class MessageBrokerExtensions
             busConfigurator.AddConsumer<PubSubCommandHandler>();
             busConfigurator.AddConsumer<ProcessOrderDisputeCommandHandler>();
 
-            if (brokerMode == "Memory") {
+            if (messageBrokerOptions.Provider == MessageBrokerProvider.Memory) {
                 busConfigurator.UsingInMemory((context, configurator) => {
                     configurator.UseMessageRetry(retry => retry.Interval(5, TimeSpan.FromSeconds(5)));
                     configurator.UseInMemoryOutbox(context);
@@ -37,23 +40,25 @@ public static class MessageBrokerExtensions
                 return;
             }
 
-            busConfigurator.UsingRabbitMq((context, configurator) =>
-            {
-                configurator.Host(AppEnv.MESSAGE_BROKER.CONFIGURATIONS.CONNECTION_STRING.NotNullEnv());
+            busConfigurator.UsingRabbitMq((context, configurator) => {
+                string connectionString = configuration.GetConnectionString("RabbitMq") 
+                    ?? throw new InvalidOperationException("Missing 'ConnectionStrings:RabbitMq' configuration value.");
+                
+                configurator.Host(connectionString);
                 
                 configurator.UseCircuitBreaker(circuitBreaker => {
-                    circuitBreaker.TrackingPeriod = TimeSpan.FromMinutes(1);
-                    circuitBreaker.TripThreshold = 15;
-                    circuitBreaker.ActiveThreshold = 10;
-                    circuitBreaker.ResetInterval = TimeSpan.FromMinutes(5);
+                    circuitBreaker.TrackingPeriod = TimeSpan.FromMinutes(messageBrokerOptions.CircuitBreaker.TrackingPeriodMinutes);
+                    circuitBreaker.TripThreshold = messageBrokerOptions.CircuitBreaker.TripThreshold;
+                    circuitBreaker.ActiveThreshold = messageBrokerOptions.CircuitBreaker.ActiveThreshold;
+                    circuitBreaker.ResetInterval = TimeSpan.FromMinutes(messageBrokerOptions.CircuitBreaker.ResetIntervalMinutes);
                 });
                 
                 configurator.UseMessageRetry(retry => {
                     retry.Exponential(
-                        retryLimit: 5, 
-                        minInterval: TimeSpan.FromSeconds(1), 
-                        maxInterval: TimeSpan.FromMinutes(2), 
-                        intervalDelta: TimeSpan.FromSeconds(5)
+                        retryLimit: messageBrokerOptions.Retry.RetryLimit,
+                        minInterval: TimeSpan.FromSeconds(messageBrokerOptions.Retry.MinIntervalSeconds), 
+                        maxInterval: TimeSpan.FromMinutes(messageBrokerOptions.Retry.MaxIntervalSeconds), 
+                        intervalDelta: TimeSpan.FromSeconds(messageBrokerOptions.Retry.IntervalDeltaSeconds)
                     );
                 });
                 

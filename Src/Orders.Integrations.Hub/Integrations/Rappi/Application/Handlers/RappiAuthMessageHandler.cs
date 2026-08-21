@@ -1,5 +1,4 @@
-﻿using Orders.Integrations.Hub.Core.Application.Ports.Out.Cache;
-using Orders.Integrations.Hub.Core.Infrastructure.Extensions;
+using Orders.Integrations.Hub.Core.Application.Ports.Out.Cache;
 using Orders.Integrations.Hub.Integrations.Common.Contracts;
 using Orders.Integrations.Hub.Integrations.Common.Extensions;
 using Orders.Integrations.Hub.Integrations.Common.ValueObjects;
@@ -12,6 +11,7 @@ namespace Orders.Integrations.Hub.Integrations.Rappi.Application.Handlers;
 public class RappiAuthMessageHandler(
     ILogger<RappiAuthMessageHandler> logger,
     IRappiAuthClient rappiAuthClient,
+    IConfiguration configuration,
     ICacheService cacheService
 ) : DelegatingHandler {
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
@@ -35,7 +35,7 @@ public class RappiAuthMessageHandler(
                     new RappiAuthTokenRequest(
                         ClienteId: integration.ClientId,
                         ClienteSecret: integration.ClientSecret,
-                        Audience: AppEnv.INTEGRATIONS.RAPPI.CLIENT.AUDIENCE.NotNullEnv()
+                        Audience: configuration.GetValue("Integrations:Rappi:Client:Audience", string.Empty)
                     )
                 );
 
