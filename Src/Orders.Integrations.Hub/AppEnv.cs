@@ -4,20 +4,6 @@ namespace Orders.Integrations.Hub;
 
 public static class AppEnv
 {
-    public static class INTERNAL
-    {
-        public static class ENDPOINT
-        {
-            public static readonly AnvEnv BASE_URL = new("INTERNAL__ENDPOINT__BASE_URL");
-        }
-    }
-    public static class ORDERS
-    {
-        public static class ENDPOINT
-        {
-            public static readonly AnvEnv BASE_URL = new("ORDERS__ENDPOINT__BASE_URL");
-        }
-    }
     public static class INTEGRATIONS
     {
         public static class IFOOD
@@ -59,52 +45,4 @@ public static class AppEnv
             }
         }
     }
-
-    public static class CACHE
-    {
-        public static readonly AnvEnv MODE = new("CACHE__MODE");
-
-        public static class CONFIGURATIONS
-        {
-            public static readonly AnvEnv CONNECTION_STRING = new("CACHE__CONFIGURATIONS__CONNECTION_STRING");
-        }
-    }
-
-    public static class MESSAGE_BROKER
-    {
-        public static readonly AnvEnv MODE = new("MESSAGE_BROKER__MODE");
-        
-        public static class CONFIGURATIONS
-        {
-            public static readonly AnvEnv CONNECTION_STRING = new("MESSAGE_BROKER__CONFIGURATIONS__CONNECTION_STRING");
-        }
-    }
-    
-    public static class PUB_SUB
-    {
-        public static class TOPICS
-        {
-            public static readonly AnvEnv ACCEPT_ORDER = new("PUB_SUB__TOPICS__ACCEPT_ORDER");
-            public static readonly AnvEnv IS_LOCAL = new("PUB_SUB__TOPICS__IS_LOCAL");
-        }
-    }
-    public static class OBJECT_STORAGE
-    {
-        public static class BUCKET
-        {
-            public static readonly AnvEnv NAME = new("OBJECT_STORAGE__BUCKET__NAME");
-        }
-    }
-    public static class AWS
-    {
-        public static readonly AnvEnv IS_LOCALSTACK = new("AWS__IS_LOCALSTACK");
-    }
-    public static class LOCALSTACK
-    {
-        public static readonly AnvEnv ENDPOINT_URL = new("LOCALSTACK__ENDPOINT_URL");
-    }
-    public static readonly AnvEnv AWS_PROFILE = new("AWS_PROFILE");
-    public static readonly AnvEnv AWS_REGION = new("AWS_REGION");
-    public static readonly AnvEnv OTEL_SERVICE_NAME = new("OTEL_SERVICE_NAME");
-    public static readonly AnvEnv OTEL_EXPORTER_OTLP_ENDPOINT = new("OTEL_EXPORTER_OTLP_ENDPOINT");
 }
