@@ -12,13 +12,13 @@ public static class IntegrationsDependencyInjection
 {
     extension(IServiceCollection services)
     {
-        public IServiceCollection AddIntegrationsModule()
+        public IServiceCollection AddIntegrationsModule(IConfiguration configuration)
         {
             return services
                     .AddServices()
-                    .AddIFood()
-                    .AddRappi()
-                    .AddFood99()
+                    .AddIFood(configuration)
+                    .AddRappi(configuration)
+                    .AddFood99(configuration)
                 ;
         }
 

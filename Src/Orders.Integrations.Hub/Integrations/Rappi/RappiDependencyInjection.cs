@@ -1,7 +1,8 @@
+using Microsoft.Extensions.Options;
+
 using Orders.Integrations.Hub.Core.Application.Ports.In.UseCases;
 using Orders.Integrations.Hub.Core.Application.Ports.Out.Serialization;
 using Orders.Integrations.Hub.Core.Application.Ports.Out.UseCases;
-using Orders.Integrations.Hub.Core.Infrastructure.Extensions;
 using Orders.Integrations.Hub.Integrations.Common.Application.Handlers;
 using Orders.Integrations.Hub.Integrations.Common.Contracts;
 using Orders.Integrations.Hub.Integrations.Common.Serialization;
@@ -14,6 +15,7 @@ using Orders.Integrations.Hub.Integrations.Rappi.Domain.Contracts;
 using Orders.Integrations.Hub.Integrations.Rappi.Domain.Entity;
 using Orders.Integrations.Hub.Integrations.Rappi.Domain.ValueObjects.DTOs.Request;
 using Orders.Integrations.Hub.Integrations.Rappi.Infrastructure;
+using Orders.Integrations.Hub.Integrations.Rappi.Infrastructure.Options;
 
 using Refit;
 
@@ -23,10 +25,10 @@ public static class RappiDependencyInjection
 {
     extension(IServiceCollection services)
     {
-        public IServiceCollection AddRappi()
+        public IServiceCollection AddRappi(IConfiguration configuration)
             => services
                 .AddRappiServices()
-                .AddRappiClients()
+                .AddRappiClients(configuration)
         ;
 
         private IServiceCollection AddRappiServices()
@@ -52,13 +54,16 @@ public static class RappiDependencyInjection
             return services;
         }
 
-        private IServiceCollection AddRappiClients()
+        private IServiceCollection AddRappiClients(IConfiguration configuration)
         {
-            string baseUrl = AppEnv.INTEGRATIONS.RAPPI.ENDPOINT.BASE_URL.NotNullEnv();
-            string baseAuthUrl = AppEnv.INTEGRATIONS.RAPPI.ENDPOINT.AUTH.NotNullEnv();
+            services.AddOptions<RappiOptions>()
+                .Bind(configuration.GetSection(RappiOptions.SectionName))
+                .ValidateDataAnnotations()
+                .ValidateOnStart();
 
-            services.AddHttpClient<IRappiAuthClient, RappiAuthClient>(client => {
-                client.BaseAddress = new Uri(baseAuthUrl);
+            services.AddHttpClient<IRappiAuthClient, RappiAuthClient>((serviceProvider, client) => {
+                RappiOptions options = serviceProvider.GetRequiredService<IOptions<RappiOptions>>().Value;
+                client.BaseAddress = options.Endpoint.AuthUrl;
             });
 
             services.AddScoped<RappiAuthMessageHandler>();
@@ -68,8 +73,9 @@ public static class RappiDependencyInjection
                         serviceProvider.GetRequiredKeyedService<ICustomJsonSerializer>(RappiIntegrationKey.Value)
                     )
                 })
-                .ConfigureHttpClient(client => {
-                    client.BaseAddress = new Uri(baseUrl);
+                .ConfigureHttpClient((serviceProvider, client) => {
+                    RappiOptions options = serviceProvider.GetRequiredService<IOptions<RappiOptions>>().Value;
+                    client.BaseAddress = options.Endpoint.BaseUrl;
                 })
                 .AddHttpMessageHandler<IntegrationContextHandler>()
                 .AddHttpMessageHandler<RappiAuthMessageHandler>();

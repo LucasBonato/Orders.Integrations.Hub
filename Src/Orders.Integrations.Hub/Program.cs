@@ -11,8 +11,8 @@ if (!string.Equals(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"),
     Env.TraversePath().Load();
 
 builder.Services
-    .AddIntegrationsModule()
     .AddCore(builder.Configuration)
+    .AddIntegrationsModule(builder.Configuration)
     .AddOpenApi()
 ;
 
