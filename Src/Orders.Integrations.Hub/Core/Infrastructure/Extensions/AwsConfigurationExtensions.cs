@@ -41,7 +41,7 @@ public static class AwsConfigurationExtensions {
 
         AmazonSimpleNotificationServiceConfig config = new() {
             ServiceURL = options.ServiceUrlOverride,
-            RegionEndpoint = RegionEndpoint.GetBySystemName(options.Region)
+            AuthenticationRegion = options.Region
         };
 
         return new AmazonSimpleNotificationServiceClient(ResolveCredentials(options), config);
@@ -54,7 +54,7 @@ public static class AwsConfigurationExtensions {
         AmazonS3Config config = new() {
             ServiceURL = options.ServiceUrlOverride,
             ForcePathStyle = options.ForcePathStyle,
-            RegionEndpoint = RegionEndpoint.GetBySystemName(options.Region)
+            AuthenticationRegion = options.Region
         };
 
         return new AmazonS3Client(ResolveCredentials(options), config);

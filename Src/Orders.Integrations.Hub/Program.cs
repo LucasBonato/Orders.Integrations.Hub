@@ -7,7 +7,7 @@ using Scalar.AspNetCore;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-if (!string.Equals(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"), "Test", StringComparison.OrdinalIgnoreCase))
+if (!builder.Environment.IsEnvironment("Test"))
     Env.TraversePath().Load();
 
 builder.Services
