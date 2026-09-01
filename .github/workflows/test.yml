@@ -77,7 +77,7 @@ jobs:
 
       - name: Run Unit Tests
         run: |
-          dotnet run \
+          dotnet test \
             --project Test/Orders.Integrations.Hub.UnitTests/Orders.Integrations.Hub.UnitTests.csproj \
             --configuration Release \
             --no-build \
@@ -127,7 +127,7 @@ jobs:
 
       - name: Run Integration Tests
         run: |
-          dotnet run \
+          dotnet test \
             --project Test/Orders.Integrations.Hub.IntegrationTests/Orders.Integrations.Hub.IntegrationTests.csproj \
             --configuration Release \
             --no-build \
@@ -177,7 +177,7 @@ jobs:
 
       - name: Run Architecture Tests
         run: |
-          dotnet run \
+          dotnet test \
             --project Test/Orders.Integrations.Hub.ArchTests/Orders.Integrations.Hub.ArchTests.csproj \
             --configuration Release \
             --no-build \
