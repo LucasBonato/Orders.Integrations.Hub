@@ -81,11 +81,12 @@ jobs:
             --project Test/Orders.Integrations.Hub.UnitTests/Orders.Integrations.Hub.UnitTests.csproj \
             --configuration Release \
             --no-build \
+            --results-directory TestResults \
             --report-trx \
-            --results-directory TestResults/unit-tests.trx \
-            --coverage \
-            --coverage-output-format cobertura \
-            --coverage-output coverage.cobertura.xml
+            --report-trx-filename unit-tests.trx \
+            --coverlet \
+            --coverlet-output-format cobertura
+            --coverlet-include "[Orders.Integrations.Hub*]*"
 
       - name: Upload test results
         if: always()
@@ -101,7 +102,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: coverage-unit
-          path: "**/coverage.cobertura.xml"
+          path: "**/coverage.cobertura.*.xml"
           if-no-files-found: warn
           retention-days: 14
 
@@ -130,11 +131,12 @@ jobs:
             --project Test/Orders.Integrations.Hub.IntegrationTests/Orders.Integrations.Hub.IntegrationTests.csproj \
             --configuration Release \
             --no-build \
+            --results-directory TestResults \
             --report-trx \
-            --results-directory TestResults/integration-tests.trx \
-            --coverage \
-            --coverage-output-format cobertura \
-            --coverage-output coverage.cobertura.xml
+            --report-trx-filename integration-tests.trx \
+            --coverlet \
+            --coverlet-output-format cobertura
+            --coverlet-include "[Orders.Integrations.Hub*]*"
 
       - name: Upload test results
         if: always()
@@ -150,7 +152,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: coverage-integration
-          path: "**/coverage.cobertura.xml"
+          path: "**/coverage.cobertura.*.xml"
           if-no-files-found: warn
           retention-days: 14
 
@@ -178,8 +180,9 @@ jobs:
           dotnet test --project Test/Orders.Integrations.Hub.ArchTests/Orders.Integrations.Hub.ArchTests.csproj \
             --configuration Release \
             --no-build \
+            --results-directory TestResults \
             --report-trx \
-            --results-directory TestResults/architecture-tests.trx 
+            --report-trx-filename architecture-tests.trx \
           
       - name: Upload test results
         if: always()
@@ -222,7 +225,7 @@ jobs:
       
       - name: Generate coverage report
         run: |
-          reports=$(find coverage-input -name 'coverage.cobertura.xml' -print | paste -sd ';' -)
+          reports=$(find coverage-input -name 'coverage.cobertura.*.xml' -print | paste -sd ';' -)
 
           if [ -z "$reports" ]; then
             echo "❌ No coverage data available." >> "$GITHUB_STEP_SUMMARY"
