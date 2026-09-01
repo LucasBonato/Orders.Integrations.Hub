@@ -59,6 +59,7 @@ jobs:
   unit-tests:
     name: Unit Tests
     runs-on: ubuntu-latest
+    needs: build
 
     steps:
       - name: Checkout code
@@ -106,6 +107,7 @@ jobs:
   integration-tests:
     name: Integration Tests
     runs-on: ubuntu-latest
+    needs: build
 
     steps:
       - name: Checkout code
@@ -153,6 +155,7 @@ jobs:
   architecture-tests:
     name: Architecture Tests
     runs-on: ubuntu-latest
+    needs: build
 
     steps:
       - name: Checkout code
