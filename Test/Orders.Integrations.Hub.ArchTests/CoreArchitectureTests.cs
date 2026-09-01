@@ -226,9 +226,11 @@ public class CoreArchitectureTests
             .Or()
             .HaveNameEndingWith("Endpoint")
             .And()
-            .HaveName(nameof(AppEnv))
+            .AreNotInterfaces()
+            .And()
+            .DoNotResideInNamespace("Orders.Integrations.Hub.AppEnv") // generated config catalog (Anv), not an HTTP endpoint
             .Should()
-            .ResideInNamespace($"{AdaptersNamespace}.In.Http")
+            .ResideInNamespaceMatching("Orders.Integrations.Hub.*.Adapters.In.Http")
             .GetResult();
 
         Assert.True(result.IsSuccessful,

@@ -13,13 +13,12 @@ if (!builder.Environment.IsEnvironment("Test"))
 builder.Services
     .AddCore(builder.Configuration)
     .AddIntegrationsModule(builder.Configuration)
-    .AddOpenApi()
 ;
 
 WebApplication app = builder.Build();
 
 if (app.Environment.IsDevelopment()) {
-    app.MapOpenApi();
+    app.MapOpenApi().WithDocumentPerVersion();
     app.MapScalarApiReference();
 }
 
