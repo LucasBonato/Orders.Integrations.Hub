@@ -81,10 +81,11 @@ jobs:
             --project Test/Orders.Integrations.Hub.UnitTests/Orders.Integrations.Hub.UnitTests.csproj \
             --configuration Release \
             --no-build \
-            --report-xunit-trx \
-            --report-xunit-trx-filename TestResults/unit-tests.trx \
-            --coverlet \
-            --coverlet-output-format cobertura
+            --report-trx \
+            --results-directory TestResults/unit-tests.trx \
+            --coverage \
+            --coverage-output-format cobertura \
+            --coverage-output coverage.cobertura.xml
 
       - name: Upload test results
         if: always()
@@ -129,10 +130,11 @@ jobs:
             --project Test/Orders.Integrations.Hub.IntegrationTests/Orders.Integrations.Hub.IntegrationTests.csproj \
             --configuration Release \
             --no-build \
-            --report-xunit-trx \
-            --report-xunit-trx-filename TestResults/integration-tests.trx \
-            --coverlet \
-            --coverlet-output-format cobertura
+            --report-trx \
+            --results-directory TestResults/integration-tests.trx \
+            --coverage \
+            --coverage-output-format cobertura \
+            --coverage-output coverage.cobertura.xml
 
       - name: Upload test results
         if: always()
@@ -176,8 +178,8 @@ jobs:
           dotnet test --project Test/Orders.Integrations.Hub.ArchTests/Orders.Integrations.Hub.ArchTests.csproj \
             --configuration Release \
             --no-build \
-            --report-xunit-trx \
-            --report-xunit-trx-filename TestResults/architecture-tests.trx
+            --report-trx \
+            --results-directory TestResults/architecture-tests.trx 
           
       - name: Upload test results
         if: always()
