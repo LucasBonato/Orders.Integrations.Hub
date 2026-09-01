@@ -5,6 +5,8 @@
 
 # dotenv files
 .env
+.env.*
+!.env.example
 
 # User-specific files
 *.rsuser
@@ -511,3 +513,8 @@ graphify-out/cost.json
 .supermaven/
 .llm-cache/
 graphify-out
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
