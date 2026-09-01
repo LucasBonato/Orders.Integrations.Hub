@@ -1,4 +1,3 @@
-using Amazon;
 using Amazon.Runtime;
 using Amazon.Runtime.Credentials;
 using Amazon.S3;
