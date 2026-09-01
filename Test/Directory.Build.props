@@ -1,12 +1,10 @@
 ﻿<Project>
     <PropertyGroup>
-        <IsTestProject>true</IsTestProject>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
-        <IsPackable>false</IsPackable>
     </PropertyGroup>
-    <ItemGroup>
-        <PackageReference Include="coverlet.collector">
+    <ItemGroup Condition="'$(IsTestProject)' == 'true'">
+        <PackageReference Include="coverlet.MTP">
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
     </ItemGroup>

@@ -1,11 +1,8 @@
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
 using Orders.Integrations.Hub.Core.Application.Ports.In.UseCases;
 using Orders.Integrations.Hub.Core.Application.Ports.Out.Serialization;
 using Orders.Integrations.Hub.Core.Application.Ports.Out.UseCases;
-using Orders.Integrations.Hub.Core.Infrastructure.Extensions;
 using Orders.Integrations.Hub.Integrations.Common.Application.Handlers;
 using Orders.Integrations.Hub.Integrations.Common.Serialization;
 using Orders.Integrations.Hub.Integrations.Food99.Application.Clients;

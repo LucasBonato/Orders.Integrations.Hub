@@ -1,6 +1,3 @@
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-
 using Orders.Integrations.Hub.Core.Infrastructure.Extensions;
 
 namespace Orders.Integrations.Hub.Core;
