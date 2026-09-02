@@ -1,6 +1,10 @@
 using System.Net;
 using System.Text;
-using System.Text.Json;
+
+using Orders.Integrations.Hub.Core.Application.DTOs.Request;
+using Orders.Integrations.Hub.Core.Domain.Enums;
+using Orders.Integrations.Hub.Core.Domain.ValueObjects;
+using Orders.Integrations.Hub.Core.Infrastructure.Serialization;
 using Orders.Integrations.Hub.IntegrationTests.Infrastructure.Host;
 using Orders.Integrations.Hub.IntegrationTests.Infrastructure.Mocks;
 
@@ -19,7 +23,7 @@ public sealed class OrdersHubOrderDisputeEndpointTests : IntegrationTestBase
         Host.WireMock.IFoodApi.StubCommandEndpoints();
 
         // Act
-        using HttpResponseMessage result = await SendAsync("ACCEPT");
+        using HttpResponseMessage result = await SendAsync();
 
         // Assert
         Assert.Equal(HttpStatusCode.NoContent, result.StatusCode);
@@ -29,7 +33,7 @@ public sealed class OrdersHubOrderDisputeEndpointTests : IntegrationTestBase
     [Fact]
     public async Task Post_ShouldReturnProblem_WhenCounterOfferDoesNotHaveAnAlternative() {
         // Act
-        using HttpResponseMessage result = await SendAsync("COUNTER_OFFER");
+        using HttpResponseMessage result = await SendAsync(DisputeResponseType.COUNTER_OFFER);
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
@@ -39,28 +43,28 @@ public sealed class OrdersHubOrderDisputeEndpointTests : IntegrationTestBase
     [Fact]
     public async Task Post_ShouldReturnProblem_WhenIntegrationDoesNotSupportDisputes() {
         // Act
-        using HttpResponseMessage result = await SendAsync("ACCEPT", "RAPPI");
+        using HttpResponseMessage result = await SendAsync(DisputeResponseType.ACCEPT, "RAPPI");
 
         // Assert
         Assert.Equal(HttpStatusCode.UnprocessableEntity, result.StatusCode);
     }
 
-    private Task<HttpResponseMessage> SendAsync(string type, string integration = "IFOOD") {
-        string body = JsonSerializer.Serialize(
-            new {
-                disputeId = "dispute-1",
-                integration,
-                type,
-                alternativeId = (string?)null,
-                disputeResponse = new {
-                    reason = "Customer request",
-                    detailsReason = (string?)null,
-                    type = (string?)null,
-                    price = (object?)null,
-                    additionalTimeInMinutes = (int?)null,
-                    additionalTimeReason = (string?)null
-                }
-            }
+    private Task<HttpResponseMessage> SendAsync(DisputeResponseType type = DisputeResponseType.ACCEPT, string integration = "IFOOD") {
+        string body = new CoreJsonSerializer().Serialize(
+            new RespondDisputeIntegrationRequest(
+                DisputeId: "dispute-1",
+                Integration: IntegrationKey.From(integration),
+                Type: type,
+                AlternativeId: null,
+                DisputeResponse: new RespondDisputeResponse(
+                    Reason: "Customer request",
+                    DetailsReason: null,
+                    Type: null,
+                    Price: null,
+                    AdditionalTimeInMinutes: null,
+                    AdditionalTimeReason: null
+                )
+            )
         );
 
         return Host.Http.PostAsync(

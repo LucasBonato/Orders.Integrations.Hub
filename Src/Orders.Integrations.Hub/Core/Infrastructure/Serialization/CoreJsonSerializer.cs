@@ -11,7 +11,10 @@ public class CoreJsonSerializer : ICustomJsonSerializer
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
         DictionaryKeyPolicy = JsonNamingPolicy.CamelCase,
         PropertyNameCaseInsensitive = true,
-        Converters = { new JsonStringEnumConverter(JsonNamingPolicy.SnakeCaseUpper) }
+        Converters = {
+            new JsonStringEnumConverter(JsonNamingPolicy.SnakeCaseUpper),
+            new IntegrationKeyJsonConverter()
+        }
     };
 
     public string Serialize<T>(T value) => JsonSerializer.Serialize(value, Options);
