@@ -75,6 +75,9 @@ jobs:
         with:
           name: test-build
 
+      - name: Fix all permissions
+        run: chmod -R u+rwX .
+
       - name: Extract build output
         run: tar -xzf test-build.tar.gz
 
@@ -130,6 +133,9 @@ jobs:
         uses: actions/download-artifact@v8
         with:
           name: test-build
+
+      - name: Fix all permissions
+        run: chmod -R u+rwX .
 
       - name: Extract build output
         run: tar -xzf test-build.tar.gz
