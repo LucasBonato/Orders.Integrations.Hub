@@ -76,6 +76,9 @@ jobs:
         with:
           name: test-build
 
+      - name: Restore dependencies
+        run: dotnet restore Orders.Integrations.Hub.slnx
+
       - name: Run Unit Tests
         run: |
           dotnet test \
