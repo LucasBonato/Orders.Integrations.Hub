@@ -131,6 +131,12 @@ jobs:
         with:
           name: test-build
 
+      - name: Extract build output
+        run: tar -xzf test-build.tar.gz
+
+      - name: Restore dependencies
+        run: dotnet restore Orders.Integrations.Hub.slnx
+
       - name: Run Integration Tests
         run: |
           dotnet test \
@@ -180,6 +186,12 @@ jobs:
         uses: actions/download-artifact@v8
         with:
           name: test-build
+          
+      - name: Extract build output
+        run: tar -xzf test-build.tar.gz
+
+      - name: Restore dependencies
+        run: dotnet restore Orders.Integrations.Hub.slnx
 
       - name: Run Architecture Tests
         run: |
