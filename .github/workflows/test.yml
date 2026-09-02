@@ -52,9 +52,9 @@ jobs:
           name: test-build
           path: |
             Src/**/bin/Release/**
-            Src/**/obj/Release/**
+            Src/**/obj/**
             Test/**/bin/Release/**
-            Test/**/obj/Release/**
+            Test/**/obj/**
           retention-days: 1
 
   unit-tests:
