@@ -47,7 +47,7 @@ jobs:
             --no-restore
           
       - name: Package build output
-        run: tar -czf test-build.tar.gz Src Test --exclude='*/bin/Release/**/*.pdb'
+        run: tar --exclude='*/bin/Release/**/*.pdb' -czf test-build.tar.gz Src Test
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v7
