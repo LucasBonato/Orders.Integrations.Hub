@@ -86,7 +86,7 @@ jobs:
             --report-trx \
             --report-trx-filename unit-tests.trx \
             --coverlet \
-            --coverlet-output-format cobertura
+            --coverlet-output-format cobertura \
             --coverlet-include "[Orders.Integrations.Hub*]*"
 
       - name: Upload test results
@@ -136,7 +136,7 @@ jobs:
             --report-trx \
             --report-trx-filename integration-tests.trx \
             --coverlet \
-            --coverlet-output-format cobertura
+            --coverlet-output-format cobertura \
             --coverlet-include "[Orders.Integrations.Hub*]*"
 
       - name: Upload test results
@@ -184,7 +184,7 @@ jobs:
             --no-build \
             --results-directory TestResults \
             --report-trx \
-            --report-trx-filename architecture-tests.trx \
+            --report-trx-filename architecture-tests.trx
           
       - name: Upload test results
         if: always()
