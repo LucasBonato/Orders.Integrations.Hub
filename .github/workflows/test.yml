@@ -78,6 +78,9 @@ jobs:
 
       - name: Restore dependencies
         run: dotnet restore Orders.Integrations.Hub.slnx
+        
+      - name: Fix executable permissions
+        run: find Test -maxdepth 5 -type f -path "*/bin/Release/net10.0/*" -name "Orders.Integrations.Hub.*Tests" -exec chmod +x {} \;
 
       - name: Run Unit Tests
         run: |
