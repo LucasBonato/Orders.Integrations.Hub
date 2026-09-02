@@ -47,7 +47,7 @@ jobs:
             --no-restore
           
       - name: Package build output
-        run: tar --exclude='*/bin/Release/**/*.pdb' -czf test-build.tar.gz Src Test
+        run: tar -czf test-build.tar.gz Src Test
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v7
@@ -74,9 +74,6 @@ jobs:
         uses: actions/download-artifact@v8
         with:
           name: test-build
-
-      - name: Fix all permissions
-        run: chmod -R u+rwX .
 
       - name: Extract build output
         run: tar -xzf test-build.tar.gz
@@ -133,9 +130,6 @@ jobs:
         uses: actions/download-artifact@v8
         with:
           name: test-build
-
-      - name: Fix all permissions
-        run: chmod -R u+rwX .
 
       - name: Extract build output
         run: tar -xzf test-build.tar.gz
