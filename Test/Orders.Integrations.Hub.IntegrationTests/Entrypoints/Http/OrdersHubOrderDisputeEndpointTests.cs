@@ -4,7 +4,6 @@ using System.Text;
 using Orders.Integrations.Hub.Core.Application.DTOs.Request;
 using Orders.Integrations.Hub.Core.Domain.Enums;
 using Orders.Integrations.Hub.Core.Domain.ValueObjects;
-using Orders.Integrations.Hub.Core.Infrastructure.Serialization;
 using Orders.Integrations.Hub.IntegrationTests.Infrastructure.Host;
 using Orders.Integrations.Hub.IntegrationTests.Infrastructure.Mocks;
 
@@ -50,7 +49,7 @@ public sealed class OrdersHubOrderDisputeEndpointTests : IntegrationTestBase
     }
 
     private Task<HttpResponseMessage> SendAsync(DisputeResponseType type = DisputeResponseType.ACCEPT, string integration = "IFOOD") {
-        string body = new CoreJsonSerializer().Serialize(
+        string body = Serializer.Serialize(
             new RespondDisputeIntegrationRequest(
                 DisputeId: "dispute-1",
                 Integration: IntegrationKey.From(integration),

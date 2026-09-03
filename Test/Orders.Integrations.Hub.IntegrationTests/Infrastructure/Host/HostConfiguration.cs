@@ -42,10 +42,10 @@ public static class HostConfiguration
         {
             configuration
                 .AddJsonFile(
-                    new PhysicalFileProvider(AppContext.BaseDirectory),
-                    "appsettings.IntegrationTest.json",
+                    path: "appsettings.IntegrationTest.json",
                     optional: false,
-                    reloadOnChange: false)
+                    reloadOnChange: false
+                )
                 .Add(new HostSettingsConfigurationSource(builder, dynamicSettings.Keys));
         });
     }

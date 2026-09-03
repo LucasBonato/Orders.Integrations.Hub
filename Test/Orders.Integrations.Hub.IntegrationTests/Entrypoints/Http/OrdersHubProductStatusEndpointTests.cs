@@ -16,9 +16,10 @@ public sealed class OrdersHubProductStatusEndpointTests : IntegrationTestBase
         const string body = "{\"Message\":\"{\\\"sku\\\":\\\"sku-1\\\"}\"}";
 
         // Act
+        using StringContent content = new(body, Encoding.UTF8, "application/json");
         using HttpResponseMessage result = await Host.Http.PostAsync(
             $"/api/v1/orders-hub/orders/products/{action}",
-            new StringContent(body, Encoding.UTF8, "application/json"),
+            content,
             TestContext.Current.CancellationToken
         );
 

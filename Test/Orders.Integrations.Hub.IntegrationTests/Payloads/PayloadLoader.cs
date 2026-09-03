@@ -6,12 +6,28 @@ namespace Orders.Integrations.Hub.IntegrationTests.Payloads;
 /// over the exact bytes that are posted.
 /// </summary>
 public static class PayloadLoader {
-    private static readonly string BasePath = Path.Combine(AppContext.BaseDirectory, "Payloads", "Templates");
+    private static readonly string BasePath = Path.Join(AppContext.BaseDirectory, "Payloads", "Templates");
 
     /// <summary>Loads a fixture file verbatim, with no token substitution.</summary>
     public static string Load(string integration, string name)
     {
-        string path = Path.Combine(BasePath, integration, $"{name}.json");
+        if (
+            Path.IsPathRooted(integration) || 
+            integration.Contains(Path.DirectorySeparatorChar) || 
+            integration.Contains(Path.AltDirectorySeparatorChar)
+        )
+            throw new ArgumentException("integration must be a relative single path segment", nameof(integration));
+        
+        if (
+            Path.IsPathRooted(name) ||
+            name.Contains(Path.DirectorySeparatorChar) ||
+            name.Contains(Path.AltDirectorySeparatorChar)
+        )
+            throw new ArgumentException("name must be a relative single path segment", nameof(name));
+
+        string filename = $"{name.Replace(".json", string.Empty)}.json";
+        
+        string path = Path.Join(BasePath, integration, filename);
 
         if (!File.Exists(path))
             throw new FileNotFoundException(
@@ -20,6 +36,9 @@ public static class PayloadLoader {
                 "CopyToOutputDirectory in the .csproj.",
                 path
             );
+        
+        if (string.IsNullOrEmpty(path) || Path.GetFileName(path) != filename)
+            throw new ArgumentException("Path is empty and could not get the filename", nameof(path));
 
         return File.ReadAllText(path);
     }

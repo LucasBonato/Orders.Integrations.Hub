@@ -1,7 +1,9 @@
 using System.Net;
 using System.Text;
-using System.Text.Json;
 
+using Orders.Integrations.Hub.Core.Application.DTOs.Request;
+using Orders.Integrations.Hub.Core.Domain.Enums;
+using Orders.Integrations.Hub.Core.Domain.ValueObjects;
 using Orders.Integrations.Hub.IntegrationTests.Contracts;
 using Orders.Integrations.Hub.IntegrationTests.Infrastructure.Extensions;
 using Orders.Integrations.Hub.IntegrationTests.Infrastructure.Host;
@@ -24,20 +26,9 @@ public sealed class OrdersHubOrderStatusEndpointTests : IntegrationTestBase
         Host.WireMock.StubIntegration(contract);
 
         string merchantId = $"{contract.Descriptor.Key.ToLowerInvariant()}-merchant-id";
-        string body = JsonSerializer.Serialize(new {
-            orderId = "ord-1",
-            externalId = "ext-1",
-            merchantId,
-            status = "CONFIRMED",
-            integration = contract.Descriptor.IntegrationQueryValue
-        });
 
         // Act
-        using HttpResponseMessage result = await Host.Http.PatchAsync(
-            Route,
-            new StringContent(body, Encoding.UTF8, "application/json"),
-            TestContext.Current.CancellationToken
-        );
+        using HttpResponseMessage result = await SendStatusAsync(contract.Descriptor.IntegrationQueryValue, merchantId);
 
         // Assert
         Assert.Equal(HttpStatusCode.NoContent, result.StatusCode);
@@ -72,13 +63,15 @@ public sealed class OrdersHubOrderStatusEndpointTests : IntegrationTestBase
     }
 
     private Task<HttpResponseMessage> SendStatusAsync(string integration, string merchantId) {
-        string body = JsonSerializer.Serialize(new {
-            orderId = "ord-1",
-            externalId = "ext-1",
-            merchantId,
-            status = "CONFIRMED",
-            integration
-        });
+        string body = Serializer.Serialize(new ChangeOrderStatusRequest(
+            OrderId: "ord-1",
+            ExternalId: "ext-1",
+            MerchantId: merchantId,
+            Status: OrderEventType.CONFIRMED,
+            Integration: IntegrationKey.From(integration),
+            CancellationReason: null,
+            CancellationMetadata: null
+        ));
 
         return Host.Http.PatchAsync(
             Route,

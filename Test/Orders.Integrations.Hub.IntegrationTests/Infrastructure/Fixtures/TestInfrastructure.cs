@@ -82,7 +82,8 @@ public sealed class TestInfrastructure : IAsyncLifetime {
 
     private static async ValueTask TryDisposeAsync(IAsyncLifetime resource, List<Exception> exceptions) {
         try { await resource.DisposeAsync(); }
-        catch (Exception ex) { exceptions.Add(ex); }
+        catch (ObjectDisposedException ex) { exceptions.Add(ex); }
+        catch (InvalidOperationException ex) { exceptions.Add(ex); }
     }
 }
 
