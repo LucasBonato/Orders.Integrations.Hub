@@ -7,19 +7,18 @@ using Scalar.AspNetCore;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-if (!string.Equals(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"), "Test", StringComparison.OrdinalIgnoreCase))
+if (!builder.Environment.IsEnvironment("Test"))
     Env.TraversePath().Load();
 
 builder.Services
-    .AddCore()
-    .AddIntegrationsModule()
-    .AddOpenApi()
+    .AddCore(builder.Configuration)
+    .AddIntegrationsModule(builder.Configuration)
 ;
 
 WebApplication app = builder.Build();
 
 if (app.Environment.IsDevelopment()) {
-    app.MapOpenApi();
+    app.MapOpenApi().WithDocumentPerVersion();
     app.MapScalarApiReference();
 }
 

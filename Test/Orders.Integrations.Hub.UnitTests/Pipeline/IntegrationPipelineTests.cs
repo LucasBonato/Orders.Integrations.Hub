@@ -3,6 +3,7 @@ using System.Net.Http.Headers;
 using System.Text;
 
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 using NSubstitute;
@@ -138,6 +139,7 @@ public class IntegrationPipelineTests
         RappiAuthMessageHandler authHandler = new(
             Substitute.For<ILogger<RappiAuthMessageHandler>>(),
             authClient,
+            Substitute.For<IConfiguration>(),
             cache
         );
         IntegrationContextHandler contextHandler = new(httpContextAccessor);

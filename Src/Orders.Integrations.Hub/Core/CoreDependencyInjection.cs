@@ -1,4 +1,4 @@
-﻿using Orders.Integrations.Hub.Core.Infrastructure.Extensions;
+using Orders.Integrations.Hub.Core.Infrastructure.Extensions;
 
 namespace Orders.Integrations.Hub.Core;
 
@@ -11,17 +11,17 @@ public static class CoreDependencyInjection
         return app;
     }
 
-    public static IServiceCollection AddCore(this IServiceCollection services) {
+    public static IServiceCollection AddCore(this IServiceCollection services, IConfiguration configuration) {
         return services
                 .AddProblemDetailsConfiguration()
                 .AddApiVersioningConfiguration()
-                .AddObservabilityConfiguration()
-                .AddMessageBrokerConfiguration()
+                .AddObservabilityConfiguration(configuration)
+                .AddMessageBrokerConfiguration(configuration)
                 .AddSerializationConfiguration()
                 .AddCoreSpecificConfiguration()
-                .AddClientsConfiguration()
-                .AddCacheConfiguration()
-                .AddAwsConfiguration()
+                .AddClientsConfiguration(configuration)
+                .AddCacheConfiguration(configuration)
+                .AddAwsConfiguration(configuration)
             ;
     }
 }

@@ -25,7 +25,6 @@ public static class ApiVersioningExtensions
     {
         services
             .AddApiVersioning(options => {
-                options.DefaultApiVersion = new ApiVersion(1);
                 options.ReportApiVersions = true;
                 options.AssumeDefaultVersionWhenUnspecified = true;
                 options.ApiVersionReader = ApiVersionReader.Combine(
@@ -36,7 +35,8 @@ public static class ApiVersioningExtensions
             .AddApiExplorer(options => {
                 options.GroupNameFormat = "'v'V";
                 options.SubstituteApiVersionInUrl = true;
-            });
+            })
+            .AddOpenApi();
         
         return services;
     }

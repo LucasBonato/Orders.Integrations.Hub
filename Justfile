@@ -1,4 +1,5 @@
 export PROJECT := "Src/Orders.Integrations.Hub"
+export SOLUTION := "Orders.Integrations.Hub.slnx"
 
 set dotenv-load
 
@@ -6,7 +7,11 @@ set dotenv-load
 [private]
 default:
     @just --list
-    
+
+# =========================
+# Development
+# =========================
+
 # Run Project
 [group("dev")]
 run:
@@ -20,47 +25,61 @@ watch:
 # Restore the project
 [group("dev")]
 restore:
-    dotnet restore
+    dotnet restore {{SOLUTION}}
 
 # Build the project
 [group("dev")]
 build:
-    dotnet build
+    dotnet build {{SOLUTION}}
 
 # Clean Solution
 [group("dev")]
 clean:
-    dotnet clean
-    
+    dotnet clean {{SOLUTION}}
+
+# =========================
+# Tests
+# =========================
+
 # Run all tests
 [group("test")]
 test:
-    dotnet test Test/*
+    dotnet test {{SOLUTION}}
 
 # Run all tests with watch
 [group("test")]
 test-watch:
-    dotnet watch test Test/*
+    dotnet watch test {{SOLUTION}}
 
 # Run all tests with coverage
 [group("test")]
 coverage:
-    dotnet test Test/* --collect:"XPlat Code Coverage"
-    
+    dotnet test {{SOLUTION}} \
+        --coverlet \
+        --coverlet-output-format cobertura
+
+# =========================
+# Formatting
+# =========================
+
 # Format code
 [group("format")]
 format:
-    dotnet format
+    dotnet format {{SOLUTION}}
 
 # Show warnings of the lint
 [group("format")]
 lint:
-    dotnet build -warnaserror
+    dotnet build {{SOLUTION}} -warnaserror
 
 # Run all checks for format and tests
 [group("format")]
 check: format lint test
     @echo "All checks passed"
+
+# =========================
+# Containers
+# =========================
 
 # Up all containers from compose
 [group("containers")]
@@ -87,18 +106,25 @@ rebuild:
 ps:
     docker compose ps
 
+# =========================
+# OpenTelemetry
+# =========================
+
 # Show url for dashboard OpenTelemetry is exporting
 [group("otel")]
 dashboard:
     @echo "Aspire dashboard: $OTEL_EXPORTER_OTLP_ENDPOINT"
 
+# =========================
+# Utilities
+# =========================
 
 # List all packages of the solution
 [group("util")]
 deps:
-    dotnet list package
+    dotnet list {{SOLUTION}} package
 
 # Show outdated packages
 [group("util")]
 outdated:
-    dotnet list package --outdated
+    dotnet list {{SOLUTION}} package --outdated

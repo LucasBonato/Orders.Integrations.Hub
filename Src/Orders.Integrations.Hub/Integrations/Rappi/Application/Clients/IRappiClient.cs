@@ -10,13 +10,13 @@ public interface IRappiClient : IIntegrationClient {
     [Get("/api/webhooks")]
     Task<List<RappiWebhookEventsResponse>> GetWebhooks();
 
-    [Put("/api/webhooks/{@event}")]
+    [Put("/api/webhooks/{event}")]
     Task<RappiWebhookEventsResponse> PutWebhookStatus([Body] RappiWebhookChangeStatusRequest request, string @event);
 
-    [Put("/api/webhooks/{@event}/stores")]
+    [Put("/api/webhooks/{event}/stores")]
     Task<RappiWebhookEventsResponse> PutWebhookAddNewStores([Body] List<RappiWebhookAddStoresRequest> request, string @event);
 
-    [Delete("/api/webhooks/{@event}/stores")]
+    [Delete("/api/webhooks/{event}/stores")]
     Task<RappiWebhookRemoveStoresResponse> DeleteWebhookRemoveStores([Body] RappiWebhookRemoveStoresRequest request, string @event);
 
     [Put("/api/webhooks/order/new")]

@@ -1,0 +1,105 @@
+﻿{
+  "id": "{{orderId}}",
+  "displayId": "display-456",
+  "orderType": "DELIVERY",
+  "orderTiming": "IMMEDIATE",
+  "salesChannel": "IFOOD",
+  "category": "FOOD",
+  "createdAt": "{{createdAt}}",
+  "preparationStartDateTime": "{{preparationStartDateTime}}",
+  "isTest": false,
+  "extraInfo": null,
+  "merchant": {
+    "id": "merchant-1",
+    "name": "Test Merchant"
+  },
+  "customer": {
+    "id": "customer-1",
+    "name": "Test Customer",
+    "documentNumber": "12345678901",
+    "ordersCountOnMerchant": 1,
+    "phone": null,
+    "segmentation": "REGULAR"
+  },
+  "items": [
+    {
+      "index": 1,
+      "id": "item-1",
+      "uniqueId": "unique-1",
+      "imageUrl": "https://example.com/img.jpg",
+      "externalCode": "EXT-001",
+      "ean": "1234567890123",
+      "name": "Test Item",
+      "type": "PRODUCT",
+      "quantity": 2,
+      "unit": "UN",
+      "unitPrice": 10.00,
+      "price": 20.00,
+      "scalePrices": {
+        "defaultPrice": 10.00,
+        "scales": []
+      },
+      "optionsPrice": 0,
+      "totalPrice": 20.00,
+      "observations": "",
+      "options": null
+    }
+  ],
+  "benefits": null,
+  "additionalFees": null,
+  "total": {
+    "additionalFees": 0,
+    "subTotal": 20.00,
+    "deliveryFee": 5.00,
+    "benefits": 0,
+    "orderAmount": 25.00
+  },
+  "payments": {
+    "prepaid": 25.00,
+    "pending": 0,
+    "methods": [
+      {
+        "value": 25.00,
+        "currency": "BRL",
+        "type": "ONLINE",
+        "method": "CREDIT",
+        "wallet": null,
+        "card": {
+          "brand": "VISA"
+        },
+        "cash": null,
+        "transaction": null
+      }
+    ]
+  },
+  "picking": null,
+  "delivery": {
+    "mode": "DEFAULT",
+    "description": "Standard delivery",
+    "deliveredBy": "IFOOD",
+    "deliveryDateTime": "{{deliveryDateTime}}",
+    "deliveryAddress": {
+      "streetName": "Rua Teste",
+      "streetNumber": "123",
+      "formattedAddress": "Rua Teste, 123",
+      "neighborhood": "Centro",
+      "complement": "",
+      "reference": "",
+      "postalCode": "12345-678",
+      "city": "São Paulo",
+      "state": "SP",
+      "country": "Brasil",
+      "coordinates": {
+        "latitude": -23.5505,
+        "longitude": -46.6333
+      }
+    },
+    "observations": "",
+    "pickupCode": ""
+  },
+  "takeout": null,
+  "dineIn": null,
+  "indoor": null,
+  "schedule": null,
+  "additionalInfo": null
+}

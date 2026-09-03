@@ -24,27 +24,29 @@ jobs:
   build:
     name: Build & Publish
     runs-on: ubuntu-latest
+    
+    permissions:
+      contents: read
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v7
-        with:
-          fetch-depth: 0
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v5
+        uses: actions/setup-dotnet@v6
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: Restore dependencies
-        run: dotnet restore Orders.Integrations.Hub.slnx
+        run: |
+          dotnet restore Orders.Integrations.Hub.slnx
         env:
           NUGET_XMLDOC_MODE: skip
 
       - name: Build
         run: |
           dotnet build Orders.Integrations.Hub.slnx \
-            -c Release \
+            --configuration Release \
             --no-restore \
             -p:ContinuousIntegrationBuild=true \
             -p:DeterministicBuild=true \
@@ -53,9 +55,10 @@ jobs:
       - name: Publish
         run: |
           dotnet publish Src/Orders.Integrations.Hub/Orders.Integrations.Hub.csproj \
-            -c Release \
+            --configuration Release \
             --no-build \
-            -o ./publish
+            --no-restore \
+            --output ./publish
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v7
@@ -96,8 +99,6 @@ jobs:
           tags: |
             type=ref,event=branch
             type=sha,prefix={{branch}}-
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v7

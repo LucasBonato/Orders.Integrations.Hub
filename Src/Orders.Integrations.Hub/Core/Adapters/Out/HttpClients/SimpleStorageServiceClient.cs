@@ -1,16 +1,19 @@
-﻿using Amazon.S3;
+using Amazon.S3;
 using Amazon.S3.Model;
 using Amazon.S3.Transfer;
 
+using Microsoft.Extensions.Options;
+
 using Orders.Integrations.Hub.Core.Application.Ports.Out.Clients;
-using Orders.Integrations.Hub.Core.Infrastructure.Extensions;
+using Orders.Integrations.Hub.Core.Infrastructure.Options;
 
 namespace Orders.Integrations.Hub.Core.Adapters.Out.HttpClients;
 
 public class SimpleStorageServiceClient(
-    IAmazonS3 s3Client
+    IAmazonS3 s3Client,
+    IOptions<ObjectStorageOptions> options
 ) : IObjectStorageClient {
-    private readonly string _bucketName = AppEnv.OBJECT_STORAGE.BUCKET.NAME.NotNullEnv();
+    private readonly string _bucketName = options.Value.Bucket.Name;
 
     public async Task<string> UploadFile(Stream file, string contentType, string key)
     {

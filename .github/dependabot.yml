@@ -9,8 +9,8 @@ updates:
     allow:
       - dependency-type: "all"
     commit-message:
-      prefix: "chore(deps):"
-      prefix-development: "chore(deps-dev):"
+      prefix: "chore/nuget(deps):"
+      prefix-development: "chore/nuget(deps-dev):"
       include: "scope"
   - package-ecosystem: "github-actions"
     directory: "/"
@@ -20,7 +20,7 @@ updates:
       time: "03:00"
     open-pull-requests-limit: 5
     commit-message:
-      prefix: "ci(actions):"
+      prefix: "ci/actions(deps):"
       include: "scope"
   - package-ecosystem: "docker"
     directory: "/"
@@ -30,7 +30,7 @@ updates:
       time: "03:00"
     open-pull-requests-limit: 3
     commit-message:
-      prefix: "chore(docker):"
+      prefix: "chore/docker(deps):"
       include: "scope"
   - package-ecosystem: "pip"
     directory: "/"
@@ -40,5 +40,5 @@ updates:
       time: "04:00"
     open-pull-requests-limit: 3
     commit-message:
-      prefix: "chore(deps):"
+      prefix: "chore/pip(deps):"
       include: "scope"

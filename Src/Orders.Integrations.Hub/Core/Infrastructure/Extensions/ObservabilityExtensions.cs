@@ -1,28 +1,36 @@
-﻿using System.Diagnostics.Metrics;
+using System.Diagnostics.Metrics;
 
 using OpenTelemetry;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 
+using Orders.Integrations.Hub.Core.Infrastructure.Options;
+
 namespace Orders.Integrations.Hub.Core.Infrastructure.Extensions;
 
 public static class ObservabilityExtensions
 {
-    public static IServiceCollection AddObservabilityConfiguration(this IServiceCollection services)
+    public static IServiceCollection AddObservabilityConfiguration(this IServiceCollection services, IConfiguration configuration)
     {
-        string serviceName = AppEnv.OTEL_SERVICE_NAME.NotNullEnv();
+        OpenTelemetryOptions otlpOptions = configuration
+            .GetSection(OpenTelemetryOptions.SectionName)
+            .Get<OpenTelemetryOptions>() 
+                ?? throw new InvalidOperationException($"Missing '{OpenTelemetryOptions.SectionName}' configuration section.");
 
         services
             .AddOpenTelemetry()
-            .UseOtlpExporter()
+            .UseOtlpExporter(
+                otlpOptions.Protocol,
+                otlpOptions.Endpoint
+            )
             .ConfigureResource(resource => {
-                resource.AddService(serviceName: serviceName);
+                resource.AddService(serviceName: otlpOptions.ServiceName);
             })
             .WithTracing(tracing => {
                 tracing
                     .AddSource(
-                        serviceName,
+                        otlpOptions.ServiceName,
                         nameof(MassTransit)
                     )
                     .AddAspNetCoreInstrumentation()
@@ -34,7 +42,7 @@ public static class ObservabilityExtensions
             .WithMetrics(metrics => {
                 metrics
                     .AddMeter(
-                        serviceName,
+                        otlpOptions.ServiceName,
                         nameof(MassTransit)
                     )
                     .AddAspNetCoreInstrumentation()

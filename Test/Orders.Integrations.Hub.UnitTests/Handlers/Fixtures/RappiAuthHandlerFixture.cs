@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 using NSubstitute;
@@ -15,6 +16,7 @@ namespace Orders.Integrations.Hub.UnitTests.Handlers.Fixtures;
 public sealed class RappiAuthHandlerFixture : AuthHandlerTestFixture {
     private ILogger<RappiAuthMessageHandler> Logger { get; }
     private IRappiAuthClient AuthClient { get; }
+    private IConfiguration Configuration { get; }
     private ICacheService Cache { get; }
     public override TestHandler InnerHandler { get; }
     public override DelegatingHandler Handler { get; }
@@ -26,9 +28,10 @@ public sealed class RappiAuthHandlerFixture : AuthHandlerTestFixture {
         Cache = CreateCacheMock();
 
         AuthClient = Substitute.For<IRappiAuthClient>();
+        Configuration = Substitute.For<IConfiguration>();
         InnerHandler = new TestHandler();
 
-        Handler = new RappiAuthMessageHandler(Logger, AuthClient, Cache) {
+        Handler = new RappiAuthMessageHandler(Logger, AuthClient, Configuration, Cache) {
             InnerHandler = InnerHandler
         };
     }
