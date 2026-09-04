@@ -1,70 +1,45 @@
-# Testing Strategy
-
 ## Overview
 
-This repository uses a **risk-based testing strategy** adapted for a hexagonal (ports & adapters) event-driven integration platform. The goal is not blanket coverage but targeted confidence where it matters most: serialization, mapping, and message handling.
+This repository uses a risk-based testing strategy for a hexagonal, event-driven integration platform. The goal is targeted confidence at serialization, mapping, routing, transport, and external-service boundaries.
 
-## Test Pyramid (Adapted)
+## Test Pyramid
 
 ```
-     ╱╲          E2E (few — manual smoke or staging only)
-    ╱  ╲
-   ╱────╲        Integration (MassTransit harness, TestContainers)
-  ╱      ╲
- ╱────────╲      Unit (serializers, validators, routers, handlers in isolation)
-╱──────────╲
+     /\        Manual or staging smoke tests
+    /  \
+   /----\      Integration: HTTP, RabbitMQ, Redis, LocalStack
+  /      \
+ /--------\    Unit: domain, serializers, validators, routers, handlers
 ```
-
-The pyramid is **flattened** — we write more unit tests and focused integration tests, but very few (if any) full end-to-end tests. The event-driven architecture means most bugs surface at the serialization, routing, or mapping boundaries, not at the UI level.
 
 ## What Each Level Covers
 
-| Layer | Test Level | What's Tested |
+| Area | Test level | Coverage |
 |---|---|---|
-| **Domain** (Core/Domain) | Unit | Entities, ValueObjects, Enums — pure logic, zero dependencies |
-| **Application** (Core/Application) | Unit + Integration | Commands, DTOs, Port interfaces, UseCase orchestration |
-| **Adapters.In** (HTTP, Messaging) | Integration | Endpoint filters, webhook signature validation, command handlers |
-| **Adapters.Out** (Cache, HTTP, S3) | Unit + Integration | Cache behavior, HTTP client pipelines, object storage operations |
-| **Infrastructure** | Unit | Serializers (`ICustomJsonSerializer`), routers (`IntegrationRouter`), middleware, converters |
-| **Integrations** (IFood, Rappi, Food99) | Unit + Integration | Per-integration serializers, signature strategies, auth handlers, pipeline handlers |
+| Core domain | Unit | Entities, value objects, enums, and pure rules |
+| Application | Unit + integration | Commands, DTOs, ports, and use-case orchestration |
+| Inbound adapters | Integration | HTTP endpoints, webhook signatures, and MassTransit consumers |
+| Outbound adapters | Unit + integration | HTTP clients, cache, S3, SNS, and serialization |
+| Integration modules | Unit + integration | Mapping, auth, signatures, pipelines, and dispatch |
 
-## Risk-Based Approach
+## Integration Host Modes
 
-Highest-risk areas get disproportionate test investment:
+- `AppFactory.Create()` uses in-memory MassTransit and memory cache. WireMock owns the Orders and integration HTTP boundaries.
+- `AppFactory.Create(testInfrastructure.Environment)` uses real RabbitMQ, Redis, and LocalStack containers. These tests are in `IntegrationTestCollection` and run serially because they share the fixture.
+- Runtime container and WireMock values are supplied through `UseSetting` and a host configuration provider. Tests do not write process environment variables.
+- Consumer round trips wait for observable WireMock or SQS results. Tests do not use sleeps.
 
-- **Serialization / Deserialization** — every integration has its own JSON format (camelCase, snake_case, enum casing differences). A serializer mismatch causes silent data corruption, not a crash. Each integration serializer gets a dedicated test class.
-- **Mapping Extensions** — converting integration-specific DTOs to domain objects. Tested with real payloads deserialized from files.
-- **Signature Validation** — webhook security. Every validator is tested for valid, tampered, missing, and expired signatures.
-- **Message Routing** — `IIntegrationRouter` resolution by keyed DI. A wrong route means silent message loss.
-- **Command Handlers** — MassTransit consumers. Tested with `ITestHarness` to verify consumption, fault publishing, and mock interactions.
+## Risk-Based Priorities
 
-## Adding a New Integration
+- Test every integration serializer and mapping extension with realistic payloads.
+- Test webhook signatures for missing, invalid, and valid signatures.
+- Test keyed integration routing and unsupported integrations.
+- Test consumer round trips through real RabbitMQ when transport wiring matters.
+- Test S3/SNS behavior against LocalStack when an in-memory fake cannot verify the behavior.
 
-To add a new integration (e.g., "Keeta") with minimal test code:
+## Adding an Integration
 
-1. **Serializer tests** — follow `RappiJsonSerializerTests` pattern (camelCase, snake_case, enums, round-trip)
-2. **Auth handler tests** — use `AuthHandlerTestFixture` + `AuthHandlerFixtureProvider` polymorphic pattern
-3. **Pipeline tests** — chain `IntegrationContextHandler` + auth handler + `TestHandler` to verify end-to-end request flow
-4. **Webhook endpoint tests** — use `WebApplicationFactory` with `TestContainers.Redis`
-5. **Mapping extension tests** — deserialize a real payload fixture and assert mapped fields on the domain object
-
-Arch tests auto-discover new integrations via `DiscoverIntegrationNamespaces()` — no modifications needed.
-
-## Reusable Infrastructure
-
-- `Test/Orders.Integrations.Hub.TestCommon/` contains shared builders, fakes, and fixtures
-- `FakeCache` and `FakeStorage` replace Redis/S3 for unit tests
-- `ObjectMother` provides static factory methods for common domain objects
-- `AuthHandlerTestFixture` + `ClassData` enables testing auth handlers across all integrations with shared test methods
-- `MassTransitTestHarnessExtensions.AddDefaultTestHarness<T>()` reduces boilerplate for consumer tests
-
-## Coverage Targets
-
-No hard numbers — but these guidelines apply:
-
-- **Serializers**: every serializer method (Serialize, Deserialize, enums, null handling, round-trip) must be tested
-- **Validators**: every code path (valid, invalid, boundary) must be tested
-- **Infrastructure**: the `IntegrationRouter` Resolve/CanResolve/throw paths must be tested
-- **Command handlers**: consume success + fault paths must be tested
-- **Cache**: Get/Set/expire/overwrite for each cache mode must be tested
-- **Middleware**: each exception type mapping must be tested
+1. Add serializer, auth, pipeline, mapping, and webhook tests using the existing integration patterns.
+2. Add an `IIntegrationContract` and signer so shared theories discover the integration automatically.
+3. Add realistic raw payload templates. Signatures must be calculated over the raw body.
+4. Run the unit, architecture, and integration test projects.

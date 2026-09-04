@@ -16,7 +16,7 @@
 | `CoreArchitectureTests` | `Test/.../ArchTests/CoreArchitectureTests.cs` | Domain independence, Application-only-on-Domain, adapter placement |
 | `IntegrationsArchitectureTests` | `Test/.../ArchTests/IntegrationsArchitectureTests.cs` | Integration isolation, common contracts, auto-discovery |
 | `IntegrationRouterTests` | `Test/.../UnitTests/Integration/IntegrationRouterTests.cs` | keyed DI resolution, scoped lifetime, missing key |
-| `MassTransitCommandDispatcher` (via `CommandDispatcherTests`) | `Test/.../IntegrationTests/CommandHandlers/CommandDispatcherTests.cs` | adapter `ICommandDispatcher` → bus publish |
+| `Entrypoints.Messaging` tests | `Test/.../IntegrationTests/Entrypoints/Messaging/` | inbound message adapter → real consumer → external boundary |
 
 ## Layer Dependency Rules
 

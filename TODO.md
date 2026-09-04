@@ -7,6 +7,7 @@
   - [ ] Support to Polling
 - [ ] Implement DoorDash
 - [ ] Workflow to verify and test the PR blocking merge
+- [ ] Substitute LocalStack to Floci
 - [X] Fix the Integrations Architecture
 - [X] Implement Architecture Tests
 - [X] Memory cache as local and fallback of distributed cache

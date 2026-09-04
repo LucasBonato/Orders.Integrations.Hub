@@ -1,83 +1,30 @@
-# Integration Testing
+## Overview
 
-Integration tests validate the **real wiring** between components — message bus, HTTP pipeline, cache backends, and storage services. They use `ITestHarness` for MassTransit consumers, `TestContainers` for infrastructure dependencies, and `WebApplicationFactory` for HTTP endpoints.
+Integration tests validate the real wiring between the HTTP pipeline, message bus, cache, storage, and external HTTP boundaries.
 
-## MassTransit Test Harness
+## Test Hosts
 
-The `ITestHarness` pattern is used for all command handler tests. This validates that consumers receive messages, interact with mocked dependencies, and publish faults on failure.
-
-```csharp
-public sealed class CreateOrderCommandHandlerTests : IAsyncLifetime
-{
-    private readonly ITestHarness _harness;
-    private readonly IOrderClient _orderClient;
-
-    public CreateOrderCommandHandlerTests()
-    {
-        _orderClient = Substitute.For<IOrderClient>();
-        ServiceProvider provider = new ServiceCollection()
-            .AddSingleton(_orderClient)
-            .AddLogging()
-            .AddDefaultTestHarness<CreateOrderCommandHandler>()
-            .BuildServiceProvider(true);
-        _harness = provider.GetRequiredService<ITestHarness>();
-    }
-
-    public async ValueTask InitializeAsync() => await _harness.Start();
-    public async ValueTask DisposeAsync() => await _harness.Stop();
-}
-```
-
-Use `AddDefaultTestHarness<TConsumer>()` to configure in-memory bus, kebab-case endpoints, and `IntegrationKeyJsonConverter`. Three scenarios per consumer: success, fault on failure, no fault on success.
-
-## TestContainers
-
-TestContainers provide real infrastructure for integration tests:
-
-| Container | Use Case |
+| Host | Use |
 |---|---|
-| **Redis** | Cache integration tests (real `IDistributedCache`) |
-| **LocalStack** | S3 storage tests (dispute evidence) |
-| **RabbitMQ** | Transport-level message tests (retry, circuit breaker) |
+| `AppFactory.Create()` | In-memory broker/cache, WireMock HTTP boundaries, fast endpoint and webhook tests |
+| `AppFactory.Create(environment)` | RabbitMQ, Redis, and LocalStack integration tests |
 
-Each expensive container uses a **collection fixture**:
+Both hosts run the real application entry point. The test host always uses the `Test` environment and committed `appsettings.IntegrationTest.json`; runtime container and WireMock values are injected per host.
 
-```csharp
-[CollectionDefinition("Redis")]
-public class RedisCollection : ICollectionFixture<RedisContainerFixture> { }
+## External Boundaries
 
-[Collection("Redis")]
-public class WebhookEndpointTests : IAsyncLifetime { ... }
-```
+- WireMock owns Orders, IFood, Rappi, and Food99 HTTP services.
+- `TestIntegrationClient` replaces the in-code `InternalClient` settings adapter while retaining `InternalCacheClient`.
+- RabbitMQ tests publish through `IPublishEndpoint` and observe the resulting HTTP call.
+- S3, SNS, and SQS tests use LocalStack through the AWS SDK.
 
-## WebApplicationFactory
+## Containers
 
-For full HTTP pipeline tests (webhook endpoints, signature filters, middleware):
+`TestInfrastructure` is a shared, serial collection fixture for Redis, RabbitMQ, and LocalStack. The fixture resets state before each test instance. Docker or Podman is required for the real-infrastructure tests.
 
-```csharp
-public class WebhookEndpointTests : IClassFixture<WebApplicationFactory<Program>>
-{
-    private readonly HttpClient _client;
+## Deterministic Coordination
 
-    public WebhookEndpointTests(WebApplicationFactory<Program> factory)
-    {
-        _client = factory.WithWebHostBuilder(builder =>
-        {
-            builder.ConfigureTestServices(services =>
-            {
-                services.AddSingleton(Substitute.For<IInternalClient>());
-            });
-        }).CreateClient();
-    }
-}
-```
-
-## When to Use Each Approach
-
-| Need | Approach |
-|---|---|
-| Test a MassTransit consumer | `ITestHarness` + mocked dependencies |
-| Test full HTTP webhook pipeline | `WebApplicationFactory` + `ITestHarness` |
-| Test cache behavior with real Redis | `TestContainers.Redis` collection fixture |
-| Test S3 operations | `FakeStorage` for unit, `TestContainers.LocalStack` for integration |
-| Test message transport | `TestContainers.RabbitMQ` |
+- Use WireMock wait helpers for HTTP effects.
+- Use SQS long-polling for SNS delivery.
+- Use `TestContext.Current.CancellationToken`.
+- Do not use `Task.Delay` or process environment mutation for test coordination.

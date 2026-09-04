@@ -170,7 +170,7 @@ When you open a PR, the template guides you:
 | **Testing** | ✅ Yes | "Unit tests added for edge cases" |
 | **Breaking Changes** | ⚠️ If applicable | "API endpoint URL changed (minor version bump)" |
 | **Checklist** | ✅ Yes | Check all boxes (StyleCop clean, tests pass, etc.) |
-| **Deployment Notes** | ⚠️ If applicable | "New env var: `CACHE__MODE`" |
+| **Deployment Notes** | ⚠️ If applicable | "New configuration key: `Cache:Provider`" |
 
 **Agent-friendly sections:**
 - Machines auto-parse the PR template
@@ -254,7 +254,7 @@ Infrastructure (HTTP, DB, cache)
 
 ### Use Instead:
 - ✅ Environment variables (`.env`, secret management)
-- ✅ Configuration providers (AppEnv.cs)
+- ✅ Configuration providers and environment variables
 - ✅ GitHub Secrets (for CI/CD)
 
 **Automatic checks:**
