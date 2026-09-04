@@ -1,39 +1,31 @@
-# event-testing
-
-**When:** Testing MassTransit consumers, command handlers, event flows, pub/sub, and fault handling.
+**When:** Testing MassTransit consumers, command flows, SNS delivery, and external effects.
 
 ## Patterns
 
-- **MassTransit `ITestHarness`** for in-memory bus simulation — `Start()`/`Stop()` via `IAsyncLifetime`
-- **`IConsumer<T>` testing** — publish command via `_harness.Bus.Publish()`, verify with `_harness.Consumed.Any<T>()`
-- **Fault testing** — verify `_harness.Published.Any<Fault<T>>()` when mocks throw
-- **Mock external dependencies** (clients, SNS, cache) with NSubstitute, inject into DI
-- **`AddDefaultTestHarness<TConsumer>()`** extension from `MassTransitTestHarnessExtensions.cs` — standardizes in-memory config with `IntegrationKeyJsonConverter`
+- Use the real RabbitMQ host through `AppFactory.Create(TestInfrastructure.Environment)`.
+- Publish commands through `IPublishEndpoint`.
+- Wait for WireMock requests or SQS messages; never sleep.
+- Use `TestContext.Current.CancellationToken` for all asynchronous operations.
+- Use builders from `TestCommon/Fakers`.
 
 ## Examples
 
-| Test Class | File Path | What It Tests |
+| Test class | File path | What it tests |
 |---|---|---|
-| `CreateOrderCommandHandlerTests` | `Test/.../IntegrationTests/CommandHandlers/CreateOrderCommandHandlerTests.cs` | consumer → `IOrderClient`, fault on error |
-| `UpdateOrderCommandHandlerTests` | `Test/.../IntegrationTests/CommandHandlers/UpdateOrderCommandHandlerTests.cs` | consumer → `IOrderClient.PatchOrder`, fault |
-| `ProcessOrderDisputeCommandHandlerTests` | `Test/.../IntegrationTests/CommandHandlers/ProcessOrderDisputeCommandHandlerTests.cs` | consumer → `PatchOrderDispute` with arg matching |
-| `PubSubCommandHandlerTests` | `Test/.../IntegrationTests/CommandHandlers/PubSubCommandHandlerTests.cs` | consumer → `IAmazonSNS`, fault on SNS error |
-| `CommandDispatcherTests` | `Test/.../IntegrationTests/CommandHandlers/CommandDispatcherTests.cs` | dispatcher → bus publish |
+| `CreateOrderCommandHandlerTests` | `Test/.../IntegrationTests/Entrypoints/Messaging/CreateOrderCommandHandlerTests.cs` | consumer to Orders create call |
+| `UpdateOrderStatusCommandHandlerTests` | `Test/.../IntegrationTests/Entrypoints/Messaging/UpdateOrderStatusCommandHandlerTests.cs` | consumer to Orders patch call |
+| `ProcessOrderDisputeCommandHandlerTests` | `Test/.../IntegrationTests/Entrypoints/Messaging/ProcessOrderDisputeCommandHandlerTests.cs` | consumer to dispute patch call |
+| `PubSubCommandHandlerTests` | `Test/.../IntegrationTests/Entrypoints/Messaging/PubSubCommandHandlerTests.cs` | SNS publish observed through SQS |
 
-## Conventions
+## Assertions
 
-- **Constructor** sets up `ServiceCollection` with mocks + `AddDefaultTestHarness<T>()`, resolves `ITestHarness`
-- **`IAsyncLifetime.InitializeAsync`** → `await _harness.Start()`
-- **`IAsyncLifetime.DisposeAsync`** → `await _harness.Stop()`
-- **Assert consumption** with `GetConsumerHarness<T>().Consumed.Any<T>()` before asserting mock interactions
-- **Test both success and fault paths** — each in its own `[Fact]`
-- **Use `Fakers`** for command generation: `new CreateOrderCommandFaker().WithOrder(...).Generate()`
-- **Use `Arg.Is<>()`** for structured argument matching on mocked dependencies
+- Wait for the external effect before asserting its body or count.
+- Parse SNS envelopes before asserting the serialized payload.
+- Keep one behavior per test.
+- Reset shared infrastructure centrally through `TestInfrastructure`.
 
 ## Anti-Patterns
 
-- ❌ **Mocking `IBus` or `IPublishEndpoint`:** Use `ITestHarness.Bus` — the harness provides the real in-memory bus
-- ❌ **Verifying mock calls before bus delivery:** Always assert `Consumed.Any<T>()` first, then verify mock received calls
-- ❌ **Testing handlers in isolation without harness:** Consumer/handler logic includes middleware, serialization, and DI — test through the harness
-- ❌ **Missing fault tests:** Every handler with an external dependency should have a fault-publish test
-- ❌ **Shared harness across test classes:** Each test class creates its own `ITestHarness`
+- Do not mock `IBus` or `IPublishEndpoint` in transport integration tests.
+- Do not call consumers directly when testing broker wiring.
+- Do not use `Task.Delay` or process environment mutation for test coordination.

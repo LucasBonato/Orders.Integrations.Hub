@@ -44,7 +44,7 @@ This project serves as a central entry point for receiving and processing extern
 - 📦 **Flexible Caching** — in-memory (L1), Redis (L2), or hybrid L1/L2 modes
 - 📊 **Observability** with OpenTelemetry
 - ☁️ **Infrastructure as Code** with Terraform and LocalStack
-- 🧪 **Comprehensive Test Suite**: Unit, Architecture, and Integration tests with MassTransit test harness
+- 🧪 **Comprehensive Test Suite**: Unit, Architecture, and full-stack Integration tests
 
 ---
 
@@ -377,21 +377,23 @@ MassTransit automatically discovers and registers all consumers from assemblies,
 
 ### Unit Tests
 - **Location**: `Test/Orders.Integrations.Hub.UnitTests/`
-- **Framework**: xUnit
-- **Coverage**: Business logic, caching, validations, integrations
-- **Example**: `Integrations/IntegrationKeyValidationTests.cs`
+- **Framework**: xUnit v3
+- **Coverage**: Business logic, caching, validation, serialization, and integration handlers
+- **Test Host**: Microsoft.Testing.Platform
 
-### Integration Tests (NEW)
+### Integration Tests
 - **Location**: `Test/Orders.Integrations.Hub.IntegrationTests/`
-- **Framework**: xUnit + **MassTransit TestFramework**
-- **Purpose**: Verify command dispatch, message routing, and handler execution
-- **Key Test Files**:
-  - `CommandHandlers/CommandDispatcherTests.cs` — Direct dispatcher functionality and message routing
-  - `CommandHandlers/CreateOrderCommandHandlerTests.cs` — Order creation command flow
-  - `CommandHandlers/UpdateOrderCommandHandlerTests.cs` — Order status update scenarios
-  - `CommandHandlers/ProcessOrderDisputeCommandHandlerTests.cs` — Dispute handling logic
-  - `CommandHandlers/PubSubCommandHandlerTests.cs` — Publish/Subscribe patterns
-  - `Extensions/MassTransitTestHarnessExtensions.cs` — Reusable test setup utilities
+- **Framework**: xUnit v3, `WebApplicationFactory<Program>`, WireMock.Net, and Testcontainers
+- **Test Host**: Microsoft.Testing.Platform
+- **Host mode**: (`AppFactory.Create(environment)`): RabbitMQ, Redis, and LocalStack SNS/SQS/S3 containers
+- Static configuration is loaded from `appsettings.IntegrationTest.json`. Runtime-discovered WireMock and container endpoints are supplied through `UseSetting`; no `AddInMemoryCollection` configuration is used.
+- Real-infrastructure tests share one serial `IntegrationTestCollection`; independent in-memory collections remain parallel.
+- HTTP tests use real application routes and assert WireMock requests. Messaging tests verify RabbitMQ consumer round trips, SNS delivery, and S3 evidence storage.
+- Payload signatures are computed over raw JSON loaded from `Payloads/Templates/`.
+- Run tests with Microsoft Testing Platform commands, for example:
+  - `dotnet test --project Test/Orders.Integrations.Hub.UnitTests/Orders.Integrations.Hub.UnitTests.csproj`
+  - `dotnet test --project Test/Orders.Integrations.Hub.IntegrationTests/Orders.Integrations.Hub.IntegrationTests.csproj`
+  - `dotnet test --project Test/Orders.Integrations.Hub.ArchTests/Orders.Integrations.Hub.ArchTests.csproj`
 
 ### Architecture Tests
 - **Location**: `Test/Orders.Integrations.Hub.ArchTests/`
@@ -429,7 +431,9 @@ Includes:
 
 ### ☁️ Infrastructure
 
-Using Terraform to provision LocalStack:
+The integration tests provision LocalStack resources directly with the AWS SDK. Terraform is not required to run tests.
+
+Terraform remains available for local application infrastructure:
 
 ```bash
 cd infra/terraform/envs/local
@@ -451,7 +455,7 @@ cp .env.example .env
 
 #### 🧬 Caching Modes
 
-The hub supports three cache modes via `CACHE__MODE` environment variable:
+The hub supports three cache providers via `Cache:Provider` JSON Key:
 
 - **Memory** — In-process caching using `MemoryCache`. Suitable for development or single-instance deployments. No external dependencies.
 - **Distributed** — Redis-only caching using `StackExchange.Redis`. Use for multi-instance deployments requiring shared cache across instances.
@@ -460,68 +464,154 @@ The hub supports three cache modes via `CACHE__MODE` environment variable:
 **Example:**
 ```bash
 # Development (in-process)
-CACHE__MODE=Memory
+Cache:Provider=Memory
 
 # Production with Redis
-CACHE__MODE=Distributed
-CACHE__CONFIGURATIONS__CONNECTION_STRING=redis.example.com:6379,password=secret
+Cache:Provider=Distributed
+ConnectionStrings:Redis=redis.example.com:6379,password=secret
 
 # Hybrid (local fast + shared)
-CACHE__MODE=Hybrid
-CACHE__CONFIGURATIONS__CONNECTION_STRING=redis.example.com:6379
+Cache:Provider=Hybrid
+ConnectionStrings:Redis=redis.example.com:6379
 ```
 
-For local testing of Distributed/Hybrid modes, bring up Redis via `docker-compose up redis` and use `CACHE__CONFIGURATIONS__CONNECTION_STRING=redis:6379`.
+For local testing of Distributed/Hybrid modes, bring up Redis via `docker-compose up redis` and use `ConnectionStrings:Redis=redis:6379`.
 
-#### 🔑 Environment Variables Overview
+[## 🔧 Configuration
 
-> The exact keys used depend on whether an integration is **multi-tenant** or **centralized**.  
-> Multi-tenant integrations fetch credentials from the internal API (and mostly need base URLs).  
-> Centralized integrations read credentials directly from env vars + cache keys.
+The hub is configured through `appsettings.json` files. Values are loaded in this order (lowest to highest precedence):
 
-| Category   | Variables (examples)                                                                                                                                                                                |
-|------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Internal   | `ORDERS__ENDPOINT__BASE_URL` — Internal Orders API endpoint                                                                                                                                         |
-| Internal   | `INTERNAL__ENDPOINT__BASE_URL` — Internal API endpoint                                                                                                                                              |
-| iFood      | `INTEGRATIONS__IFOOD__ENDPOINT__BASE_URL`, <br>`INTEGRATIONS__IFOOD__CLIENT__ID`, `INTEGRATIONS__IFOOD__CLIENT__SECRET` *(centralized)*                          |
-| Rappi      | `INTEGRATIONS__RAPPI__ENDPOINT__BASE_URL`, <br>`INTEGRATIONS__RAPPI__CLIENT__ID`, `INTEGRATIONS__RAPPI__SECRET`, `INTEGRATIONS__RAPPI__AUDIENCE` *(centralized)* |
-| 99Food     | `INTEGRATIONS__FOOD99__ENDPOINT__BASE_URL`, <br>`INTEGRATIONS__FOOD99__CLIENT__ID`, `INTEGRATIONS__FOOD99__CLIENT__SECRET` *(centralized)*                      |
-| Cache      | `CACHE__MODE` — one of: Memory, Distributed, Hybrid |
-| Cache      | `CACHE__CONFIGURATIONS__CONNECTION_STRING` — Redis connection string (e.g., `redis:6379` or `localhost:6379,password=abc123`) |
-| Pub/Sub    | `PUB_SUB__TOPICS__ACCEPT_ORDER`, `PUB_SUB__IS_LOCAL`                                                                                                                                                |
-| Messaging  | `MASSTRANSIT__TRANSPORT` — Transport mode: `InMemory` (development) or `RabbitMQ` (production)                                                                                                      |
-| RabbitMQ   | `RABBITMQ__HOST` — RabbitMQ server hostname (default: `localhost`)                                                                                                                                   |
-| RabbitMQ   | `RABBITMQ__PORT` — RabbitMQ port (default: `5672`)                                                                                                                                                  |
-| RabbitMQ   | `RABBITMQ__USERNAME` — Authentication username (default: `guest`)                                                                                                                                    |
-| RabbitMQ   | `RABBITMQ__PASSWORD` — Authentication password (default: `guest`)                                                                                                                                    |
-| RabbitMQ   | `RABBITMQ__VHOST` — Virtual host (default: `/`)                                                                                                                                                     |
-| Storage    | `OBJECT_STORAGE__BUCKET__NAME`                                                                                                                                                                      |
-| LocalStack | `LOCALSTACK__AWS__IS_LOCALSTACK`, `LOCALSTACK__ENDPOINT_URL`                                                                                                                                        |
-| AWS        | `AWS_PROFILE`, `AWS_REGION`                                                                                                                                                                         |
-| Telemetry  | `OTEL_SERVICE_NAME`, `OTEL_EXPORTER_OTLP_ENDPOINT`                                                                                                                                                  |
+1. `appsettings.json` — committed defaults
+2. `appsettings.{env}.json` — environment-specific overrides (`appsettings.Development.json`, `appsettings.Test.json`)
+3. Dotenv chain (`.env` → `.env.{environment}` → `.env.local`) — process environment variables win; loaded via `IConfiguration` environment-variables provider
+4. Per-host test `UseSetting` — runtime-discovered WireMock/containers bridged by `HostConfiguration` (integration tests only)
 
-📁 For local development, most values can be left blank or set to local/test equivalents.
+> **Note**: In production, configure via `appsettings.json` or secret manager. In development, `appsettings.Development.json` overrides defaults. Most values have sensible defaults in `appsettings.Development.json`.
+
+#### Internal Clients
+
+- `Clients:Internal:BaseUrl` — Internal Orders API endpoint (default: `http://localhost:8000`)
+- `Clients:Orders:BaseUrl` — Internal integration-settings client endpoint (default: `http://localhost:8000`)
+
+#### Integrations (per-integration)
+
+Each integration (IFood, Rappi, Food99) uses the `Integrations:{Name}` section. Client `Id`/`Secret` are **required for centralized mode**; leave blank locally and set via secrets manager in production.
+
+**IFood:**
+- `Integrations:IFood:Client:Id` — Client ID (blank locally, set via secrets manager in production)
+- `Integrations:IFood:Client:Secret` — Client Secret (blank locally, set via secrets manager in production)
+- `Integrations:IFood:Endpoint:BaseUrl` — Merchant API base URL (default: `https://merchant-api.ifood.com.br`)
+- `Integrations:IFood:Endpoint:AuthUrl` — Auth0 authorization URL (default: `https://rests-integrations-dev.auth0.com/`)
+
+**Rappi:**
+- `Integrations:Rappi:Client:Id` — Client ID (blank locally)
+- `Integrations:Rappi:Client:Secret` — Client Secret (blank locally)
+- `Integrations:Rappi:Client:Audience` — Audience (blank locally; optional field, currently used by Rappi only, but integrations can edit this field in the future if needed)
+- `Integrations:Rappi:Endpoint:BaseUrl` — API base URL (default: `https://microservices.dev.rappi.com/api/v2/restaurants-integrations-public-api`)
+- `Integrations:Rappi:Endpoint:AuthUrl` — Auth0 token URL (default: `https://rests-integrations-dev.auth0.com/`)
+
+**Food99:**
+- `Integrations:Food99:Client:Id` — Client ID (blank locally)
+- `Integrations:Food99:Client:Secret` — Client Secret (blank locally)
+- `Integrations:Food99:Endpoint:BaseUrl` — API base URL (default: `https://openapi.didi-food.com`)
+
+#### Cache
+
+- `Cache:Provider` — one of: `Memory`, `Distributed`, `Hybrid` (default: `Memory`)
+- `ConnectionStrings:Redis` — Redis connection string. Format: `host:port,password=your_secure_password,ssl=True,abortConnect=False` — password and ssl are optional locally; in production set via secrets manager.
+
+**Example:**
+- Development (no password): `redis:6379`
+- Development with password: `your-redis-host.com:6379,password=secure-password`
+- Production: set via secrets manager (same format)
+
+#### Messaging
+
+- `MessageBroker:Provider` — one of: `Memory`, `RabbitMq` (default: `Memory`)
+- `MessageBroker:Retry:RetryLimit` — retry limit (default: `5`)
+- `MessageBroker:Retry:MinIntervalSeconds` — min retry interval (default: `1`)
+- `MessageBroker:Retry:MaxIntervalSeconds` — max retry interval (default: `120`)
+- `MessageBroker:Retry:IntervalDeltaSeconds` — interval delta (default: `5`)
+- `MessageBroker:CircuitBreaker:TrackingPeriodMinutes` — circuit breaker tracking period (default: `1`)
+- `MessageBroker:CircuitBreaker:TripThreshold` — trip threshold (default: `15`)
+- `MessageBroker:CircuitBreaker:ActiveThreshold` — active threshold (default: `10`)
+- `MessageBroker:CircuitBreaker:ResetIntervalMinutes` — reset interval (default: `5`)
+
+#### AWS / LocalStack
+
+- `Providers:Aws:ServiceUrlOverride` — LocalStack endpoint override (default: `http://localhost:4566`)
+- `Providers:Aws:Region` — AWS region (default: `us-east-1`)
+- `Providers:Aws:Profile` — AWS profile (default: `localstack`)
+- `Providers:Aws:ForcePathStyle` — whether to force path style URLs (default: `true`)
+
+#### Pub/Sub
+
+- `PubSub:Provider` — e.g. `Sns` (default: `Sns`)
+- `PubSub:Topics:AcceptOrder` — SNS topic ARN for order-accept events
+
+#### Object Storage
+
+- `ObjectStorage:Provider` — e.g. `S3` (default: `S3`)
+- `ObjectStorage:Bucket:Name` — S3 bucket name (any name; provisioned by AWS/LocalStack/Flocli; set via Terraform/secrets manager in production. Empty string in default config is a placeholder.)
+
+#### Telemetry
+
+- `OpenTelemetry:ServiceName` — service name (default: `Orders.Integrations.Hub`)
+- `OpenTelemetry:Endpoint` — OTLP endpoint (default: `http://localhost:4318`)
+- `OpenTelemetry:Protocol` — protocol (default: `HttpProtobuf`)
+
+#### Logging
+
+- `Logging:LogLevel:Default` — default log level (default: `Information`)
+- `Logging:LogLevel:Microsoft.AspNetCore` — ASP.NET Core log level (default: `Information`)
+- `Logging:LogLevel:System.Net.Http.HttpClient.OtlpLogExporter` — OTLP log exporter (default: `None`)
+- `Logging:LogLevel:System.Net.Http.HttpClient.OtlpTraceExporter` — OTLP trace exporter (default: `None`)
+- `Logging:LogLevel:System.Net.Http.HttpClient.OtlpMetricExporter` — OTLP metric exporter (default: `None`)
+- `Logging:LogLevel:Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddleware` — exception handler middleware (default: `None`)
+
+#### Hosting
+
+- `AllowedHosts` — allowed host header values (`*` for any, default: `*`)
+
+#### Value Source Notes
+
+- **Blank locally, set via secrets manager in production**: `Client:Id`, `Client:Secret`, `ObjectStorage:Bucket:Name`, `ConnectionStrings:Redis` (production), `Providers:Aws:ServiceUrlOverride` (production)
+- **Defaults in `appsettings.Development.json`**: Most `:*` default values shown above
+- **Override via environment variables** (dotenv chain): Lowest precedence; win if already set in real environment
+- **Per-host test `UseSetting`**: Integration tests only; bridge runtime-discovered values (WireMock ports, container IPs)
+
+#### .env.example
+
+```env
+ASPNETCORE_URLS="http://localhost:5077"
+ASPNETCORE_ENVIRONMENT="Development"
+```
+
+(Other values are configured via `appsettings.json`; no env vars strictly required for basic operation.)
 
 #### 🐰 RabbitMQ Configuration (Production)
 
-For production environments using RabbitMQ as the message bus transport:
+For production environments using RabbitMQ as the message bus transport, set in `appsettings.json`:
 
-```bash
-# .env or environment variables
-MASSTRANSIT__TRANSPORT=RabbitMQ
-RABBITMQ__HOST=rabbitmq.yourdomain.com
-RABBITMQ__PORT=5672
-RABBITMQ__USERNAME=your_username
-RABBITMQ__PASSWORD=your_password
-RABBITMQ__VHOST=/your_vhost
+```json
+{
+  "MessageBroker": {
+    "Provider": "RabbitMq",
+    "ConnectionStrings:RabbitMq": "amqp://your_username:your_password@rabbitmq.yourdomain.com:5672/your_vhost"
+  }
+}
 ```
 
 **In-Memory Configuration (Development)**
 
 For local development, MassTransit uses in-memory transport by default:
 
-```bash
-MASSTRANSIT__TRANSPORT=InMemory
+```json
+{
+  "MessageBroker": {
+    "Provider": "Memory"
+  }
+}
 ```
 
 No additional configuration needed — all commands and messages stay in memory for fast iteration.
@@ -538,8 +628,7 @@ File: `Test/Directory.Packages.props`
 ```xml
 <ItemGroup>
   <!-- Testing Framework -->
-  <PackageReference Include="xunit" Version="2.x.x" />
-  <PackageReference Include="xunit.runner.visualstudio" Version="2.x.x" />
+  <PackageReference Include="xunit.v3" Version="4.x.x" />
   
   <!-- Test Data Generation -->
   <PackageReference Include="Bogus" Version="37.x.x" />

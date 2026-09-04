@@ -14,3 +14,8 @@ resource "aws_s3_bucket_lifecycle_configuration" "expire_old_files" {
     }
   }
 }
+
+output "s3_dispute_images_bucket_name" {
+  description = "Name of the dispute evidence bucket"
+  value       = aws_s3_bucket.s3_dispute_images_bucket.id
+}

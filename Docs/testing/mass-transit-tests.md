@@ -1,105 +1,37 @@
-# MassTransit Tests
+## Overview
 
-MassTransit is the backbone of the event-driven architecture. Tests validate consumer behavior, command publishing, and transport configuration.
+MassTransit is the application message boundary. Integration tests use the real RabbitMQ transport; unit tests cover consumer-adjacent behavior through the existing unit-test patterns.
 
-## MassTransitTestHarnessExtensions
+## Real Transport Tests
 
-The shared extension method `AddDefaultTestHarness<TConsumer>()` reduces boilerplate:
+Real consumer tests live under `Test/Orders.Integrations.Hub.IntegrationTests/Entrypoints/Messaging/` and use:
 
-```csharp
-internal static class MassTransitTestHarnessExtensions
-{
-    public static IServiceCollection AddDefaultTestHarness<TConsumer>(
-        this IServiceCollection services
-    ) where TConsumer : class, IConsumer =>
-        services.AddMassTransitTestHarness(cfg => {
-            cfg.SetKebabCaseEndpointNameFormatter();
-            cfg.AddConsumer<TConsumer>();
-            cfg.UsingInMemory((context, configurator) => {
-                configurator.ConfigureJsonSerializerOptions(options => {
-                    options.Converters.Add(new IntegrationKeyJsonConverter());
-                    return options;
-                });
-                configurator.ConfigureEndpoints(context);
-            });
-        });
-}
-```
+- `AppFactory.Create(testInfrastructure.Environment)` with RabbitMQ enabled.
+- `IPublishEndpoint` to publish the command.
+- WireMock request waiters for Orders API calls.
+- LocalStack SQS long-polling for SNS delivery assertions.
+- `TestContext.Current.CancellationToken` for cancellation.
 
-Always use this extension for handler tests. It ensures in-memory transport, kebab-case endpoints, and `IntegrationKeyJsonConverter`.
-
-## In-Memory Bus for Handler Tests
-
-All consumer tests use the in-memory bus via `AddMassTransitTestHarness`:
+Example:
 
 ```csharp
-ServiceProvider provider = new ServiceCollection()
-    .AddSingleton(_orderClient)
-    .AddLogging()
-    .AddDefaultTestHarness<CreateOrderCommandHandler>()
-    .BuildServiceProvider(true);
+Host.WireMock.OrdersApi.StubCreateOrder();
+CreateOrderCommand command = new CreateOrderCommandFaker().Generate();
 
-_harness = provider.GetRequiredService<ITestHarness>();
-await _harness.Start();
-await _harness.Bus.Publish(command);
+using IServiceScope scope = Host.Services.CreateScope();
+IPublishEndpoint bus = scope.ServiceProvider.GetRequiredService<IPublishEndpoint>();
+await bus.Publish(command, TestContext.Current.CancellationToken);
+
+await Host.WireMock.OrdersApi.WaitForCreateOrderAsync(TestContext.Current.CancellationToken);
 ```
 
-## RabbitMQ TestContainers for Transport Tests
+## Container Lifecycle
 
-Use `TestContainers.RabbitMQ` when testing retry, delayed delivery, or circuit breaker behavior:
+`TestInfrastructure` owns Redis, RabbitMQ, and LocalStack through `IAsyncLifetime`. The shared `IntegrationTestCollection` resets queues, cache, and object storage before each test instance and disposes all containers afterward.
 
-```csharp
-[Collection("RabbitMQ")]
-public class TransportTests : IAsyncLifetime
-{
-    private readonly RabbitMqContainer _rabbitMq;
-    private IBusControl _bus;
+## Assertions
 
-    public async Task InitializeAsync()
-    {
-        _rabbitMq = new RabbitMqBuilder()
-            .WithImage("rabbitmq:3-management-alpine")
-            .Build();
-        await _rabbitMq.StartAsync();
-
-        _bus = Bus.Factory.CreateUsingRabbitMq(cfg => {
-            cfg.Host(_rabbitMq.GetConnectionString());
-            cfg.ReceiveEndpoint("test-queue", e => {
-                e.Consumer<TestConsumer>();
-            });
-        });
-        await _bus.StartAsync();
-    }
-}
-```
-
-Use sparingly — the in-memory harness is sufficient for most handler tests.
-
-## Retry and Circuit Breaker Testing
-
-To verify retry behavior:
-
-```csharp
-services.AddMassTransitTestHarness(cfg => {
-    cfg.AddConsumer<TestRetryConsumer>()
-        .Endpoint(e => e.Name = "retry-queue");
-    cfg.UsingInMemory((context, configurator) => {
-        configurator.UseMessageRetry(r => r.Immediate(3));
-        configurator.ConfigureEndpoints(context);
-    });
-});
-
-Assert.Equal(4, consumer.InvocationCount); // 1 initial + 3 retries
-```
-
-Circuit breaker testing follows the same pattern — configure `UseCircuitBreaker` and assert messages go to the fault queue after the circuit opens.
-
-## Key Assertions
-
-| Assertion | What It Verifies |
-|---|---|
-| `harness.Consumed.Any<T>()` | Message of type T consumed by any handler |
-| `harness.Published.Any<T>()` | Message of type T published to bus |
-| `harness.Published.Any<Fault<T>>()` | Fault published (handler threw) |
-| `consumerHarness.Consumed.Select().Count()` | Count consumed by specific handler |
-| `harness.Sent.Any<T>()` | Message sent to an endpoint |
+- Wait for the observable external effect instead of sleeping.
+- Assert the request path, count, and serialized body at the WireMock boundary.
+- For SNS, subscribe a temporary SQS queue and use `ReceiveMessageAsync` long-polling.
+- Keep each test focused on one consumer behavior.

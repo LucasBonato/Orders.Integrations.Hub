@@ -1,95 +1,29 @@
-# Event / Command Handler Tests
+## Overview
 
-Command handlers are MassTransit consumers that receive commands from the bus and orchestrate use cases. Tests use the `ITestHarness` with in-memory transport.
+Messaging tests exercise commands through the real RabbitMQ transport and verify the resulting external effect. They are not in-memory MassTransit harness tests.
 
-## Testing Consumers with ITestHarness
-
-All command handler tests follow the same pattern (see `CreateOrderCommandHandlerTests`):
+## Consumer Round Trip
 
 ```csharp
-public sealed class CreateOrderCommandHandlerTests : IAsyncLifetime
-{
-    private readonly ITestHarness _harness;
-    private readonly IOrderClient _orderClient;
+Host.WireMock.OrdersApi.StubPatchOrder();
+UpdateOrderStatusCommand command = new UpdateOrderStatusCommandFaker().Generate();
 
-    public CreateOrderCommandHandlerTests()
-    {
-        _orderClient = Substitute.For<IOrderClient>();
-        ServiceProvider provider = new ServiceCollection()
-            .AddSingleton(_orderClient)
-            .AddLogging()
-            .AddDefaultTestHarness<CreateOrderCommandHandler>()
-            .BuildServiceProvider(true);
-        _harness = provider.GetRequiredService<ITestHarness>();
-    }
+using IServiceScope scope = Host.Services.CreateScope();
+IPublishEndpoint bus = scope.ServiceProvider.GetRequiredService<IPublishEndpoint>();
+await bus.Publish(command, TestContext.Current.CancellationToken);
 
-    public async ValueTask InitializeAsync() => await _harness.Start();
-    public async ValueTask DisposeAsync() => await _harness.Stop();
-}
+await Host.WireMock.OrdersApi.WaitForPatchOrderAsync(TestContext.Current.CancellationToken);
 ```
 
-`AddDefaultTestHarness<TConsumer>()` configures in-memory transport, kebab-case naming, `IntegrationKeyJsonConverter`, and consumer registration.
+Use the corresponding WireMock waiter for dispute and create-order commands. Assertions should verify one behavior: the expected external call and its serialized data.
 
-## Three Essential Scenarios
+## SNS Events
 
-### 1. Success — command consumed, mock interaction verified
+Subscribe a temporary SQS queue to the LocalStack topic, publish the command, then use `ReceiveMessageAsync` with long-polling. Parse the SNS envelope before asserting the serialized message.
 
-```csharp
-[Fact]
-public async Task Consume_Should_Call_OrderClient_CreateOrder()
-{
-    CreateOrderCommand command = new CreateOrderCommandFaker().Generate();
-    await _harness.Bus.Publish(command);
+## Conventions
 
-    Assert.True(await _harness.GetConsumerHarness<CreateOrderCommandHandler>()
-        .Consumed.Any<CreateOrderCommand>());
-
-    await _orderClient.Received(1).CreateOrder(Arg.Is<Order>(o =>
-        o.OrderId == command.Order.OrderId));
-}
-```
-
-### 2. Fault on failure — asserts Fault<T> published
-
-```csharp
-[Fact]
-public async Task Consume_Should_Fault_When_Client_Throws()
-{
-    _orderClient.CreateOrder(Arg.Any<Order>())
-        .ThrowsAsync(new Exception("client error"));
-    await _harness.Bus.Publish(new CreateOrderCommandFaker().Generate());
-
-    Assert.True(await _harness.Published.Any<Fault<CreateOrderCommand>>());
-}
-```
-
-### 3. No fault on success
-
-```csharp
-[Fact]
-public async Task Consume_Should_Not_Fault_When_Client_Succeeds()
-{
-    await _harness.Bus.Publish(new CreateOrderCommandFaker().Generate());
-    Assert.False(await _harness.Published.Any<Fault<CreateOrderCommand>>());
-}
-```
-
-## Testing Command Publishing
-
-```csharp
-[Fact]
-public async Task DispatchAsync_Should_Publish_Command_To_Bus()
-{
-    CreateOrderCommand command = new CreateOrderCommandFaker().Generate();
-    await _dispatcher.DispatchAsync(command);
-    Assert.True(await _harness.Published.Any<CreateOrderCommand>());
-}
-```
-
-## Key Assertions
-
-- `harness.Consumed.Any<T>()` — message consumed by any handler
-- `harness.Published.Any<T>()` — message published to bus
-- `harness.Published.Any<Fault<T>>()` — fault was published
-- `harness.GetConsumerHarness<TConsumer>().Consumed.Any<T>()` — specific handler consumed
-- `Received(1)` / `DidNotReceiveWithAnyArgs()` — precise mock interaction verification
+- Test classes are sealed and use `IAsyncLifetime` through `RealInfrastructureTestBase`.
+- Use builders from `TestCommon/Fakers`.
+- Reset shared infrastructure centrally; do not add per-test sleeps or environment-variable races.
+- Keep unit tests for pure consumer logic and failure mapping; use real transport tests for broker and endpoint wiring.
