@@ -8,7 +8,7 @@ namespace Orders.Integrations.Hub.Integrations.IFood.Application.Ports.Out;
 public class IFoodOrderGetCancellationReasonUseCase(
     IIFoodClient iFoodClient
 ) : IOrderGetCancellationReasonUseCase {
-    public async Task<List<CancellationReasonsResponse>> ExecuteAsync(string? externalOrderId)
+    public async ValueTask<List<CancellationReasonsResponse>> ExecuteAsync(string? externalOrderId)
     {
         if (string.IsNullOrEmpty(externalOrderId))
             throw new ArgumentNullException(nameof(externalOrderId));
