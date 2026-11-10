@@ -128,3 +128,38 @@ deps:
 [group("util")]
 outdated:
     dotnet list {{SOLUTION}} package --outdated
+
+# =========================
+# Load Tests
+# =========================
+
+export LOADTESTS_NBOMBER := "Test/Orders.Integrations.Hub.LoadTests"
+export LOADTESTS_K6 := "Test/Orders.Integrations.Hub.LoadTests.K6"
+
+# NBomber load test (default profiles, ~30s duration)
+# Usage: just loadtest-nbomber [vus] [duration]
+[group("loadtest")]
+loadtest-nbomber vus="3" duration="00:00:30":
+    @echo "Running NBomber load test ({{vus}} vus, {{duration}} duration)..."
+    env LOADTEST_WEBHOOK_COPIES={{vus}} LOADTEST_WEBHOOK_DURATION={{duration}} LOADTEST_CORE_COPIES={{vus}} LOADTEST_CORE_DURATION={{duration}} LOADTEST_RAPPI_PING_COPIES=2 LOADTEST_RAPPI_PING_DURATION={{duration}} dotnet run --project {{LOADTESTS_NBOMBER}}/Orders.Integrations.Hub.LoadTests.csproj
+
+# NBomber stress load test (higher load, ~2min duration)
+# Usage: just loadtest-nbomber-stress [vus] [duration]
+[group("loadtest")]
+loadtest-nbomber-stress vus="10" duration="00:02:00":
+    @echo "Running NBomber stress load test ({{vus}} vus, {{duration}} duration)..."
+    env LOADTEST_STRESS_WEBHOOK_COPIES={{vus}} LOADTEST_STRESS_WEBHOOK_DURATION={{duration}} LOADTEST_STRESS_CORE_COPIES={{vus}} LOADTEST_STRESS_CORE_DURATION={{duration}} dotnet run --project {{LOADTESTS_NBOMBER}}/Orders.Integrations.Hub.LoadTests.csproj -- --stress
+
+# k6 load test (default profiles)
+# Usage: just loadtest-k6 [vus] [duration]
+[group("loadtest")]
+loadtest-k6 vus="3" duration="30s":
+    @echo "Running k6 load test ({{vus}} vus, {{duration}} duration)..."
+    @WEBHOOK_VUS={{vus}} WEBHOOK_DURATION={{duration}} CORE_VUS={{vus}} CORE_DURATION={{duration}} powershell -ExecutionPolicy Bypass -File "$(cygpath -w '{{LOADTESTS_K6}}/scripts/run.ps1')"
+
+# k6 stress load test (higher load)
+# Usage: just loadtest-k6-stress [vus] [duration]
+[group("loadtest")]
+loadtest-k6-stress vus="10" duration="2m":
+    @echo "Running k6 stress load test ({{vus}} vus, {{duration}} duration)..."
+    @STRESS=true STRESS_WEBHOOK_VUS={{vus}} STRESS_CORE_VUS={{vus}} STRESS_DURATION={{duration}} powershell -ExecutionPolicy Bypass -File "$(cygpath -w '{{LOADTESTS_K6}}/scripts/run.ps1')"
