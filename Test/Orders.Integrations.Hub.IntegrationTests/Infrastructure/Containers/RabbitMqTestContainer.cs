@@ -1,4 +1,5 @@
 using DotNet.Testcontainers.Containers;
+using RabbitMQ.Client;
 using Testcontainers.RabbitMq;
 
 namespace Orders.Integrations.Hub.IntegrationTests.Infrastructure.Containers;
@@ -7,12 +8,29 @@ public sealed class RabbitMqTestContainer : IAsyncLifetime
 {
     private readonly RabbitMqContainer _container = new RabbitMqBuilder("rabbitmq:alpine")
         .Build();
+    private IConnection? _connection;
+    private IChannel? _channel;
 
     public string ConnectionString => _container.GetConnectionString();
 
-    public async ValueTask InitializeAsync() => await _container.StartAsync();
+    public async ValueTask InitializeAsync()
+    {
+        await _container.StartAsync();
 
-    public async ValueTask DisposeAsync() => await _container.DisposeAsync();
+        ConnectionFactory connectionFactory = new() { Uri = new Uri(ConnectionString) };
+        _connection = await connectionFactory.CreateConnectionAsync();
+        _channel = await _connection.CreateChannelAsync();
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_channel is not null)
+            await _channel.DisposeAsync();
+        if (_connection is not null)
+            await _connection.DisposeAsync();
+
+        await _container.DisposeAsync();
+    }
 
     public async Task ResetAsync(CancellationToken cancellationToken)
     {
@@ -24,16 +42,15 @@ public sealed class RabbitMqTestContainer : IAsyncLifetime
         if (result.ExitCode != 0)
             throw new InvalidOperationException($"Could not list RabbitMQ queues: {result.Stderr}");
 
-        foreach (string queue in result.Stdout.Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
-        {
-            ExecResult purge = await _container.ExecAsync(
-                ["rabbitmqctl", "purge_queue", queue],
-                cancellationToken
-            );
+        string[] queues = result.Stdout.Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        IChannel channel = _channel
+            ?? throw new InvalidOperationException("RabbitMQ AMQP channel has not been initialized.");
 
-            if (purge.ExitCode != 0)
-                throw new InvalidOperationException($"Could not purge RabbitMQ queue '{queue}': {purge.Stderr}");
+        foreach (string queue in queues)
+        {
+            await channel.QueuePurgeAsync(queue, cancellationToken);
         }
+
     }
 
     public async Task CreateVHostAsync(string vhost, CancellationToken cancellationToken)
