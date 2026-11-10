@@ -34,8 +34,8 @@ public sealed class IFoodWebhookDispatchTests(
 
         // Assert
         Assert.Equal(202, (int)result.StatusCode);
-        Assert.Empty(Host.WireMock.IFood.LogEntries);
-        Assert.Empty(Host.WireMock.Orders.LogEntries);
+        Assert.Equal(0, await Host.WireMock.IFoodApi.RequestCountAsync("/", TestContext.Current.CancellationToken));
+        Assert.Equal(0, await Host.WireMock.OrdersApi.RequestCountAsync("/Orders", TestContext.Current.CancellationToken));
     }
 
     [Fact]
@@ -43,9 +43,9 @@ public sealed class IFoodWebhookDispatchTests(
     {
         // Arrange
         Host.ConfigureIntegrationContext(IntegrationTestData.GetIntegrationContext(_contract));
-        Host.WireMock.IFoodApi.StubToken();
-        Host.WireMock.IFoodApi.StubOrderDetails();
-        Host.WireMock.OrdersApi.StubCreateOrder();
+        await Host.WireMock.IFoodApi.StubTokenAsync(cancellationToken: TestContext.Current.CancellationToken);
+        await Host.WireMock.IFoodApi.StubOrderDetailsAsync(cancellationToken: TestContext.Current.CancellationToken);
+        await Host.WireMock.OrdersApi.StubCreateOrderAsync(cancellationToken: TestContext.Current.CancellationToken);
 
         // Act
         using HttpResponseMessage result = await Host.Http.PostSignedAsync(
@@ -57,8 +57,8 @@ public sealed class IFoodWebhookDispatchTests(
         // Assert
         Assert.Equal(HttpStatusCode.Accepted, result.StatusCode);
         await Host.WireMock.OrdersApi.WaitForCreateOrderAsync(TestContext.Current.CancellationToken);
-        Assert.Equal(1, WireMockApi.RequestCount(Host.WireMock.IFood, "/order/v1.0/orders/order-1"));
-        Assert.Equal(1, Host.WireMock.OrdersApi.RequestCount("/Orders"));
+        Assert.Equal(1, await Host.WireMock.IFoodApi.RequestCountAsync("/order/v1.0/orders/order-1", TestContext.Current.CancellationToken));
+        Assert.Equal(1, await Host.WireMock.OrdersApi.RequestCountAsync("/Orders", TestContext.Current.CancellationToken));
     }
 
     [Fact]
@@ -66,9 +66,9 @@ public sealed class IFoodWebhookDispatchTests(
     {
         // Arrange
         Host.ConfigureIntegrationContext(IntegrationTestData.GetIntegrationContext(_contract));
-        Host.WireMock.IFoodApi.StubToken();
-        Host.WireMock.IFoodApi.StubOrderDetails("order-999");
-        Host.WireMock.OrdersApi.StubCreateOrder();
+        await Host.WireMock.IFoodApi.StubTokenAsync(cancellationToken: TestContext.Current.CancellationToken);
+        await Host.WireMock.IFoodApi.StubOrderDetailsAsync("order-999", TestContext.Current.CancellationToken);
+        await Host.WireMock.OrdersApi.StubCreateOrderAsync(cancellationToken: TestContext.Current.CancellationToken);
         string payload = PayloadLoader.Load(
             Integration,
             "placed",
@@ -85,7 +85,7 @@ public sealed class IFoodWebhookDispatchTests(
         // Assert
         Assert.Equal(HttpStatusCode.Accepted, result.StatusCode);
         await Host.WireMock.OrdersApi.WaitForCreateOrderAsync(TestContext.Current.CancellationToken);
-        Assert.Equal(1, WireMockApi.RequestCount(Host.WireMock.IFood, "/order/v1.0/orders/order-999"));
+        Assert.Equal(1, await Host.WireMock.IFoodApi.RequestCountAsync("/order/v1.0/orders/order-999", TestContext.Current.CancellationToken));
     }
 
     [Theory]
@@ -95,7 +95,7 @@ public sealed class IFoodWebhookDispatchTests(
     {
         // Arrange
         Host.ConfigureIntegrationContext(IntegrationTestData.GetIntegrationContext(_contract));
-        Host.WireMock.OrdersApi.StubPatchOrder();
+        await Host.WireMock.OrdersApi.StubPatchOrderAsync(cancellationToken: TestContext.Current.CancellationToken);
 
         // Act
         using HttpResponseMessage result = await Host.Http.PostSignedAsync(
@@ -107,6 +107,6 @@ public sealed class IFoodWebhookDispatchTests(
         // Assert
         Assert.Equal(HttpStatusCode.Accepted, result.StatusCode);
         await Host.WireMock.OrdersApi.WaitForPatchOrderAsync(TestContext.Current.CancellationToken);
-        Assert.Equal(1, Host.WireMock.OrdersApi.RequestCount("/Orders"));
+        Assert.Equal(1, await Host.WireMock.OrdersApi.RequestCountAsync("/Orders", TestContext.Current.CancellationToken));
     }
 }

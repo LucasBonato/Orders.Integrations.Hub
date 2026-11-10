@@ -1,25 +1,34 @@
+using Orders.Integrations.Hub.IntegrationTests.Infrastructure.Host;
 using Orders.Integrations.Hub.TestCommon.Contracts;
-using Orders.Integrations.Hub.TestCommon.Host;
 
 namespace Orders.Integrations.Hub.IntegrationTests.Infrastructure.Helpers;
 
 public static class WireMockIntegrationExtensions
 {
-    public static void StubIntegration(this WireMockServers servers, IIntegrationContract contract)
-    {
+    public static async Task StubIntegrationAsync(
+        this WireMockServers servers,
+        IIntegrationContract contract,
+        CancellationToken cancellationToken = default
+    ) {
         switch (contract.Descriptor.Key.ToLowerInvariant())
         {
             case "ifood":
-                servers.IFoodApi.StubToken();
-                servers.IFoodApi.StubCommandEndpoints();
+                await Task.WhenAll(
+                    servers.IFoodApi.StubTokenAsync(cancellationToken: cancellationToken),
+                    servers.IFoodApi.StubCommandEndpointsAsync(cancellationToken)
+                );
                 break;
             case "rappi":
-                servers.RappiApi.StubToken();
-                servers.RappiApi.StubCommandEndpoints();
+                await Task.WhenAll(
+                    servers.RappiApi.StubTokenAsync(cancellationToken: cancellationToken),
+                    servers.RappiApi.StubCommandEndpointsAsync(cancellationToken)
+                );
                 break;
             case "food99":
-                servers.Food99Api.StubToken();
-                servers.Food99Api.StubCommandEndpoints();
+                await Task.WhenAll(
+                    servers.Food99Api.StubTokenAsync(cancellationToken: cancellationToken),
+                    servers.Food99Api.StubCommandEndpointsAsync(cancellationToken)
+                );
                 break;
         }
     }

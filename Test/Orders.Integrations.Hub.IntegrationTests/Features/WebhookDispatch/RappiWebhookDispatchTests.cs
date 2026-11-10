@@ -27,7 +27,7 @@ public sealed class RappiWebhookDispatchTests(
     {
         // Arrange
         Host.ConfigureIntegrationContext(IntegrationTestData.GetIntegrationContext(_contract));
-        Host.WireMock.OrdersApi.StubCreateOrder();
+        await Host.WireMock.OrdersApi.StubCreateOrderAsync(cancellationToken: TestContext.Current.CancellationToken);
 
         // Act
         using HttpResponseMessage result = await Host.Http.PostSignedAsync(
@@ -38,7 +38,7 @@ public sealed class RappiWebhookDispatchTests(
         // Assert
         Assert.Equal(201, (int)result.StatusCode);
         await Host.WireMock.OrdersApi.WaitForCreateOrderAsync(TestContext.Current.CancellationToken);
-        Assert.Equal(1, Host.WireMock.OrdersApi.RequestCount("/Orders"));
+        Assert.Equal(1, await Host.WireMock.OrdersApi.RequestCountAsync("/Orders", TestContext.Current.CancellationToken));
     }
 
     [Fact]
@@ -69,7 +69,7 @@ public sealed class RappiWebhookDispatchTests(
     {
         // Arrange
         Host.ConfigureIntegrationContext(IntegrationTestData.GetIntegrationContext(_contract));
-        Host.WireMock.OrdersApi.StubPatchOrder();
+        await Host.WireMock.OrdersApi.StubPatchOrderAsync(cancellationToken: TestContext.Current.CancellationToken);
 
         // Act
         using HttpResponseMessage result = await Host.Http.PostSignedAsync(
@@ -81,6 +81,6 @@ public sealed class RappiWebhookDispatchTests(
         // Assert
         Assert.Equal(HttpStatusCode.Accepted, result.StatusCode);
         await Host.WireMock.OrdersApi.WaitForPatchOrderAsync(TestContext.Current.CancellationToken);
-        Assert.Equal(1, Host.WireMock.OrdersApi.RequestCount("/Orders"));
+        Assert.Equal(1, await Host.WireMock.OrdersApi.RequestCountAsync("/Orders", TestContext.Current.CancellationToken));
     }
 }

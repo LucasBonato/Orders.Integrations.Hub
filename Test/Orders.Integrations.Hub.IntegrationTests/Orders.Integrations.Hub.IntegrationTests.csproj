@@ -14,7 +14,6 @@
         <PackageReference Include="Testcontainers.LocalStack" />
         <PackageReference Include="Testcontainers.RabbitMq" />
         <PackageReference Include="Testcontainers.Redis" />
-        <PackageReference Include="WireMock.Net" />
     </ItemGroup>
 
     <ItemGroup>

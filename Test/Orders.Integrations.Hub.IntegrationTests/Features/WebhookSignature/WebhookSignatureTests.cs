@@ -64,7 +64,7 @@ public sealed class WebhookSignatureTests(
         // Arrange
         Host.ConfigureIntegrationContext(IntegrationTestData.GetIntegrationContext(contract));
         if (contract.Descriptor.Key is "Rappi" or "Food99")
-            Host.WireMock.OrdersApi.StubCreateOrder();
+            await Host.WireMock.OrdersApi.StubCreateOrderAsync(cancellationToken: TestContext.Current.CancellationToken);
 
         // Act
         using HttpResponseMessage result = await Host.Http.PostSignedAsync(

@@ -22,15 +22,18 @@ public sealed class OrderDisputeEndpointTests(
         // Arrange
         Host.ConfigureIntegrationContext(IntegrationTestData.GetIntegrationContext());
         
-        Host.WireMock.IFoodApi.StubToken();
-        Host.WireMock.IFoodApi.StubCommandEndpoints();
+        await Host.WireMock.IFoodApi.StubTokenAsync(cancellationToken: TestContext.Current.CancellationToken);
+        await Host.WireMock.IFoodApi.StubCommandEndpointsAsync(TestContext.Current.CancellationToken);
 
         // Act
         using HttpResponseMessage result = await SendAsync();
 
         // Assert
         Assert.Equal(HttpStatusCode.NoContent, result.StatusCode);
-        Assert.Equal(1, WireMockApi.RequestCount(Host.WireMock.IFood, "/order/v1.0/disputes/dispute-1/accept"));
+        Assert.Equal(1, await Host.WireMock.IFoodApi.RequestCountAsync(
+            "/order/v1.0/disputes/dispute-1/accept",
+            TestContext.Current.CancellationToken
+        ));
     }
 
     [Fact]

@@ -17,7 +17,7 @@ public sealed class ProcessOrderDisputeCommandHandlerTests(
     [Fact]
     public async Task Publish_ShouldPatchOrderDisputeThroughOrdersService() {
         // Arrange
-        Host.WireMock.OrdersApi.StubPatchOrderDispute();
+        await Host.WireMock.OrdersApi.StubPatchOrderDisputeAsync(cancellationToken: TestContext.Current.CancellationToken);
         ProcessOrderDisputeCommand command = new(
             ExternalOrderId: "external-order-1",
             Integration: IntegrationKey.From("IFOOD"),
@@ -32,6 +32,6 @@ public sealed class ProcessOrderDisputeCommandHandlerTests(
 
         // Assert
         await Host.WireMock.OrdersApi.WaitForPatchOrderDisputeAsync(TestContext.Current.CancellationToken);
-        Assert.Equal(1, Host.WireMock.OrdersApi.RequestCount("/Orders/dispute"));
+        Assert.Equal(1, await Host.WireMock.OrdersApi.RequestCountAsync("/Orders/dispute", TestContext.Current.CancellationToken));
     }
 }

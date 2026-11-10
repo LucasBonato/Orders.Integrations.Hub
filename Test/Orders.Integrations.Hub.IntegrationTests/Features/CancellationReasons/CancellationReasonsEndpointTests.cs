@@ -8,7 +8,6 @@ using Orders.Integrations.Hub.IntegrationTests.Infrastructure.Fixtures.Collectio
 using Orders.Integrations.Hub.IntegrationTests.Infrastructure.Helpers;
 using Orders.Integrations.Hub.TestCommon.Contracts;
 using Orders.Integrations.Hub.TestCommon.Host;
-using Orders.Integrations.Hub.TestCommon.Mocks;
 
 namespace Orders.Integrations.Hub.IntegrationTests.Features.CancellationReasons;
 
@@ -28,8 +27,8 @@ public sealed class CancellationReasonsEndpointTests(
         Host.ConfigureIntegrationContext(IntegrationTestData.GetIntegrationContext(contract));
 
         if (contract.Descriptor.Key == "IFood") {
-            Host.WireMock.IFoodApi.StubCancellationReasons();
-            Host.WireMock.StubIntegration(contract);
+            await Host.WireMock.IFoodApi.StubCancellationReasonsAsync(TestContext.Current.CancellationToken);
+            await Host.WireMock.StubIntegrationAsync(contract, TestContext.Current.CancellationToken);
         }
 
         // Act
@@ -54,8 +53,8 @@ public sealed class CancellationReasonsEndpointTests(
         // Arrange
         Host.ConfigureIntegrationContext(IntegrationTestData.GetIntegrationContext());
         
-        Host.WireMock.IFoodApi.StubToken();
-        Host.WireMock.IFoodApi.StubCancellationReasons();
+        await Host.WireMock.IFoodApi.StubTokenAsync(cancellationToken: TestContext.Current.CancellationToken);
+        await Host.WireMock.IFoodApi.StubCancellationReasonsAsync(TestContext.Current.CancellationToken);
 
         // Act
         HttpRequestMessage request = new(HttpMethod.Get, $"{Route}?integration=IFOOD&externalOrderId=ext-1") {
@@ -65,7 +64,10 @@ public sealed class CancellationReasonsEndpointTests(
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, result.StatusCode);
-        Assert.Equal(1, WireMockApi.RequestCount(Host.WireMock.IFood, "/order/v1.0/orders/ext-1/cancellationReasons"));
+        Assert.Equal(1, await Host.WireMock.IFoodApi.RequestCountAsync(
+            "/order/v1.0/orders/ext-1/cancellationReasons",
+            TestContext.Current.CancellationToken
+        ));
     }
 
     [Fact]

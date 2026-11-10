@@ -23,7 +23,7 @@ public sealed class Food99WebhookDispatchTests(
     {
         // Arrange
         Host.ConfigureIntegrationContext(IntegrationTestData.GetIntegrationContext(_contract));
-        Host.WireMock.OrdersApi.StubCreateOrder();
+        await Host.WireMock.OrdersApi.StubCreateOrderAsync(cancellationToken: TestContext.Current.CancellationToken);
 
         // Act
         using HttpResponseMessage result = await Host.Http.PostSignedAsync(
@@ -35,7 +35,7 @@ public sealed class Food99WebhookDispatchTests(
         // Assert
         Assert.Equal(HttpStatusCode.OK, result.StatusCode);
         await Host.WireMock.OrdersApi.WaitForCreateOrderAsync(TestContext.Current.CancellationToken);
-        Assert.Equal(1, Host.WireMock.OrdersApi.RequestCount("/Orders"));
+        Assert.Equal(1, await Host.WireMock.OrdersApi.RequestCountAsync("/Orders", TestContext.Current.CancellationToken));
     }
 
     [Fact]
@@ -43,7 +43,7 @@ public sealed class Food99WebhookDispatchTests(
     {
         // Arrange
         Host.ConfigureIntegrationContext(IntegrationTestData.GetIntegrationContext(_contract));
-        Host.WireMock.OrdersApi.StubPatchOrder();
+        await Host.WireMock.OrdersApi.StubPatchOrderAsync(cancellationToken: TestContext.Current.CancellationToken);
 
         // Act
         using HttpResponseMessage result = await Host.Http.PostSignedAsync(
@@ -55,7 +55,7 @@ public sealed class Food99WebhookDispatchTests(
         // Assert
         Assert.Equal(HttpStatusCode.OK, result.StatusCode);
         await Host.WireMock.OrdersApi.WaitForPatchOrderAsync(TestContext.Current.CancellationToken);
-        Assert.Equal(1, Host.WireMock.OrdersApi.RequestCount("/Orders"));
+        Assert.Equal(1, await Host.WireMock.OrdersApi.RequestCountAsync("/Orders", TestContext.Current.CancellationToken));
     }
 
     [Fact]
@@ -63,7 +63,7 @@ public sealed class Food99WebhookDispatchTests(
     {
         // Arrange
         Host.ConfigureIntegrationContext(IntegrationTestData.GetIntegrationContext(_contract));
-        Host.WireMock.OrdersApi.StubPatchOrderDispute();
+        await Host.WireMock.OrdersApi.StubPatchOrderDisputeAsync(cancellationToken: TestContext.Current.CancellationToken);
 
         // Act
         using HttpResponseMessage result = await Host.Http.PostSignedAsync(
@@ -75,7 +75,7 @@ public sealed class Food99WebhookDispatchTests(
         // Assert
         Assert.Equal(HttpStatusCode.OK, result.StatusCode);
         await Host.WireMock.OrdersApi.WaitForPatchOrderDisputeAsync(TestContext.Current.CancellationToken);
-        Assert.Equal(1, Host.WireMock.OrdersApi.RequestCount("/Orders/dispute"));
+        Assert.Equal(1, await Host.WireMock.OrdersApi.RequestCountAsync("/Orders/dispute", TestContext.Current.CancellationToken));
     }
 
     [Fact]

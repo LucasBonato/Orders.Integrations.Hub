@@ -22,13 +22,13 @@ public sealed class DisputeEvidenceStorageTests(
         // Arrange
         Host.ConfigureIntegrationContext(IntegrationTestData.GetIntegrationContext());
         
-        Host.WireMock.IFoodApi.StubEvidence();
-        Host.WireMock.OrdersApi.StubPatchOrderDispute();
+        await Host.WireMock.IFoodApi.StubEvidenceAsync(cancellationToken: TestContext.Current.CancellationToken);
+        await Host.WireMock.OrdersApi.StubPatchOrderDisputeAsync(cancellationToken: TestContext.Current.CancellationToken);
         string payload = PayloadLoader
             .Load("IFood", "dispute")
             .Replace(
                 "https://media.test/evidence-1.png", 
-                $"{Host.WireMock.IFood.Url}/evidence-1.png", 
+                new Uri(Host.WireMock.BaseUrl!, "evidence-1.png").AbsoluteUri,
                 StringComparison.Ordinal
             );
 

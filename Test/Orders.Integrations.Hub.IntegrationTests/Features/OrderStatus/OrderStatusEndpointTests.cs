@@ -9,7 +9,6 @@ using Orders.Integrations.Hub.IntegrationTests.Infrastructure.Fixtures.Collectio
 using Orders.Integrations.Hub.IntegrationTests.Infrastructure.Helpers;
 using Orders.Integrations.Hub.TestCommon.Contracts;
 using Orders.Integrations.Hub.TestCommon.Host;
-using Orders.Integrations.Hub.TestCommon.Mocks;
 
 namespace Orders.Integrations.Hub.IntegrationTests.Features.OrderStatus;
 
@@ -27,7 +26,7 @@ public sealed class OrderStatusEndpointTests(
     {
         // Arrange
         Host.ConfigureIntegrationContext(IntegrationTestData.GetIntegrationContext());
-        Host.WireMock.StubIntegration(contract);
+        await Host.WireMock.StubIntegrationAsync(contract, TestContext.Current.CancellationToken);
 
         string merchantId = $"{contract.Descriptor.Key.ToLowerInvariant()}-merchant-id";
 
@@ -44,15 +43,15 @@ public sealed class OrderStatusEndpointTests(
         // Arrange
         Host.ConfigureIntegrationContext(IntegrationTestData.GetIntegrationContext());
         
-        Host.WireMock.IFoodApi.StubToken();
-        Host.WireMock.IFoodApi.StubCommandEndpoints();
+        await Host.WireMock.IFoodApi.StubTokenAsync(cancellationToken: TestContext.Current.CancellationToken);
+        await Host.WireMock.IFoodApi.StubCommandEndpointsAsync(TestContext.Current.CancellationToken);
 
         // Act
         using HttpResponseMessage result = await SendStatusAsync("IFOOD", "ifood-merchant");
 
         // Assert
         Assert.Equal(HttpStatusCode.NoContent, result.StatusCode);
-        Assert.Equal(1, WireMockApi.RequestCount(Host.WireMock.IFood, "/order/v1.0/orders/ext-1/confirm"));
+        Assert.Equal(1, await Host.WireMock.IFoodApi.RequestCountAsync("/order/v1.0/orders/ext-1/confirm", TestContext.Current.CancellationToken));
     }
 
     [Fact]

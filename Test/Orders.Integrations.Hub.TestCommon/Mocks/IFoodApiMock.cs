@@ -1,31 +1,23 @@
-﻿using System.Net;
-
 using Orders.Integrations.Hub.IntegrationTests.Payloads;
-
-using WireMock.Server;
 
 namespace Orders.Integrations.Hub.TestCommon.Mocks;
 
-public sealed class IFoodApiMock(WireMockServer server) {
-    private readonly IWireMockTarget? _target;
-
-    public IFoodApiMock(IWireMockTarget target) : this((WireMockServer)null!) => _target = target;
-
+public sealed class IFoodApiMock(WireMockAdminClient adminClient) : WireMockApiMock(adminClient) {
     private const string Integration = "IFood";
-    
-    public void StubToken(string token = "ifood-token")
-        => Respond(
+
+    public Task StubTokenAsync(string token = "ifood-token", CancellationToken cancellationToken = default)
+        => RespondAsync(
             "/authentication/v1.0/oauth/token",
             HttpMethod.Post,
             body: PayloadLoader.Load(
                 Integration,
                 "auth",
                 ("accessToken", token)
-            )
+            ), cancellationToken: cancellationToken
         );
 
-    public void StubOrderDetails(string orderId = "order-1")
-        => Respond(
+    public Task StubOrderDetailsAsync(string orderId = "order-1", CancellationToken cancellationToken = default)
+        => RespondAsync(
             "/order/v1.0/orders/*",
             HttpMethod.Get,
             body: PayloadLoader.Load(
@@ -35,44 +27,37 @@ public sealed class IFoodApiMock(WireMockServer server) {
                 ("createdAt", DateTime.UtcNow.ToString("O")),
                 ("preparationStartDateTime", DateTime.UtcNow.ToString("O")),
                 ("deliveryDateTime", DateTime.UtcNow.AddHours(1).ToString("O"))
-            )
+            ), cancellationToken: cancellationToken
         );
 
-    public void StubCancellationReasons()
-        => Respond(
+    public Task StubCancellationReasonsAsync(CancellationToken cancellationToken = default)
+        => RespondAsync(
             "/order/v1.0/orders/*/cancellationReasons",
             HttpMethod.Get,
-            body: "[{\"cancelCodeId\":\"0\",\"description\":\"Customer request\"}]"
-        );
+            body: "[{\"cancelCodeId\":\"0\",\"description\":\"Customer request\"}]",
+            cancellationToken: cancellationToken
+        );  
 
-    public void StubCommandEndpoints() {
-        Respond("/order/v1.0/orders/*/confirm", HttpMethod.Post);
-        Respond("/order/v1.0/orders/*/preparationStarted", HttpMethod.Post);
-        Respond("/order/v1.0/orders/*/readyToPickup", HttpMethod.Post);
-        Respond("/order/v1.0/orders/*/dispatch", HttpMethod.Post);
-        Respond("/order/v1.0/orders/*/requestCancellation", HttpMethod.Post);
-        Respond("/order/v1.0/disputes/*/accept", HttpMethod.Post);
-        Respond("/order/v1.0/disputes/*/reject", HttpMethod.Post);
-        Respond("/order/v1.0/disputes/*/alternatives/*", HttpMethod.Post);
+    public async Task StubCommandEndpointsAsync(CancellationToken cancellationToken = default)
+    {
+        await Task.WhenAll(
+            RespondAsync("/order/v1.0/orders/*/confirm", HttpMethod.Post, cancellationToken: cancellationToken),
+            RespondAsync("/order/v1.0/orders/*/preparationStarted", HttpMethod.Post, cancellationToken: cancellationToken),
+            RespondAsync("/order/v1.0/orders/*/readyToPickup", HttpMethod.Post, cancellationToken: cancellationToken),
+            RespondAsync("/order/v1.0/orders/*/dispatch", HttpMethod.Post, cancellationToken: cancellationToken),
+            RespondAsync("/order/v1.0/orders/*/requestCancellation", HttpMethod.Post, cancellationToken: cancellationToken),
+            RespondAsync("/order/v1.0/disputes/*/accept", HttpMethod.Post, cancellationToken: cancellationToken),
+            RespondAsync("/order/v1.0/disputes/*/reject", HttpMethod.Post, cancellationToken: cancellationToken),
+            RespondAsync("/order/v1.0/disputes/*/alternatives/*", HttpMethod.Post, cancellationToken: cancellationToken)
+        );
     }
 
-    public void StubEvidence(string path = "/evidence-1.png")
-        => Respond(
+    public Task StubEvidenceAsync(string path = "/evidence-1.png", CancellationToken cancellationToken = default)
+        => RespondAsync(
             path,
             HttpMethod.Get,
             body: "test-image",
-            contentType: "image/png"
+            contentType: "image/png",
+            cancellationToken: cancellationToken
         );
-
-    public int RequestCount(string path) => _target?.RequestCount(path) ?? WireMockApi.RequestCount(server, path);
-
-    private void Respond(
-        string path,
-        HttpMethod method,
-        HttpStatusCode statusCode = HttpStatusCode.OK,
-        string body = "{}",
-        string contentType = "application/json"
-    ) => (_target is null
-        ? new Action(() => WireMockApi.Respond(server, path, method, statusCode, body, contentType))
-        : new Action(() => _target.Respond(path, method, statusCode, body, contentType)))();
 }

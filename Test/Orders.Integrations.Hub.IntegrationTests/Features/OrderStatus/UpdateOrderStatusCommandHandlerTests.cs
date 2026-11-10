@@ -16,7 +16,7 @@ public sealed class UpdateOrderStatusCommandHandlerTests(
     [Fact]
     public async Task Publish_ShouldPatchOrderThroughOrdersService() {
         // Arrange
-        Host.WireMock.OrdersApi.StubPatchOrder();
+        await Host.WireMock.OrdersApi.StubPatchOrderAsync(cancellationToken: TestContext.Current.CancellationToken);
         UpdateOrderStatusCommand command = new(
             new OrderUpdateFaker().Generate(),
             IntegrationKey.From("IFOOD")
@@ -29,6 +29,6 @@ public sealed class UpdateOrderStatusCommandHandlerTests(
 
         // Assert
         await Host.WireMock.OrdersApi.WaitForPatchOrderAsync(TestContext.Current.CancellationToken);
-        Assert.Equal(1, Host.WireMock.OrdersApi.RequestCount("/Orders"));
+        Assert.Equal(1, await Host.WireMock.OrdersApi.RequestCountAsync("/Orders", TestContext.Current.CancellationToken));
     }
 }

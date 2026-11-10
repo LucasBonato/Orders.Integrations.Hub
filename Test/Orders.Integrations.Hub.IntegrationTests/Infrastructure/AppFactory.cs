@@ -13,7 +13,6 @@ using Orders.Integrations.Hub.Integrations.Common.Application;
 using Orders.Integrations.Hub.Integrations.Common.Contracts;
 using Orders.Integrations.Hub.IntegrationTests.Infrastructure.Host;
 using Orders.Integrations.Hub.TestCommon.Configuration;
-using Orders.Integrations.Hub.TestCommon.Host;
 
 using Xunit.Internal;
 
@@ -24,42 +23,29 @@ public sealed class AppFactory : WebApplicationFactory<Program>
 {
     private readonly Dictionary<string, string?> _dynamicSettings;
     private readonly bool _autoAccept;
+    private readonly IntegrationTestEnvironment _environment;
 
-    public WireMockServers WireMock { get; }
+    public WireMockServers WireMock => _environment.WireMock;
     public HttpClient Http { get; }
 
     private AppFactory(
-        IntegrationTestEnvironment? environment,
-        WireMockServers wireMock,
+        IntegrationTestEnvironment environment,
         bool autoAccept
-    )  {
+    ) {
+        _environment = environment;
         _autoAccept = autoAccept;
-        WireMock = wireMock;
-        try  {
-            _dynamicSettings = WireMockSettingsMap.Build(WireMock);
-
-            if (environment is not null)
-            {
-                foreach (var setting in environment.Configuration())
-                {
-                    _dynamicSettings[setting.Key] = setting.Value;
-                }
-            }
-
-            Http = CreateClient();
-        }
-        catch
-        {
-            WireMock.Dispose();
-            throw;
-        }
+        _dynamicSettings = environment.Configuration()
+            .ToDictionary(
+                setting => setting.Key, 
+                setting => setting.Value
+            );
+        Http = CreateClient();
     }
 
     public static AppFactory Create(
-        IntegrationTestEnvironment? environment,
-        WireMockServers wireMock,
+        IntegrationTestEnvironment environment,
         bool autoAccept = false
-    ) => new(environment, wireMock, autoAccept);
+    ) => new(environment, autoAccept);
 
     public void ConfigureIntegrationContext(
         IntegrationContext integrationContext
@@ -117,6 +103,5 @@ public sealed class AppFactory : WebApplicationFactory<Program>
     public new async ValueTask DisposeAsync()
     {
         await base.DisposeAsync();
-        WireMock.Dispose();
     }
 }

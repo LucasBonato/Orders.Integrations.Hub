@@ -15,7 +15,7 @@ public sealed class CreateOrderCommandHandlerTests(
     [Fact]
     public async Task Publish_ShouldPostOrderToOrdersService() {
         // Arrange
-        Host.WireMock.OrdersApi.StubCreateOrder();
+        await Host.WireMock.OrdersApi.StubCreateOrderAsync(cancellationToken: TestContext.Current.CancellationToken);
         CreateOrderCommand command = new CreateOrderCommandFaker().Generate();
 
         // Act
@@ -25,7 +25,8 @@ public sealed class CreateOrderCommandHandlerTests(
 
         // Assert
         await Host.WireMock.OrdersApi.WaitForCreateOrderAsync(TestContext.Current.CancellationToken);
-        string body = Host.WireMock.OrdersApi.LastRequestBody("/Orders");
+        string? body = await Host.WireMock.OrdersApi.LastRequestBodyAsync("/Orders", TestContext.Current.CancellationToken);
+        Assert.NotNull(body);
         Assert.Contains(command.Order.OrderId, body, StringComparison.Ordinal);
     }
 }
