@@ -60,7 +60,7 @@ if (includeOutbound)
     scenarios.Add(OrderStatusScenario.Food99Outbound(httpClient, host.BaseUrl));
 }
 
-string runDirectory = Path.Combine(LoadTestSettings.ReportsRoot,
+string runDirectory = Path.Join(LoadTestSettings.ReportsRoot,
     $"nbomber-{DateTimeOffset.UtcNow:yyyyMMdd-HHmmss-fff}-{Guid.NewGuid():N}");
 Directory.CreateDirectory(runDirectory);
 object runMetadata = new
@@ -86,7 +86,7 @@ object runMetadata = new
         MaxP95ResponseTimeMs = LoadTestSettings.MaxP95ResponseTimeMs
     }
 };
-File.WriteAllText(Path.Combine(runDirectory, "loadtest-metadata.json"),
+File.WriteAllText(Path.Join(runDirectory, "loadtest-metadata.json"),
     System.Text.Json.JsonSerializer.Serialize(runMetadata, new System.Text.Json.JsonSerializerOptions { WriteIndented = true }));
 
 NBomberRunner

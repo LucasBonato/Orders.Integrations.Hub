@@ -137,10 +137,12 @@ public static class SummaryReporter
 
                 string summary = string.Join(Environment.NewLine, output);
                 Console.WriteLine(summary);
-                File.WriteAllText(Path.Combine(reportDirectory, "nbomber-summary.txt"), summary);
+                File.WriteAllText(Path.Join(reportDirectory, "nbomber-summary.txt"), summary);
             }
             catch (Exception exception)
             {
+                // Summary failures must be surfaced without hiding NBomber's shutdown; Program.cs
+                // checks Passed afterward and converts this failure into a non-zero exit code.
                 Passed = false;
                 Console.Error.WriteLine($"NBomber summary generation failed: {exception}");
             }

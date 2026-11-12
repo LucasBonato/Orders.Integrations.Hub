@@ -122,13 +122,13 @@ public static class LoadTestSettings
         DirectoryInfo? directory = new(AppContext.BaseDirectory);
         while (directory is not null)
         {
-            if (File.Exists(Path.Combine(directory.FullName, "Orders.Integrations.Hub.slnx"))
-                || Directory.Exists(Path.Combine(directory.FullName, ".git")))
-                return Path.Combine(directory.FullName, "reports");
+            if (File.Exists(Path.Join(directory.FullName, "Orders.Integrations.Hub.slnx"))
+                || Directory.Exists(Path.Join(directory.FullName, ".git")))
+                return Path.Join(directory.FullName, "reports");
             directory = directory.Parent;
         }
 
-        return Path.Combine(Environment.CurrentDirectory, "reports");
+        return Path.Join(Environment.CurrentDirectory, "reports");
     }
 
     public static void Validate()

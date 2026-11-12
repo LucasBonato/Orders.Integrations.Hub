@@ -73,7 +73,7 @@ public sealed class LoadTestHost : IAsyncDisposable
         builder.WebHost.UseUrls(listenUrl);
 
         string assemblyDir = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) ?? ".";
-        string configPath = Path.Combine(assemblyDir, "appsettings.Test.json");
+        string configPath = Path.Join(assemblyDir, "appsettings.Test.json");
 
         builder.Configuration
             .AddJsonFile(configPath, optional: false, reloadOnChange: false)
