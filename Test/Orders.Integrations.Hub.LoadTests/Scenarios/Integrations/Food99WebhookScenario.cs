@@ -24,7 +24,8 @@ public static class Food99WebhookScenario
                 foreach (var header in headers)
                     request = request.WithHeader(header.Key, header.Value);
 
-                request = request.WithBody(new StringContent(payload.RawJson, System.Text.Encoding.UTF8, "application/json"));
+                using var content = new StringContent(payload.RawJson, System.Text.Encoding.UTF8, "application/json");
+                request = request.WithBody(content);
 
                 var response = await Http.Send(httpClient, request);
 

@@ -40,9 +40,10 @@ public static class ProductStatusScenario
 
         return Scenario.Create(name, async context =>
         {
+            using var content = new StringContent(body, System.Text.Encoding.UTF8, "application/json");
             var request = Http.CreateRequest("POST", $"{baseUrl}{route}")
                 .WithHeader("Content-Type", "application/json")
-                .WithBody(new StringContent(body, System.Text.Encoding.UTF8, "application/json"));
+                .WithBody(content);
 
             var response = await Http.Send(httpClient, request);
 

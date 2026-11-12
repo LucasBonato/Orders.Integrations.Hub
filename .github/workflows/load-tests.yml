@@ -39,6 +39,7 @@ jobs:
 
       - name: Run load test
         env:
+          INCLUDE_OUTBOUND: ${{ inputs.include_outbound || 'true' }}
           LOADTEST_WEBHOOK_COPIES: 20
           LOADTEST_WEBHOOK_DURATION: 00:02:00
           LOADTEST_WEBHOOK_BURST_RATE: 200
@@ -49,7 +50,7 @@ jobs:
           LOADTEST_OUTBOUND_COPIES: 10
           LOADTEST_OUTBOUND_DURATION: 00:02:00
         run: |
-          if [ "${{ inputs.include_outbound || 'true' }}" = "true" ]; then
+          if [ "$INCLUDE_OUTBOUND" = "true" ]; then
             dotnet run --project Test/Orders.Integrations.Hub.LoadTests/Orders.Integrations.Hub.LoadTests.csproj --configuration Release -- --include-outbound
           else
             dotnet run --project Test/Orders.Integrations.Hub.LoadTests/Orders.Integrations.Hub.LoadTests.csproj --configuration Release

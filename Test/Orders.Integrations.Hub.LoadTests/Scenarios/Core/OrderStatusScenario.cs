@@ -55,9 +55,10 @@ public static class OrderStatusScenario
                 }
                 """;
 
+            using var content = new StringContent(body, System.Text.Encoding.UTF8, "application/json");
             var request = Http.CreateRequest("PATCH", $"{baseUrl}/api/v1/orders-hub/orders/status")
                 .WithHeader("Content-Type", "application/json")
-                .WithBody(new StringContent(body, System.Text.Encoding.UTF8, "application/json"));
+                .WithBody(content);
 
             var response = await Http.Send(httpClient, request);
 

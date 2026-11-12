@@ -57,9 +57,8 @@ public sealed class CancellationReasonsEndpointTests(
         await Host.WireMock.IFoodApi.StubCancellationReasonsAsync(TestContext.Current.CancellationToken);
 
         // Act
-        HttpRequestMessage request = new(HttpMethod.Get, $"{Route}?integration=IFOOD&externalOrderId=ext-1") {
-            Headers = { CacheControl = new CacheControlHeaderValue { NoCache = true } }
-        };
+        using HttpRequestMessage request = new(HttpMethod.Get, $"{Route}?integration=IFOOD&externalOrderId=ext-1");
+        request.Headers.CacheControl = new CacheControlHeaderValue { NoCache = true };
         using HttpResponseMessage result = await Host.Http.SendAsync(request, TestContext.Current.CancellationToken);
 
         // Assert
