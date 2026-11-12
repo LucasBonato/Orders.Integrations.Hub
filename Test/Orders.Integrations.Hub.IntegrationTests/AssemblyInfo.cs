@@ -1,5 +1,5 @@
-﻿using Xunit.Sdk;
+﻿using Orders.Integrations.Hub.TestCommon.Contracts;
 
-using Orders.Integrations.Hub.IntegrationTests.Contracts;
+using Xunit.Sdk;
 
 [assembly: RegisterXunitSerializer(typeof(IntegrationContractSerializer), typeof(IIntegrationContract))]

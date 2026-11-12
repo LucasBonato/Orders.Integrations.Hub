@@ -1,40 +1,47 @@
-using WireMock.Server;
-
-using Orders.Integrations.Hub.IntegrationTests.Infrastructure.Mocks;
+using Orders.Integrations.Hub.IntegrationTests.Infrastructure.Containers;
+using Orders.Integrations.Hub.TestCommon.Mocks;
 
 namespace Orders.Integrations.Hub.IntegrationTests.Infrastructure.Host;
 
 /// <summary>
-/// Owns one isolated WireMock server per external HTTP boundary. A factory owns this
-/// object, so every test instance receives fresh request history and stubs.
+/// Owns a single containerized WireMock instance and exposes API mock classes
+/// for each external HTTP boundary (Orders, IFood, Rappi, Food99).
 /// </summary>
-public sealed class WireMockServers : IDisposable {
-    public WireMockServer Orders { get; } = WireMockServer.Start();
-    public WireMockServer IFood { get; } = WireMockServer.Start();
-    public WireMockServer Rappi { get; } = WireMockServer.Start();
-    public WireMockServer Food99 { get; } = WireMockServer.Start();
+public sealed class WireMockServers : IAsyncLifetime
+{
+    private readonly WireMockTestContainer _container = new();
+    private WireMockAdminClient? _adminClient;
 
-    public OrdersApiMock OrdersApi { get; }
-    public IFoodApiMock IFoodApi { get; }
-    public RappiApiMock RappiApi { get; }
-    public Food99ApiMock Food99Api { get; }
+    public Uri BaseUrl => _container.BaseUrl;
 
-    public WireMockServers() {
-        OrdersApi = new OrdersApiMock(Orders);
-        IFoodApi = new IFoodApiMock(IFood);
-        RappiApi = new RappiApiMock(Rappi);
-        Food99Api = new Food99ApiMock(Food99);
+    public OrdersApiMock OrdersApi { get; private set; } = null!;
+    public IFoodApiMock IFoodApi { get; private set; } = null!;
+    public RappiApiMock RappiApi { get; private set; } = null!;
+    public Food99ApiMock Food99Api { get; private set; } = null!;
+
+    public async ValueTask InitializeAsync()
+    {
+        await _container.StartAsync();
+
+        Uri baseUrl = _container.BaseUrl
+            ?? throw new InvalidOperationException("WireMock container URL is not available.");
+
+        _adminClient = new WireMockAdminClient(baseUrl.AbsoluteUri);
+
+        OrdersApi = new OrdersApiMock(_adminClient);
+        IFoodApi = new IFoodApiMock(_adminClient);
+        RappiApi = new RappiApiMock(_adminClient);
+        Food99Api = new Food99ApiMock(_adminClient);
     }
 
-    public void Dispose() {
-        DisposeServer(Orders);
-        DisposeServer(IFood);
-        DisposeServer(Rappi);
-        DisposeServer(Food99);
-    }
+    /// <summary>Clears mappings and request logs on the container. Call this once per test.</summary>
+    public Task ResetAllAsync(CancellationToken cancellationToken = default)
+        => (_adminClient ?? throw new InvalidOperationException("WireMock has not been initialized."))
+            .ResetAllAsync(cancellationToken);
 
-    private static void DisposeServer(WireMockServer server) {
-        server.Stop();
-        server.Dispose();
+    public async ValueTask DisposeAsync()
+    {
+        _adminClient?.Dispose();
+        await _container.DisposeAsync();
     }
 }

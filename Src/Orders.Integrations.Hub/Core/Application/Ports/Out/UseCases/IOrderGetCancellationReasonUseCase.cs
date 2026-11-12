@@ -4,5 +4,5 @@ namespace Orders.Integrations.Hub.Core.Application.Ports.Out.UseCases;
 
 public interface IOrderGetCancellationReasonUseCase
 {
-    Task<List<CancellationReasonsResponse>> ExecuteAsync(string? externalOrderId);
+    ValueTask<List<CancellationReasonsResponse>> ExecuteAsync(string? externalOrderId);
 }

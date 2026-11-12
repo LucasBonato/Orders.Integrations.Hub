@@ -17,7 +17,7 @@ public class InternalClient(
             [
                 new IntegrationSetting(
                     Name: "ifood_merchant_id",
-                    Value: "dd2aad76-35aa-4816-952c-9194822155f8"
+                    Value: "ifood-merchant"
                 ),
                 new IntegrationSetting(
                     Name: "ifood_client_id",
@@ -39,8 +39,8 @@ public class InternalClient(
             Settings:
             [
                 new IntegrationSetting(
-                    Name: "rappi_merchant_id",
-                    Value: "dd2aad76-35aa-4816-952c-9194822155f8"
+                    Name: "rappi_store_id",
+                    Value: "12345"
                 ),
                 new IntegrationSetting(
                     Name: "rappi_client_id",
@@ -48,7 +48,7 @@ public class InternalClient(
                 ),
                 new IntegrationSetting(
                     Name: "rappi_client_secret",
-                    Value: configuration.GetValue("Integrations:Rappi:Client:Id", string.Empty)
+                    Value: configuration.GetValue("Integrations:Rappi:Client:Secret", string.Empty)
                 ),
                 new IntegrationSetting(
                     Name: "rappi_mode",
@@ -62,19 +62,19 @@ public class InternalClient(
             Settings:
             [
                 new IntegrationSetting(
-                    Name: "food99_merchant_id",
-                    Value: "dd2aad76-35aa-4816-952c-9194822155f8"
+                    Name: "99food_app_shop_id",
+                    Value: "food99-shop"
                 ),
                 new IntegrationSetting(
-                    Name: "food99_client_id",
+                    Name: "99food_client_id",
                     Value: configuration.GetValue("Integrations:Food99:Client:Id", string.Empty)
                 ),
                 new IntegrationSetting(
-                    Name: "food99_client_secret",
-                    Value: configuration.GetValue("Integrations:Food99:Client:Id", string.Empty)
+                    Name: "99food_client_secret",
+                    Value: configuration.GetValue("Integrations:Food99:Client:Secret", string.Empty)
                 ),
                 new IntegrationSetting(
-                    Name: "food99_mode",
+                    Name: "99food_mode",
                     Value: nameof(IntegrationMode.Centralized)
                 )
             ]

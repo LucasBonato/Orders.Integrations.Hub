@@ -3,9 +3,8 @@ using Orders.Integrations.Hub.Integrations.Common.ValueObjects;
 
 namespace Orders.Integrations.Hub.TestCommon.Fixtures;
 
-public static class ObjectMother
-{
-    public static Integration CreateIntegration(
+public static class ObjectMother {
+    private static Integration CreateIntegration(
         string? merchantId = null,
         string? clientId = null,
         string? clientSecret = null,
@@ -24,10 +23,8 @@ public static class ObjectMother
         string? tenantId = null,
         string? merchantId = null,
         Integration? integration = null
-    )
-    {
-        var context = new IntegrationContext
-        {
+    ) {
+        var context = new IntegrationContext {
             TenantId = tenantId ?? "tenant-1",
             MerchantId = merchantId ?? "merchant-1",
             Integration = integration ?? CreateIntegration()
@@ -36,8 +33,7 @@ public static class ObjectMother
     }
 }
 
-public class IntegrationContext : IIntegrationContext
-{
+public class IntegrationContext : IIntegrationContext {
     public string? TenantId { get; set; }
     public string? MerchantId { get; set; }
     public Integration? Integration { get; set; }

@@ -3,7 +3,7 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
-    <ItemGroup Condition="$(MSBuildProjectName.EndsWith('Tests'))">
+    <ItemGroup Condition="$(MSBuildProjectName.EndsWith('Tests')) And '$(MSBuildProjectName)' != 'Orders.Integrations.Hub.LoadTests'">
         <PackageReference Include="coverlet.MTP">
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>

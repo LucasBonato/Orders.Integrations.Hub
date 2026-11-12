@@ -1,0 +1,22 @@
+{
+  "id": "event-dispute-1",
+  "code": "HSD",
+  "fullCode": "HANDSHAKE_DISPUTE",
+  "orderId": "order-900",
+  "merchantId": "ifood-merchant",
+  "merchantIds": ["ifood-merchant"],
+  "createdAt": "2025-01-15T10:30:00Z",
+  "salesChannel": "IFOOD",
+  "metadata": {
+    "disputeId": "dispute-111",
+    "parentDisputeId": null,
+    "metadata": {
+      "evidences": [
+        {
+          "url": "https://media.test/evidence-1.png",
+          "contentType": "image/png"
+        }
+      ]
+    }
+  }
+}

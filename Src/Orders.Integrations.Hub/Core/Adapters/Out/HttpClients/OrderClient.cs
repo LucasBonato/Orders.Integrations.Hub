@@ -7,8 +7,7 @@ namespace Orders.Integrations.Hub.Core.Adapters.Out.HttpClients;
 public class OrderClient(
     ILogger<OrderClient> logger,
     HttpClient httpClient
-) : IOrderClient
-{
+) : IOrderClient {
     public async Task CreateOrder(Order order)
     {
         if (logger.IsEnabled(LogLevel.Information))
@@ -18,8 +17,9 @@ public class OrderClient(
 
         if (!response.IsSuccessStatusCode)
         {
+            string content = await response.Content.ReadAsStringAsync();
             if (logger.IsEnabled(LogLevel.Error))
-                logger.LogError("[ERROR] - CreateOrderCommandHandler - Error creating order: {statusCode}, {content}, {reason}", response.StatusCode, response.Content.ReadAsStringAsync().Result, response.ReasonPhrase);
+                logger.LogError("[ERROR] - CreateOrderCommandHandler - Error creating order: {statusCode}, {content}, {reason}", response.StatusCode, content, response.ReasonPhrase);
             throw new Exception();
         }
     }
@@ -33,8 +33,9 @@ public class OrderClient(
 
         if (!response.IsSuccessStatusCode)
         {
+            string content = await response.Content.ReadAsStringAsync();
             if (logger.IsEnabled(LogLevel.Error))
-                logger.LogError("[ERROR] - UpdateOrderCommandHandler - Error updating order({orderId}): {statusCode}, {content}, {reason}", order.OrderId, response.StatusCode, response.Content.ReadAsStringAsync().Result, response.ReasonPhrase);
+                logger.LogError("[ERROR] - UpdateOrderCommandHandler - Error updating order({orderId}): {statusCode}, {content}, {reason}", order.OrderId, response.StatusCode, content, response.ReasonPhrase);
             throw new Exception();
         }
     }
@@ -48,8 +49,9 @@ public class OrderClient(
 
         if (!response.IsSuccessStatusCode)
         {
+            string content = await response.Content.ReadAsStringAsync();
             if (logger.IsEnabled(LogLevel.Error))
-                logger.LogError("[ERROR] - UpdateOrderDisputeEventHandler - Error updating dispute of order({orderId}): {statusCode}, {content}, {reason}", order.OrderId, response.StatusCode, response.Content.ReadAsStringAsync().Result, response.ReasonPhrase);
+                logger.LogError("[ERROR] - UpdateOrderDisputeEventHandler - Error updating dispute of order({orderId}): {statusCode}, {content}, {reason}", order.OrderId, response.StatusCode, content, response.ReasonPhrase);
             throw new Exception();
         }
     }

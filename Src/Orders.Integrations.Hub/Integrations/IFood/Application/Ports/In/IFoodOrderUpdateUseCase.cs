@@ -19,6 +19,6 @@ public class IFoodOrderUpdateUseCase(
             )
         );
 
-        return await Task.FromResult(ifoodOrder);
+        return ifoodOrder;
     }
 }

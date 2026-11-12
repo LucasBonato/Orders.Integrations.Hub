@@ -14,25 +14,25 @@
         <PackageReference Include="Asp.Versioning.Http" Version="10.2.3" />
         <PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="10.2.1" />
         <PackageReference Include="Asp.Versioning.OpenApi" Version="10.2.3" />
-        <PackageReference Include="AWSSDK.Core" Version="4.0.102.2" />
-        <PackageReference Include="AWSSDK.SimpleNotificationService" Version="4.0.100.11" />
-        <PackageReference Include="AWSSDK.S3" Version="4.0.102.4" />
-        <PackageReference Include="AWSSDK.SQS" Version="4.0.100.11" />
+        <PackageReference Include="AWSSDK.Core" Version="4.0.102.20" />
+        <PackageReference Include="AWSSDK.SimpleNotificationService" Version="4.0.100.25" />
+        <PackageReference Include="AWSSDK.S3" Version="4.0.104.11" />
+        <PackageReference Include="AWSSDK.SQS" Version="4.0.100.25" />
         <PackageReference Include="DotNetEnv" Version="3.2.0"/>
         <PackageReference Include="MassTransit.RabbitMQ" Version="8.5.10" />
-        <PackageReference Include="Microsoft.Extensions.Caching.Hybrid" Version="10.9.0" />
-        <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="10.0.11" />
-        <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.18.0" />
-        <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.18.0" />
-        <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.18.0" />
-        <PackageReference Include="OpenTelemetry.Instrumentation.AWS" Version="1.18.0" />
-        <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.18.0" />
-        <PackageReference Include="OpenTelemetry.Instrumentation.Runtime" Version="1.18.0" />
+        <PackageReference Include="Microsoft.Extensions.Caching.Hybrid" Version="10.11.0" />
+        <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="10.0.14" />
+        <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.20.1" />
+        <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.20.1" />
+        <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.20.2" />
+        <PackageReference Include="OpenTelemetry.Instrumentation.AWS" Version="1.20.3" />
+        <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.20.2" />
+        <PackageReference Include="OpenTelemetry.Instrumentation.Runtime" Version="1.20.1" />
         <PackageReference Include="OpenTelemetry.Instrumentation.StackExchangeRedis" Version="1.16.0-beta.1" />
-        <PackageReference Include="Refit" Version="15.2.0" />
-        <PackageReference Include="Refit.HttpClientFactory" Version="15.2.0" />
-        <PackageReference Include="Refit.Reflection" Version="15.2.0" />
-        <PackageReference Include="Scalar.AspNetCore" Version="2.17.2" />
+        <PackageReference Include="Refit" Version="16.4.0" />
+        <PackageReference Include="Refit.HttpClientFactory" Version="16.4.0" />
+        <PackageReference Include="Refit.Reflection" Version="16.4.0" />
+        <PackageReference Include="Scalar.AspNetCore" Version="2.19.0" />
         <PackageReference Include="Scrutor" Version="7.0.0"/>
     </ItemGroup>
 

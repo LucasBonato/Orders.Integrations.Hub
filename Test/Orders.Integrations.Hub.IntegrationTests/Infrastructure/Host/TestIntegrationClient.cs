@@ -12,7 +12,7 @@ namespace Orders.Integrations.Hub.IntegrationTests.Infrastructure.Host;
 /// If that adapter becomes a real HTTP client, replace this adapter with a WireMock API.
 /// </summary>
 internal sealed class TestIntegrationClient(
-    IConfiguration configuration, 
+    IConfiguration configuration,
     bool autoAccept
 ) : IInternalClient {
     private const string IFoodMerchant = "ifood-merchant";

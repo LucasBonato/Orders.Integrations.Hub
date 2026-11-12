@@ -10,10 +10,17 @@
 
     <ItemGroup>
         <PackageReference Include="Bogus" />
+        <PackageReference Include="xunit.v3.common" />
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\..\Src\Orders.Integrations.Hub\Orders.Integrations.Hub.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Content Include="Payloads\**\*.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
     </ItemGroup>
 
 </Project>

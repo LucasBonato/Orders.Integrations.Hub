@@ -1,0 +1,116 @@
+{
+  "app_id": 123456,
+  "app_shop_id": "food99-shop",
+  "timestamp": 1705325400,
+  "type": "OrderNew",
+  "data": {
+    "order_id": 987654321,
+    "order_info": {
+      "order_id": 987654321,
+      "status": 1,
+      "order_index": 1,
+      "remark": "",
+      "city_id": 101,
+      "country": "BR",
+      "timezone": "America/Sao_Paulo",
+      "pay_type": "onlinePayment",
+      "delivery_type": 1,
+      "expected_cook_eta": 1800,
+      "expected_arrived_eta": 3600,
+      "create_time": 1705325400,
+      "pay_time": 1705325450,
+      "complete_time": 0,
+      "cancel_time": 0,
+      "shop_confirm_time": 1705325400,
+      "price": {
+        "order_price": 5000,
+        "real_price": 5000,
+        "real_pay_price": 5200,
+        "delivery_price": 200,
+        "refund_price": 0,
+        "items_discount": 0,
+        "delivery_discount": 0,
+        "others_fees": {
+          "small_order_price": 0,
+          "total_tip_money": 0,
+          "service_price": 0,
+          "coupon_discount": 0
+        },
+        "customer_need_paying_money": 5200
+      },
+      "shop": {
+        "shop_id": 555,
+        "app_shop_id": "food99-shop",
+        "shop_addr": "Rua Exemplo, 100",
+        "shop_name": "Loja Teste 99Food",
+        "shop_phone": [
+          {
+            "calling_code": 55,
+            "phone": 11999999999,
+            "type": "MOBILE"
+          }
+        ]
+      },
+      "receive_address": {
+        "uid": 888,
+        "name": "João Silva",
+        "first_name": "João",
+        "last_name": "Silva",
+        "calling_code": "55",
+        "phone": "11988887777",
+        "city": "São Paulo",
+        "country_code": "BR",
+        "poi_address": "Av Paulista, 1000",
+        "house_number": "1000",
+        "poi_lat": -23.5614,
+        "poi_lng": -46.6559,
+        "coordinate_type": "wgs84",
+        "poi_display_name": "Av Paulista, 1000",
+        "state": "SP",
+        "district": "Bela Vista",
+        "street_name": "Avenida Paulista",
+        "street_number": "1000",
+        "postal_code": "01310100",
+        "complement": "Apto 42",
+        "reference": null
+      },
+      "order_items": [
+        {
+          "app_item_id": "item-1",
+          "app_external_id": "EXT-001",
+          "name": "Pizza Calabresa",
+          "total_price": 4000,
+          "sku_price": 4000,
+          "amount": 1,
+          "remark": "",
+          "sub_item_list": [
+            {
+              "app_item_id": "sub-1",
+              "app_external_id": "SUB-EXT-1",
+              "name": "Borda Recheada",
+              "total_price": 800,
+              "sku_price": 800,
+              "amount": 1,
+              "app_content_id": "content-1",
+              "content_app_external_id": "CONTENT-EXT-1",
+              "sub_item_list": []
+            }
+          ],
+          "real_price": 4800,
+          "promo_type": "none",
+          "promotion_detail": null,
+          "promo_list": null
+        }
+      ],
+      "promotions": null
+    },
+    "delivery_status": null,
+    "rider_name": null,
+    "rider_phone": null,
+    "apply_reason": null,
+    "apply_id": null,
+    "reason_list": null,
+    "images": null,
+    "base_reason_list": null
+  }
+}
