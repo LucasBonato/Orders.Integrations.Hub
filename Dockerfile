@@ -18,7 +18,7 @@ RUN dotnet publish "Orders.Integrations.Hub.csproj" \
     /p:DebugType=None \
     /p:DebugSymbols=false
 
-FROM mcr.microsoft.com/dotnet/aspnet:10.0-alpine AS final
+FROM mcr.microsoft.com/dotnet/aspnet:11.0-alpine AS final
 
 # Run as non-root for security
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
